@@ -4,10 +4,10 @@
 - [x] Install Obsidian.
     - [x] Create your main campaign "Vault".
     - [x] Establish initial folder structure.
-- [ ] Set up GitHub repository.
+- [x] Set up GitHub repository.
     - [x] Sign up or log in to GitHub.
     - [x] Create a private repository (e.g., DND_Campaign_Lore).
-    - [ ] Connect your Obsidian vault to GitHub for automatic backups.
+    - [x] Connect your Obsidian vault to GitHub for automatic backups.
 
 ## Phase 2: Create Document Templates
 - [ ] Decide core document types (NPCs, locations, history events, magic items, etc.).
@@ -27,15 +27,15 @@
 - [ ] Document these in Obsidian ("Campaign Standards.md").
 
 ## Phase 5: AI-Assisted Document Management
-- [ ] Sign up for OpenAI API access.
-- [ ] Choose a retrieval tool (e.g., LlamaIndex).
-- [ ] Integrate your Obsidian documents:
-    - [ ] Set up Python environment.
-    - [ ] Install LlamaIndex.
-    - [ ] Index Markdown files from GitHub/local folders.
-- [ ] Integrate GPT-4o:
-    - [ ] Get OpenAI API key.
-    - [ ] Connect GPT-4o via LlamaIndex.
+- [x] Sign up for OpenAI API access.
+- [x] Choose a retrieval tool (e.g., LlamaIndex).
+- [x] Integrate your Obsidian documents:
+    - [x] Set up Python environment.
+    - [x] Install LlamaIndex.
+    - [x] Index Markdown files from GitHub/local folders.
+- [x] Integrate GPT-4o:
+    - [x] Get OpenAI API key.
+    - [x] Connect GPT-4o via LlamaIndex.
 
 ## Phase 6: Visual & Interactive Layer (Optional)
 - [ ] Sign up for World Anvil or Campfire.

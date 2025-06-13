@@ -1,0 +1,283 @@
+2025-06-12 11:32:26,113 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 11:38:43,939 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 11:41:00,329 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 11:43:45,937 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 11:53:46,520 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 11:57:59,928 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 12:06:44,102 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 12:06:55,013 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 12:08:37,058 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 12:08:37,478 ERROR:UNHANDLED CRASH | Exception: Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 29, in <module>
+    app = LoreMainApp()
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 44, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 431, in _setup_browse_tab
+    self.browse_preview_box.config(state="disabled")  # Keep disabled until a note is selected
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\site-packages\customtkinter\windows\widgets\core_widget_classes\ctk_base_class.py", line 111, in config
+    raise AttributeError("'config' is not implemented for CTk widgets. For consistency, always use 'configure' instead.")
+AttributeError: 'config' is not implemented for CTk widgets. For consistency, always use 'configure' instead.
+
+2025-06-12 12:12:35,077 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 12:13:42,401 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 12:30:03,533 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 12:41:21,432 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 13:42:16,689 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 13:44:31,338 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 13:51:53,192 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 13:55:02,396 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 13:57:41,525 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 14:00:01,442 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 14:02:22,246 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 14:03:20,629 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 14:09:26,276 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 14:52:18,617 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:00:00,704 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:01:39,038 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:04:25,076 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:07:55,453 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:14:56,355 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:17:13,846 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:18:08,295 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:19:26,199 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:22:43,331 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:28:06,469 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:28:07,492 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:29:02,865 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:29:03,787 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:33:12,178 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 15:33:12,799 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:10:52,333 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:10:53,197 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:17:59,676 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:18:00,931 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:19:57,606 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:19:58,379 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:30:21,622 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:30:22,391 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:33:08,749 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:33:09,274 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:35:21,314 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:35:22,337 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:39:05,416 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:39:06,091 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:44:12,486 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:44:13,302 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:45:39,319 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 16:45:40,504 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:22:47,545 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:22:48,855 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:27:14,384 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:27:15,554 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:43:16,932 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:43:17,879 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:51:06,972 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:51:07,803 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:55:28,347 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:55:29,275 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:55:29,791 ERROR:UNHANDLED CRASH | Exception: Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 29, in <module>
+    app = LoreMainApp()
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 53, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 296, in _setup_browse_tab
+    command=self.toggle_browse_preview,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'toggle_browse_preview'
+
+2025-06-12 17:57:53,265 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:57:54,553 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:57:54,937 ERROR:UNHANDLED CRASH | Exception: Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 29, in <module>
+    app = LoreMainApp()
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 53, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 312, in _setup_browse_tab
+    command=self.toggle_browse_preview,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'toggle_browse_preview'
+
+2025-06-12 17:59:08,858 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 17:59:10,036 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:01:20,748 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:01:21,518 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:07:42,821 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:07:44,295 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:07:44,793 ERROR:UNHANDLED CRASH | Exception: Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 29, in <module>
+    app = LoreMainApp()
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 53, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 296, in _setup_browse_tab
+    command=self.toggle_browse_preview,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'toggle_browse_preview'
+
+2025-06-12 18:08:21,153 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:08:22,596 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:10:03,843 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:10:04,630 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:16:14,725 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:16:15,613 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:19:41,134 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:19:42,140 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:24:51,018 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:24:54,711 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:27:04,945 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:27:06,516 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:32:28,712 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:32:29,699 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:34:37,707 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:34:38,560 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:37:11,047 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:37:11,793 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:37:12,294 ERROR:UNHANDLED CRASH | Exception: Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 29, in <module>
+    app = LoreMainApp()
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 53, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 330, in _setup_browse_tab
+    self.preview_toggle_btn = ctk.CTkButton(
+                              ~~~~~~~~~~~~~^
+        right,
+        ^^^^^^
+    ...<2 lines>...
+        width=100, height=32, padx=8
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\site-packages\customtkinter\windows\widgets\ctk_button.py", line 52, in __init__
+    super().__init__(master=master, bg_color=bg_color, width=width, height=height, **kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\site-packages\customtkinter\windows\widgets\core_widget_classes\ctk_base_class.py", line 46, in __init__
+    check_kwargs_empty(kwargs, raise_error=True)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\site-packages\customtkinter\windows\widgets\utility\utility_functions.py", line 18, in check_kwargs_empty
+    raise ValueError(f"{list(kwargs_dict.keys())} are not supported arguments. Look at the documentation for supported arguments.")
+ValueError: ['padx'] are not supported arguments. Look at the documentation for supported arguments.
+
+2025-06-12 18:39:01,970 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:39:02,602 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:40:02,263 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 18:40:03,457 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 19:43:27,956 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 19:43:29,253 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 19:43:29,867 ERROR:UNHANDLED CRASH | Exception: Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 29, in <module>
+    app = LoreMainApp()
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 54, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 400, in _setup_browse_tab
+    self._browse_filter_notes()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 453, in _browse_filter_notes
+    tag = self.tag_filter_var.get()
+          ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'tag_filter_var'
+
+2025-06-12 19:47:15,021 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 19:47:16,614 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 19:47:17,201 ERROR:UNHANDLED CRASH | Exception: Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 29, in <module>
+    app = LoreMainApp()
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 54, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 400, in _setup_browse_tab
+    self._browse_filter_notes()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute '_browse_filter_notes'
+
+2025-06-12 19:57:00,958 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 19:57:02,243 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 19:59:47,183 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 19:59:48,404 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:16:03,838 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:16:04,930 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:16:05,460 ERROR:UNHANDLED CRASH | Exception: Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 29, in <module>
+    app = LoreMainApp()
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 54, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 260, in _setup_browse_tab
+    values=[""] + list(self.all_tags),
+                       ^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'all_tags'
+
+2025-06-12 20:20:28,149 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:20:29,606 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:22:45,317 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:22:46,434 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:25:18,833 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:25:19,890 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:29:16,859 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:29:18,683 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:33:41,203 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:33:42,685 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:33:43,313 ERROR:UNHANDLED CRASH | Exception: Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 29, in <module>
+    app = LoreMainApp()
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 54, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui.py", line 262, in _setup_browse_tab
+    variable=self.tag_filter_var,
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'tag_filter_var'
+
+2025-06-12 20:35:05,209 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:35:06,022 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:36:00,904 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:36:01,779 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:51:25,241 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:51:26,532 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:55:06,066 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:55:07,511 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:57:52,052 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 20:57:53,511 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:00:08,702 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:00:09,772 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:08:41,778 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:08:42,679 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:10:13,819 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:10:14,931 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:14:44,981 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:14:46,092 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:15:21,370 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:15:22,805 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:18:53,404 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:18:54,362 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:28:08,098 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:28:08,843 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:31:59,672 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:32:00,957 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:32:38,684 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:32:40,629 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:35:55,696 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:35:57,274 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:38:50,289 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:38:51,441 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:58:04,289 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-12 21:58:05,574 INFO:HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"

@@ -1,40 +1,24 @@
 {
   "main": {
-    "id": "f4059539ac8d6b6e",
+    "id": "c187374e8cc8cdfd",
     "type": "split",
     "children": [
       {
-        "id": "035ff0b01e9f1444",
+        "id": "cd70b6ceb26d3d85",
         "type": "tabs",
         "children": [
           {
-            "id": "ad54755f0e1092f2",
+            "id": "937b7e145493aeb2",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Administrative & Meta/Reference Sheets & Tools/Todo Lists/Untitled.md",
+                "file": "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Extended_DnD_AI_App_Plan.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Untitled"
-            }
-          }
-        ]
-      },
-      {
-        "id": "3bd1097f40deb7a5",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "e090256b00f48255",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "title": "Extended_DnD_AI_App_Plan"
             }
           }
         ]
@@ -43,15 +27,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "c2536e2cebded10c",
+    "id": "6c5f7f74ab077549",
     "type": "split",
     "children": [
       {
-        "id": "9917980b5baf264e",
+        "id": "911eef1115d0a934",
         "type": "tabs",
         "children": [
           {
-            "id": "658db2590d2877b6",
+            "id": "ddcd2279ddf9a713",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -64,7 +48,7 @@
             }
           },
           {
-            "id": "485a194f4a85d14b",
+            "id": "dd6389c65d39ae72",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -81,7 +65,7 @@
             }
           },
           {
-            "id": "a343863610723a45",
+            "id": "dd21f10ff849ea0e",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -90,28 +74,27 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
     "width": 300
   },
   "right": {
-    "id": "b6855eba3a4d3e78",
+    "id": "590928b1d45201d5",
     "type": "split",
     "children": [
       {
-        "id": "ef201c9584057482",
+        "id": "09b2fccb7c83b0a6",
         "type": "tabs",
         "children": [
           {
-            "id": "bdf05c4996f3e4ec",
+            "id": "71590b72e01be085",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Administrative & Meta/Reference Sheets & Tools/Todo Lists/Untitled.md",
+                "file": "Obsidian/World Lore/Magic Systems/Class Affinities by Field.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -121,25 +104,25 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Untitled"
+              "title": "Backlinks for Class Affinities by Field"
             }
           },
           {
-            "id": "91cf068aa434ea6b",
+            "id": "91a58b21d738202b",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Administrative & Meta/Reference Sheets & Tools/Todo Lists/Untitled.md",
+                "file": "Obsidian/World Lore/Magic Systems/Class Affinities by Field.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Untitled"
+              "title": "Outgoing links from Class Affinities by Field"
             }
           },
           {
-            "id": "87b110806766909f",
+            "id": "ddd0a94d60d52fca",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -154,18 +137,18 @@
             }
           },
           {
-            "id": "78712a2972467e36",
+            "id": "1794ede3abb56e0a",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "Administrative & Meta/Reference Sheets & Tools/Todo Lists/Untitled.md",
+                "file": "Obsidian/World Lore/Magic Systems/Class Affinities by Field.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Untitled"
+              "title": "Outline of Class Affinities by Field"
             }
           }
         ]
@@ -177,6 +160,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "obsidian-git:Open Git source control": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -185,19 +169,17 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "485a194f4a85d14b",
+  "active": "937b7e145493aeb2",
   "lastOpenFiles": [
-    "Untitled/Welcome.md",
-    "Administrative & Meta/Reference Sheets & Tools/Todo Lists/Untitled.md",
-    "Administrative & Meta/Reference Sheets & Tools/Todo Lists",
-    "Administrative & Meta/Reference Sheets & Tools",
-    "Administrative & Meta/Session Logs",
-    "Mechanics & Homebrew Rules/House Rules",
-    "Mechanics & Homebrew Rules/Custom Items & Equipment",
-    "Mechanics & Homebrew Rules/Combat Rules",
-    "Characters/NPCs/By Faction",
-    "Characters/NPCs/By Role",
-    "Characters/NPCs/By Region",
-    "Adventures & Modules/Archived Stories"
+    "Obsidian/Characters/Player Characters/Obsidiancharactersplayer_Character_Brandon.md",
+    "Obsidian/World Lore/Magic Systems/Belief and Reality Mechanics.md",
+    "Obsidian/Administrative & Meta/Reference Sheets & Tools/Templates",
+    "Obsidian/World Lore/Magic Systems/Fields of Magic.md",
+    "Obsidian/World Lore/Magic Systems/Class Affinities by Field.md",
+    "Obsidian/World Lore/History/NewNote_20250612_150840.md",
+    "NewNote_20250612_150823.md",
+    "NewNote_20250612_150804.md",
+    "NewNote_20250612_150516.md",
+    "Obsidian/World Lore/Magic Systems/How Magic Works.md"
   ]
 }
