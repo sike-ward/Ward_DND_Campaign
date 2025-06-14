@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 class ToolTip(object):
     def __init__(self, widget, text):
         self.widget = widget
@@ -18,9 +19,16 @@ class ToolTip(object):
         tw.wm_overrideredirect(1)
         tw.wm_geometry(f"+{x}+{y}")
         label = tk.Label(
-            tw, text=self.text, justify=tk.LEFT,
-            background="#23272e", fg="#eee", relief=tk.SOLID, borderwidth=1,
-            font=("Segoe UI", 10), padx=7, pady=3
+            tw,
+            text=self.text,
+            justify=tk.LEFT,
+            background="#23272e",
+            fg="#eee",
+            relief=tk.SOLID,
+            borderwidth=1,
+            font=("Segoe UI", 10),
+            padx=7,
+            pady=3,
         )
         label.pack(ipadx=1)
 

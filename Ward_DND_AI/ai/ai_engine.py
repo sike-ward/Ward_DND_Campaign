@@ -1,10 +1,12 @@
 import os
-from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
-from llama_index.core.query_engine import RetrieverQueryEngine
-from config import Config
 
 # --- TOKEN COUNTING ---
 import tiktoken
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
+from llama_index.core.query_engine import RetrieverQueryEngine
+
+from Ward_DND_AI.config.config import Config
+
 
 def count_tokens(text, model="gpt-3.5-turbo"):
     try:
@@ -13,7 +15,9 @@ def count_tokens(text, model="gpt-3.5-turbo"):
         enc = tiktoken.get_encoding("cl100k_base")
     return len(enc.encode(text))
 
+
 os.environ["OPENAI_API_KEY"] = Config.OPENAI_API_KEY
+
 
 class LoreAI:
     def __init__(self, vault_path=None, api_key=None):
@@ -34,7 +38,7 @@ class LoreAI:
     # --- AI HELPERS ---
 
     def summarize(self, text, model="gpt-3.5-turbo"):
-        prompt = f"Summarize this note in a single concise paragraph (no more than 4 sentences):\n\n{text}"
+        prompt = f"Summarize this note in a single concise paragraph (no more than 4 sentences): \n\n{text}"
         prompt_tokens = count_tokens(prompt, model)
         response = self.query(prompt)
         response_tokens = count_tokens(str(response), model)

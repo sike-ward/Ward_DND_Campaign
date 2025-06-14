@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Extended_DnD_AI_App_Plan.md",
+                "file": "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Roadmap.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Extended_DnD_AI_App_Plan"
+              "title": "Roadmap"
             }
           }
         ]
@@ -169,8 +169,18 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "937b7e145493aeb2",
+  "active": "ddcd2279ddf9a713",
   "lastOpenFiles": [
+    "pre-commit-config.yaml",
+    "fix_linter_env.ps1",
+    "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Plan for Lore Vault.md",
+    "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Roadmap.md",
+    "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Ward_DND_AI_Core_Plan.md",
+    "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Extended_DnD_AI_App_Plan.md",
+    "Ward_DND_AI/gui/gui.py.isorted",
+    "Ward_DND_AI/utils/utils.py.isorted",
+    "Ward_DND_AI/main.py.isorted",
+    "Ward_DND_AI/config/config.py.isorted",
     "Obsidian/Characters/Player Characters/Obsidiancharactersplayer_Character_Brandon.md",
     "Obsidian/World Lore/Magic Systems/Belief and Reality Mechanics.md",
     "Obsidian/Administrative & Meta/Reference Sheets & Tools/Templates",
