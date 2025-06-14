@@ -1,0 +1,6 @@
+{
+  "vault_path": "C:/Users/Evan/Desktop/Ward_DND_Campaign",
+  "openai_api_key": "REDACTED_KEY_REMOVED_FROM_HISTORY",
+  "model": "gpt-3.5",
+  "log_level": "INFO"
+}

@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 58, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 45, in main
+    app = LoreMainApp(ai_engine=ai_engine, storage_backend=storage_backend)
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 51, in __init__
+    self._setup_help_tab()
+    ~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 113, in _setup_help_tab
+    self._add_tab(HelpView, HelpController, "Help / About")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 84, in _add_tab
+    controller = controller_cls(view, self.storage, self.ai, Config)
+
+TypeError: HelpController.__init__() takes 4 positional arguments but 5 were given

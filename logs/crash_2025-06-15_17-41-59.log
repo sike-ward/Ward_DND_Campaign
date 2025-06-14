@@ -1,0 +1,66 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Lib\site-packages\llama_index\core\embeddings\utils.py", line 59, in resolve_embed_model
+    validate_openai_api_key(embed_model.api_key)  # type: ignore
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Lib\site-packages\llama_index\embeddings\openai\utils.py", line 103, in validate_openai_api_key
+    raise ValueError(MISSING_API_KEY_ERROR_MESSAGE)
+
+ValueError: No API key found for OpenAI.
+Please set either the OPENAI_API_KEY environment variable or openai.api_key prior to initialization.
+API keys can be found or created at https://platform.openai.com/account/api-keys
+
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 39, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 27, in main
+    ai_engine = LoreAI(vault_path=Config.VAULT_PATH, api_key=Config.OPENAI_API_KEY)
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\ai\ai_engine.py", line 32, in __init__
+    self.reload_data()
+    ~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\ai\ai_engine.py", line 40, in reload_data
+    self.index = VectorStoreIndex.from_documents(documents)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Lib\site-packages\llama_index\core\indices\base.py", line 122, in from_documents
+    return cls(
+        nodes=nodes,
+    ...<4 lines>...
+        **kwargs,
+    )
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Lib\site-packages\llama_index\core\indices\vector_store\base.py", line 73, in __init__
+    else Settings.embed_model
+         ^^^^^^^^^^^^^^^^^^^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Lib\site-packages\llama_index\core\settings.py", line 64, in embed_model
+    self._embed_model = resolve_embed_model("default")
+                        ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Lib\site-packages\llama_index\core\embeddings\utils.py", line 66, in resolve_embed_model
+    raise ValueError(
+    ...<10 lines>...
+    )
+
+ValueError: 
+******
+Could not load OpenAI embedding model. If you intended to use OpenAI, please check your OPENAI_API_KEY.
+Original error:
+No API key found for OpenAI.
+Please set either the OPENAI_API_KEY environment variable or openai.api_key prior to initialization.
+API keys can be found or created at https://platform.openai.com/account/api-keys
+
+Consider using embed_model='local'.
+Visit our documentation for more embedding options: https://docs.llamaindex.ai/en/stable/module_guides/models/embeddings.html#modules
+******

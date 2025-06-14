@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 30, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 21, in main
+    app = LoreMainApp()
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 21, in __init__
+    self._init_layout()
+    ~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 55, in _init_layout
+    self._setup_token_tab()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 130, in _setup_token_tab
+    self.token_controller = TokenController(view, self.ai, self.storage, Config)
+                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TypeError: TokenController.__init__() missing 1 required positional argument: 'status_var'

@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 30, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 21, in main
+    app = LoreMainApp()
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 26, in __init__
+    self._init_layout()
+    ~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 57, in _init_layout
+    self._setup_timeline_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 96, in _setup_timeline_tab
+    view = TimelineView(parent, Config)
+
+TypeError: TimelineView.__init__() takes 2 positional arguments but 3 were given

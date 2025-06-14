@@ -1,4 +1,9 @@
 @echo off
 cd /d "%~dp0"
-call .venv\Scripts\activate
-python -m Ward_DND_AI.main
+echo Launching Obsidian Lore Assistant...
+echo -----------------------------
+call .venv\Scripts\activate.bat
+python Ward_DND_AI\main.py
+echo.
+echo App exited. Press any key to close...
+pause >nul

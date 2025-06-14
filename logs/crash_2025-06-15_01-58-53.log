@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 30, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 21, in main
+    app = LoreMainApp()
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 24, in __init__
+    self._init_layout()
+    ~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 54, in _init_layout
+    self._setup_random_generator_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 103, in _setup_random_generator_tab
+    view = RandomGeneratorView(parent, Config)
+
+TypeError: RandomGeneratorView.__init__() takes 2 positional arguments but 3 were given

@@ -2,7 +2,7 @@
 
 ---
 
-## Phase 1: Preparation and Setup (Infrastructure)
+##  Preparation and Setup (Infrastructure)
 - [x] Install Obsidian  
   - [x] Create your main campaign “Vault”  
   - [x] Establish initial folder structure  
@@ -11,25 +11,25 @@
   - [x] Create a private repository (e.g. `DND_Campaign_Lore`)  
   - [x] Connect your Obsidian vault to GitHub for automatic backups  
 
-## Phase 2: Create Document Templates
+Create Document Templates
 - [ ] Decide core document types (NPCs, Locations, History Events, Magic Items, etc.)  
 - [ ] Ask ChatGPT for each template in Markdown  
   - e.g. “Give me an NPC profile template.”  
 - [ ] Copy each template into Obsidian as a new template file  
 
-## Phase 3: Initial Lore Content Creation
+##  Initial Lore Content Creation
 - [ ] List initial lore priorities (key kingdoms, cities, NPCs, events)  
 - [ ] For each, prompt ChatGPT for draft content  
   - e.g. “Write lore for the City of Emberhaven…”  
 - [ ] Save drafts into the appropriate folders using your templates  
 
-## Phase 4: Establish Naming & Tagging Conventions
+##  Establish Naming & Tagging Conventions
 - [ ] Select and finalize naming conventions  
   - e.g. `NPC_[Region]_[Name]`, `Loc_[Name]`, `Quest_[Name]`  
 - [ ] Choose tagging standards (`#npc`, `#location`, `#lore`, etc.)  
 - [ ] Document conventions in Obsidian (e.g. `Campaign Standards.md`)  
 
-## Phase 5: AI-Assisted Document Management
+#AI-Assisted Document Management
 - [x] Sign up for OpenAI API access  
 - [x] Choose retrieval tool (LlamaIndex)  
 - [x] Integrate your Obsidian documents  
@@ -38,16 +38,16 @@
   - [x] Index Markdown files from your vault  
 - [x] Integrate GPT-4o via LlamaIndex (ask/summarize/propose links)  
 
-## Phase 6: Visual & Interactive Layer (Optional)
+##  Visual & Interactive Layer (Optional)
 - [ ] Sign up for World Anvil or Campfire  
 - [ ] Import or sync foundational lore docs  
 - [ ] Create initial maps, timelines, and visual aids  
 
-## Phase 7: Collaboration & Logging Tools
+ Collaboration & Logging Tools
 - [ ] Choose Notion or Airtable (for sessions, NPCs, player notes)  
 - [ ] Set up basic databases and link back to Obsidian  
 
-## Phase 8: Maintenance & Optimization
+##  Maintenance & Optimization
 - [ ] Schedule regular (monthly) reviews  
 - [ ] Use ChatGPT to identify redundant/duplicate content  
 - [ ] Archive or refactor old/irrelevant documents  

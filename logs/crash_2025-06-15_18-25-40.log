@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 58, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 45, in main
+    app = LoreMainApp(ai_engine=ai_engine, storage_backend=storage_backend)
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 49, in __init__
+    self._setup_timeline_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 112, in _setup_timeline_tab
+    self._add_tab(TimelineView, TimelineController, "Timeline")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 87, in _add_tab
+    raise ValueError(f"Unrecognized tab label: {label}")
+
+ValueError: Unrecognized tab label: Timeline

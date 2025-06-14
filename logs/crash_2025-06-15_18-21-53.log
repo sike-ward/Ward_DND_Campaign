@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 58, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 45, in main
+    app = LoreMainApp(ai_engine=ai_engine, storage_backend=storage_backend)
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 50, in __init__
+    self._setup_campaign_settings_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 110, in _setup_campaign_settings_tab
+    self._add_tab(CampaignSettingsView, CampaignSettingsController, "Campaign Settings")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 83, in _add_tab
+    controller = controller_cls(view, Config)  # <- only needs view + config
+
+TypeError: CampaignSettingsController.__init__() missing 1 required positional argument: 'status_var'

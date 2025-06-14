@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 30, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 21, in main
+    app = LoreMainApp()
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 26, in __init__
+    self._init_layout()
+    ~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 56, in _init_layout
+    self._setup_random_generator_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 106, in _setup_random_generator_tab
+    self.random_generator_controller = RandomGeneratorController(view, self.ai, self.storage, Config, self.status_var)
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TypeError: RandomGeneratorController.__init__() takes 5 positional arguments but 6 were given

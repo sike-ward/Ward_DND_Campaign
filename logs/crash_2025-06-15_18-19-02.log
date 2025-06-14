@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 58, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 45, in main
+    app = LoreMainApp(ai_engine=ai_engine, storage_backend=storage_backend)
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 32, in __init__
+    self.status_var = tk.StringVar()
+                      ~~~~~~~~~~~~^^
+
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 565, in __init__
+    Variable.__init__(self, master, value, name)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 397, in __init__
+    master = _get_default_root('create variable')
+
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 323, in _get_default_root
+    raise RuntimeError(f"Too early to {what}: no default root window")
+
+RuntimeError: Too early to create variable: no default root window

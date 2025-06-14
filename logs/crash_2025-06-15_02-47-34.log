@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 30, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 21, in main
+    app = LoreMainApp()
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 44, in __init__
+    self.tabview.set_tab_changed_callback(self._on_tab_change)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+AttributeError: 'CTkTabview' object has no attribute 'set_tab_changed_callback'

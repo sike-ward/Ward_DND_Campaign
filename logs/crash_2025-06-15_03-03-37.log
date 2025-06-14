@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 13, in <module>
+    from Ward_DND_AI.gui.gui import LoreMainApp
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 7, in <module>
+    from Ward_DND_AI.ai.ai_engine import AIEngine
+
+ImportError: cannot import name 'AIEngine' from 'Ward_DND_AI.ai.ai_engine' (C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\ai\ai_engine.py)

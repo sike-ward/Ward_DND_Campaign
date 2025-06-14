@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 12, in <module>
+    from Ward_DND_AI.ai.ai_engine import AIEngine
+
+ImportError: cannot import name 'AIEngine' from 'Ward_DND_AI.ai.ai_engine' (C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\ai\ai_engine.py)

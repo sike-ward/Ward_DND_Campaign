@@ -1,3 +1,10 @@
 ﻿line-length = 120
+
+[lint]
 extend-select = ["E", "F", "I"]
-ignore = ["E501"]
+ignore = ["E501", "E402"]
+
+[lint.per-file-ignores]
+"main.py" = ["E402"]
+"tests/test_controller_help.py" = ["F841"]
+"tests/test_controller_token.py" = ["F841"]

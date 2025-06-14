@@ -1,0 +1,29 @@
+Timestamp: 2025-06-15T21:50:30.220168
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 42, in main
+    storage_backend = get_storage_backend("obsidian", vault_path)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 34, in get_storage_backend
+    return StorageRouter(Config()).backend
+           ~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 8, in __init__
+    self.backend = self._load_backend()
+                   ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 17, in _load_backend
+    module = importlib.import_module(module_name)
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\obsidian_backend.py", line 3, in <module>
+    from Ward_DND_AI.storage.storage_base import AbstractStorage
+ImportError: cannot import name 'AbstractStorage' from 'Ward_DND_AI.storage.storage_base' (C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_base.py)

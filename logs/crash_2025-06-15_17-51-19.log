@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 59, in <module>
+    main()
+    ~~~~^^
+
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 38, in main
+    raise ValueError("OPENAI_API_KEY not set in Config")
+
+ValueError: OPENAI_API_KEY not set in Config

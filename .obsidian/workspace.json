@@ -171,10 +171,12 @@
   },
   "active": "937b7e145493aeb2",
   "lastOpenFiles": [
-    "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Ward_DND_AI_Core_Plan.md",
+    "Ward_DND_AI/__pycache__/storage.cpython-313.pyc",
     "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Extended_DnD_AI_App_Plan.md",
     "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Commercial_Grade_Roadmap.md",
     "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Roadmap.md",
+    "Ward_DND_AI/storage.py",
+    "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Ward_DND_AI_Core_Plan.md",
     "Obsidian/Administrative & Meta/Reference Sheets & Tools/Todo Lists/Roadmap 1.md",
     "pre-commit-config.yaml",
     "fix_linter_env.ps1",
