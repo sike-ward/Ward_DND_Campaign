@@ -1,0 +1,27 @@
+Timestamp: 2025-06-16T21:06:51.800657
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 46, in main
+    app = LoreMainApp(ai_engine=ai_engine, storage_backend=storage_backend, config=config)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 49, in __init__
+    self._setup_settings_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 95, in _setup_settings_tab
+    self._add_tab(SettingsView, SettingsController, "Settings")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 66, in _add_tab
+    view = view_cls(tab, self.ai, self.config)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\view_settings.py", line 18, in __init__
+    self._init_content_area()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\view_settings.py", line 45, in _init_content_area
+    self.views["Campaign"] = CampaignSettingsView(self.content_frame, self.config)
+                             ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\campaign\view_campaign.py", line 23, in __init__
+    self.vault_entry.insert(0, self.config.VAULT_PATH)
+                               ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'function' object has no attribute 'VAULT_PATH'

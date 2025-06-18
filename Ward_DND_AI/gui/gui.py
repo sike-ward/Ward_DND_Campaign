@@ -1,157 +1,177 @@
-import tkinter as tk
+import sys
 
-import customtkinter as ctk
+from PyQt6.QtWidgets import (
+    QApplication,
+    QLabel,
+    QMainWindow,
+    QMenu,
+    QMenuBar,
+    QMessageBox,
+    QStatusBar,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
 
-from Ward_DND_AI.config.config import Config
 from Ward_DND_AI.gui.ask.controller_ask import AskController
 from Ward_DND_AI.gui.ask.view_ask import AskView
 from Ward_DND_AI.gui.browse.controller_browse import BrowseController
 from Ward_DND_AI.gui.browse.view_browse import BrowseView
-from Ward_DND_AI.gui.campaign_settings.controller_campaign_settings import (
-    CampaignSettingsController,
-)
-from Ward_DND_AI.gui.campaign_settings.view_campaign_settings import (
-    CampaignSettingsView,
-)
-from Ward_DND_AI.gui.help.controller_help import HelpController
-from Ward_DND_AI.gui.help.view_help import HelpView
 from Ward_DND_AI.gui.random_generator.controller_random_generator import (
     RandomGeneratorController,
 )
 from Ward_DND_AI.gui.random_generator.view_random_generator import RandomGeneratorView
+from Ward_DND_AI.gui.settings.controller_settings import SettingsController
+from Ward_DND_AI.gui.settings.view_settings import SettingsView
 from Ward_DND_AI.gui.summarize.controller_summarize import SummarizeController
 from Ward_DND_AI.gui.summarize.view_summarize import SummarizeView
 from Ward_DND_AI.gui.timeline.controller_timeline import TimelineController
 from Ward_DND_AI.gui.timeline.view_timeline import TimelineView
-from Ward_DND_AI.gui.token.controller_token import TokenController
-from Ward_DND_AI.gui.token.view_token import TokenView
 
 
-class LoreMainApp(ctk.CTk):
-    def __init__(self, ai_engine=None, storage_backend=None):
-        self.preview_window = None
-
-        self.ai = ai_engine or None
-        self.storage = storage_backend or None
+class LoreMainApp(QMainWindow):
+    def __init__(self, ai_engine=None, storage_backend=None, config=None):
         super().__init__()
+        self.ai = ai_engine
+        self.storage = storage_backend
+        self._config = config
 
-        self.status_var = tk.StringVar()
-        self.title("Obsidian Lore Assistant")
-        self.geometry("1024x768")
+        self.setWindowTitle("Obsidian Lore Assistant")
+        self.resize(1024, 768)
 
-        self.tabview = ctk.CTkTabview(self, command=self._on_tab_change)
-        self.tabview.pack(fill="both", expand=True, padx=10, pady=10)
+        # --- Central Tab Widget ---
+        self.tabview = QTabWidget()
+        self.setCentralWidget(self.tabview)
 
-        # Setup tabs (must come after widgets)
-        self._setup_ask_tab()
-        self._setup_browse_tab()
-        self._setup_summarize_tab()
-        self._setup_random_generator_tab()
-        self._setup_timeline_tab()
-        self._setup_campaign_settings_tab()
-        self._setup_help_tab()
-        self._setup_token_tab()
+        # --- Add tabs (placeholders, real views wired later) ---
+        self.tabs = {}
+        tab_names = [
+            ("Ask AI", "Ask AI Tab Placeholder"),
+            ("Browse Vault", "Browse Vault Tab Placeholder"),
+            ("Summarize", "Summarize Tab Placeholder"),
+            ("Random Generator", "Random Generator Tab Placeholder"),
+            ("Timeline", "Timeline Tab Placeholder"),
+            ("Settings", "Settings Tab Placeholder"),
+        ]
+        for tab_id, label in tab_names:
+            if tab_id == "Browse Vault":
+                browse_view = BrowseView(self.tabview, self._config)
+                self.browse_controller = BrowseController(
+                    browse_view, self.ai, self.storage, self._config
+                )
+                self.tabview.addTab(browse_view, tab_id)
+                self.tabs[tab_id] = browse_view
+            elif tab_id == "Ask AI":
+                ask_view = AskView(self.tabview, self._config)
+                self.ask_controller = AskController(
+                    ask_view, self.ai, self.storage, self._config
+                )
+                self.tabview.addTab(ask_view, tab_id)
+                self.tabs[tab_id] = ask_view
+            elif tab_id == "Settings":
+                settings_view = SettingsView(self.tabview, self.ai, self._config)
+                self.settings_controller = SettingsController(
+                    settings_view, self._config, self.ai, self.storage
+                )
+                self.tabview.addTab(settings_view, tab_id)
+                self.tabs[tab_id] = settings_view
+            elif tab_id == "Summarize":
+                summarize_view = SummarizeView(self.tabview, self._config)
+                self.summarize_controller = SummarizeController(
+                    summarize_view, self.ai, self.storage, self._config
+                )
+                self.tabview.addTab(summarize_view, tab_id)
+                self.tabs[tab_id] = summarize_view
+            elif tab_id == "Random Generator":
+                random_gen_view = RandomGeneratorView(self.tabview, self._config)
+                self.random_gen_controller = RandomGeneratorController(
+                    random_gen_view, self.ai, self.storage, self._config
+                )
+                self.tabview.addTab(random_gen_view, tab_id)
+                self.tabs[tab_id] = random_gen_view
+            elif tab_id == "Timeline":
+                timeline_view = TimelineView(self.tabview, self._config)
+                self.timeline_controller = TimelineController(
+                    timeline_view, self.ai, self.storage, self._config
+                )
+                self.tabview.addTab(timeline_view, tab_id)
+                self.tabs[tab_id] = timeline_view
+            else:
+                w = QWidget()
+                layout = QVBoxLayout(w)
+                layout.addWidget(QLabel(label))
+                self.tabview.addTab(w, tab_id)
+                self.tabs[tab_id] = w
 
+        # --- Status Bar ---
+        self.statusbar = QStatusBar()
+        self.setStatusBar(self.statusbar)
+        self.statusbar.showMessage("Ready")
+
+        # --- Menu Bar ---
         self._setup_menubar()
+
+        # --- Keyboard Shortcuts ---
         self._setup_shortcuts()
 
-        self.status_label = ctk.CTkLabel(
-            self, textvariable=self.status_var, font=("Segoe UI", 12, "bold")
-        )
-        self.status_label.pack(side="bottom", fill="x", pady=(0, 5))
-
-    def _add_tab(self, view_cls, controller_cls, label):
-        self.tabview.add(label)
-        parent = self.tabview.tab(label)
-
-        try:
-            view = view_cls(parent, Config)
-        except TypeError:
-            view = view_cls(parent)
-
-        setattr(self, f"{label.lower().replace(' ', '_')}_view", view)
-
-        controller = controller_cls(
-            view, self.ai, self.storage, Config, self.status_var
-        )
-        setattr(self, f"{label.lower().replace(' ', '_')}_controller", controller)
-
-        view.frame.grid(row=0, column=0, sticky="nsew")
-
-    def _setup_ask_tab(self):
-        self._add_tab(AskView, AskController, "Ask AI")
-
-    def _setup_browse_tab(self):
-        self._add_tab(BrowseView, BrowseController, "Browse Vault")
-
-    def _setup_summarize_tab(self):
-        self._add_tab(SummarizeView, SummarizeController, "Summarize")
-
-    def _setup_random_generator_tab(self):
-        self._add_tab(
-            RandomGeneratorView, RandomGeneratorController, "Random Generator"
-        )
-
-    def _setup_timeline_tab(self):
-        self._add_tab(TimelineView, TimelineController, "Timeline")
-
-    def _setup_campaign_settings_tab(self):
-        self._add_tab(
-            CampaignSettingsView, CampaignSettingsController, "Campaign Settings"
-        )
-
-    def _setup_help_tab(self):
-        self._add_tab(HelpView, HelpController, "Help / About")
-
-    def _setup_token_tab(self):
-        self._add_tab(TokenView, TokenController, "Tokens")
-
-    def _on_tab_change(self):
-        current_tab = self.tabview.get()
-
-        if current_tab == "Browse Vault":
-            self.browse_vault_controller.load_folders()
-
-    def _on_tab_change_wrapper(self, event):
-        current_tab = self.tabview.get()
-        self._on_tab_change(current_tab)
-
     def _setup_menubar(self):
-        menubar = tk.Menu(self)
-        filemenu = tk.Menu(menubar, tearoff=0)
-        filemenu.add_command(label="New Note", accelerator="Ctrl+N")
-        filemenu.add_command(label="Import Note", accelerator="Ctrl+I")
-        filemenu.add_command(label="Export Note", accelerator="Ctrl+S")
-        filemenu.add_separator()
-        filemenu.add_command(label="Exit", command=self.quit)
-        menubar.add_cascade(label="File", menu=filemenu)
-        self.config(menu=menubar)
+        from PyQt6.QtGui import QAction, QKeySequence
+
+        menubar = QMenuBar(self)
+        filemenu = QMenu("File", self)
+
+        # New Note
+        new_action = QAction("New Note", self)
+        new_action.setShortcut(QKeySequence("Ctrl+N"))
+        new_action.triggered.connect(self._menu_new_note)
+        filemenu.addAction(new_action)
+
+        # Import Note
+        import_action = QAction("Import Note", self)
+        import_action.setShortcut(QKeySequence("Ctrl+I"))
+        import_action.triggered.connect(self._menu_import_note)
+        filemenu.addAction(import_action)
+
+        # Export Note
+        export_action = QAction("Export Note", self)
+        export_action.setShortcut(QKeySequence("Ctrl+S"))
+        export_action.triggered.connect(self._menu_export_note)
+        filemenu.addAction(export_action)
+
+        filemenu.addSeparator()
+
+        # Exit
+        exit_action = QAction("Exit", self)
+        exit_action.triggered.connect(self.close)
+        filemenu.addAction(exit_action)
+
+        menubar.addMenu(filemenu)
+        self.setMenuBar(menubar)
 
     def _setup_shortcuts(self):
-        self.bind_all("<Control-s>", lambda e: self.ask_ai_controller.save_prompt())
-        self.bind_all(
-            "<Control-Return>", lambda e: self.ask_ai_controller.submit_prompt()
+        # Will wire these to Ask tab after that migration step
+        pass
+
+    # --- Menu Actions (Stubbed, to be filled in with tab logic) ---
+    def _menu_new_note(self):
+        QMessageBox.information(
+            self, "Stub", "New Note action (wire to Browse tab later)"
         )
 
-    def open_preview_window(self, content: str):
-        if self.preview_window is None or not self.preview_window.winfo_exists():
-            self.preview_window = tk.Toplevel(self)
-            self.preview_window.title("AI Output Preview")
-            self.preview_window.geometry("600x400")
+    def _menu_import_note(self):
+        QMessageBox.information(
+            self, "Stub", "Import Note action (wire to Browse tab later)"
+        )
 
-            self.preview_textbox = ctk.CTkTextbox(
-                self.preview_window, wrap="word", font=("Consolas", 12)
-            )
-            self.preview_textbox.pack(fill="both", expand=True, padx=10, pady=10)
+    def _menu_export_note(self):
+        QMessageBox.information(
+            self, "Stub", "Export Note action (wire to Browse tab later)"
+        )
 
-        self.preview_textbox.configure(state="normal")
-        self.preview_textbox.delete("1.0", "end")
-        self.preview_textbox.insert("1.0", content)
-        self.preview_textbox.configure(state="disabled")
 
-        self.preview_window.lift()
-        self.preview_window.focus()
-
-    @property
-    def output_box(self):
-        return getattr(self.ask_ai_view, "output_textbox", None)
+# Standalone run for testing window only (will not break import)
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = LoreMainApp()
+    window.show()
+    sys.exit(app.exec())

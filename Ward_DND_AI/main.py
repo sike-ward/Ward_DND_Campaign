@@ -9,27 +9,31 @@ sys.path.insert(0, str(project_root))
 # ─── Now safe to import local modules ───────────────────────────────
 import logging
 
-from Ward_DND_AI.ai.ai_engine import LoreAI
+from PyQt6.QtWidgets import QApplication
+
+from Ward_DND_AI.ai.core.model_router import get_model_backend
 from Ward_DND_AI.config.config import Config
 from Ward_DND_AI.gui.gui import LoreMainApp
 from Ward_DND_AI.storage.storage_router import get_storage_backend
-from Ward_DND_AI.utils.crash_handler import handle_crash
 
 
 def main():
     try:
         # ─── Logging ───────────────────────────────────────
         print(">>> [main] Starting setup_logging()")
-        Config.setup_logging()
+        config = Config()
+        config.log_info("Config loaded and logging initialized.")
+        config.reload()
+        print(">>> DEBUG:", config._data)
+        print(">>> OPENAI_API_KEY from config:", config.OPENAI_API_KEY)
+
         logger = logging.getLogger(__name__)
         logger.info("Launching Obsidian Lore Assistant...")
 
         # ─── Load settings from JSON ───────────────────────
         print(">>> [main] Resolving paths and config")
-        Config.load()  # <-- this is the line you were missing
-
-        vault_path = Path(Config.VAULT_PATH).resolve()
-        api_key = Config.OPENAI_API_KEY
+        vault_path = Path(config.VAULT_PATH).resolve()
+        api_key = config.OPENAI_API_KEY
 
         if not vault_path.exists():
             raise FileNotFoundError(f"Vault path does not exist: {vault_path}")
@@ -38,20 +42,25 @@ def main():
 
         # ─── AI and Storage ────────────────────────────────
         print(">>> [main] Initializing AI engine and storage backend")
-        ai_engine = LoreAI(vault_path=vault_path, api_key=api_key)
-        storage_backend = get_storage_backend("obsidian", vault_path)
+        storage_backend = get_storage_backend(config)
+        ai_engine = get_model_backend(config)
 
-        # ─── GUI App ───────────────────────────────────────
-        print(">>> [main] Creating LoreMainApp()")
-        app = LoreMainApp(ai_engine=ai_engine, storage_backend=storage_backend)
+        print(">>> [main] Creating QApplication and LoreMainApp()")
+        qapp = QApplication(sys.argv)
+        window = LoreMainApp(
+            ai_engine=ai_engine, storage_backend=storage_backend, config=config
+        )
+        window.show()
         print(">>> [main] Entering main loop")
-        app.mainloop()
+        qapp.exec()
         print(">>> [main] Application exited cleanly")
 
     except Exception:
         exc_type, exc_value, exc_traceback = sys.exc_info()
+        from Ward_DND_AI.utils.crash_handler import handle_crash
+
         handle_crash(exc_type, exc_value, exc_traceback)
-        sys.exit(1)
+    sys.exit(1)
 
 
 if __name__ == "__main__":

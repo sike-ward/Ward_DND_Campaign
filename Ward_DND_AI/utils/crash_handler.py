@@ -1,64 +1,86 @@
-import os
-import platform
 import sys
-import tkinter as tk
 import traceback
-from datetime import datetime
-from tkinter import messagebox
+from functools import wraps
 
-from Ward_DND_AI.config.config import log_exception
+from PyQt6.QtWidgets import (
+    QApplication,
+    QDialog,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QTextEdit,
+    QVBoxLayout,
+)
 
-LOG_DIR = os.path.join(os.getcwd(), "logs")
-os.makedirs(LOG_DIR, exist_ok=True)
+
+def handle_crash(exc_type, exc_value, exc_traceback):
+    trace = "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+    error_msg = f"{exc_type.__name__}: {exc_value}"
+    print("!!! CRASH HANDLER CALLED !!!")
+    print(trace)
+
+    app = QApplication.instance() or QApplication(sys.argv)  # noqa: F841
+    dlg = CrashDialogQt(error_msg, trace)
+    dlg.exec()
 
 
-def handle_crash(exc_type, exc_value, exc_traceback, log_to_file_only=False):
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    log_file = os.path.join(LOG_DIR, f"crash_{timestamp}.log")
-    summary_file = os.path.join(LOG_DIR, "last_crash_summary.txt")
+class CrashDialogQt(QDialog):
+    def __init__(self, error_message, traceback_text):
+        super().__init__()
+        self.setWindowTitle("Obsidian Lore Assistant - Crash Handler")
+        self.resize(820, 500)
 
-    header = (
-        f"Timestamp: {datetime.now().isoformat()}\n"
-        f"Platform: {platform.platform()}\n"
-        f"Python: {platform.python_version()}\n"
-        f"Executable: {sys.executable}\n"
-        f"Args: {' '.join(sys.argv)}\n" + "-" * 80 + "\n"
-    )
+        layout = QVBoxLayout(self)
 
-    error_msg = header + "".join(
-        traceback.format_exception(exc_type, exc_value, exc_traceback)
-    )
+        # Header
+        label = QLabel("<b>Application Crash Detected</b>")
+        label.setStyleSheet("font-size: 17px; color: #b94a48;")
+        layout.addWidget(label)
 
-    log_exception("UNHANDLED CRASH", error_msg)
+        # Summary/Error box
+        layout.addWidget(QLabel("Summary:"))
+        summary = QTextEdit()
+        summary.setReadOnly(True)
+        summary.setPlainText(error_message)
+        summary.setStyleSheet("background: #f9e2e2; color: #7c2121; font-weight: bold;")
+        summary.setFixedHeight(54)
+        layout.addWidget(summary)
 
-    # Save to crash log
-    with open(log_file, "w", encoding="utf-8") as f:
-        f.write(error_msg)
-
-    # Save summary
-    with open(summary_file, "w", encoding="utf-8") as f:
-        f.write(f"{exc_type.__name__}: {exc_value}\nSee full log: {log_file}")
-
-    if log_to_file_only:
-        return
-
-    print("\n>>> UNHANDLED EXCEPTION:\n")
-    print(error_msg)
-
-    try:
-        root = tk.Tk()
-        root.withdraw()
-        root.clipboard_clear()
-        root.clipboard_append(error_msg)
-        root.update()
-        messagebox.showerror(
-            "App Crash",
-            "An error occurred. Full log saved to logs/. Copied to clipboard.",
+        # Traceback
+        layout.addWidget(QLabel("Traceback:"))
+        tracebox = QTextEdit()
+        tracebox.setReadOnly(True)
+        tracebox.setPlainText(traceback_text)
+        tracebox.setStyleSheet(
+            "background: #23242a; color: #e0e0e0; font-family: Consolas;"
         )
-        root.destroy()
-    except Exception as gui_err:
-        print("[crash_handler] Failed to show error dialog:", gui_err)
+        layout.addWidget(tracebox)
+
+        # Button row (copy, close)
+        btns = QHBoxLayout()
+        copy_btn = QPushButton("Copy Report")
+        close_btn = QPushButton("Close")
+        btns.addWidget(copy_btn)
+        btns.addWidget(close_btn)
+        layout.addLayout(btns)
+
+        copy_btn.clicked.connect(
+            lambda: self.copy_to_clipboard(error_message, traceback_text)
+        )
+        close_btn.clicked.connect(self.accept)
+
+    def copy_to_clipboard(self, error_message, traceback_text):
+        clipboard = QApplication.clipboard()
+        clipboard.setText(f"{error_message}\n\n{traceback_text}")
 
 
-# Auto-hook for any uncaught exception in app
-sys.excepthook = lambda etype, val, tb: handle_crash(etype, val, tb)
+def catch_and_report_crashes(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            return fn(*args, **kwargs)
+        except Exception:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            handle_crash(exc_type, exc_value, exc_traceback)
+
+    return wrapper

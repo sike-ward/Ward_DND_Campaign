@@ -1,0 +1,16 @@
+Timestamp: 2025-06-16T22:07:05.299011
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 22, in main
+    config = Config()  # create instance
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\config\config.py", line 28, in __init__
+    self._load()
+    ~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\config\config.py", line 33, in _load
+    print(">>> [config] Loaded raw JSON:", raw)
+                                           ^^^
+UnboundLocalError: cannot access local variable 'raw' where it is not associated with a value

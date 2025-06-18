@@ -11,9 +11,9 @@ import tkinter as tk
 
 import pytest
 
-from Ward_DND_AI.ai.ai_engine import LoreAI
+from Ward_DND_AI.ai.core.loreai_engine import LoreAI
 from Ward_DND_AI.config.config import Config
-from Ward_DND_AI.storage.old_storage import ObsidianStorage
+from Ward_DND_AI.storage.storage_router import get_storage_backend
 
 
 @pytest.fixture(scope="session")
@@ -27,7 +27,9 @@ def config(tmp_path_factory):
 
 @pytest.fixture(scope="session")
 def storage(config):
-    return ObsidianStorage(config.VAULT_PATH)
+    # use the router so you can swap backends via config.VAULT_TYPE
+    config.VAULT_TYPE = "obsidian"
+    return get_storage_backend(config)
 
 
 @pytest.fixture(scope="session")

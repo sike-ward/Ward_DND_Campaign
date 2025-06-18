@@ -1,0 +1,21 @@
+Timestamp: 2025-06-16T18:54:39.359145
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 46, in main
+    app = LoreMainApp(ai_engine=ai_engine, storage_backend=storage_backend, config=config)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 41, in __init__
+    self._setup_ask_tab()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 73, in _setup_ask_tab
+    self._add_tab(AskView, AskController, "Ask AI")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 57, in _add_tab
+    parent = ctk.CTkFrame(self.notebook)
+                          ^^^^^^^^^^^^^
+  File "C:\Users\Evan\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2546, in __getattr__
+    return getattr(self.tk, attr)
+AttributeError: '_tkinter.tkapp' object has no attribute 'notebook'

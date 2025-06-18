@@ -1,0 +1,11 @@
+Timestamp: 2025-06-16T21:52:45.883466
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 22, in main
+    Config.setup_logging()
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'Config' has no attribute 'setup_logging'

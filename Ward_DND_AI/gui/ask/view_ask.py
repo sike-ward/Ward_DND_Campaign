@@ -1,70 +1,55 @@
-import tkinter as tk
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
-import customtkinter as ctk
 
-
-class AskView:
-    """
-    View for the Ask AI tab.
-    Contains prompt input, action buttons, output and history display, and status bar.
-    """
-
+class AskView(QWidget):
     def __init__(self, parent, config):
+        super().__init__(parent)
         self.config = config
-        self.frame = ctk.CTkFrame(parent)
 
-        # Configure grid weights
-        for i in range(5):
-            self.frame.columnconfigure(i, weight=1)
-        self.frame.rowconfigure(1, weight=2)  # output
-        self.frame.rowconfigure(2, weight=1)  # history
+        # --- Main layout ---
+        main_layout = QVBoxLayout(self)
 
-        # Prompt input
-        self.prompt_box = ctk.CTkTextbox(self.frame, height=100, wrap="word", undo=True)
-        self.prompt_box.grid(
-            row=0, column=0, columnspan=3, sticky="nsew", padx=6, pady=(8, 4)
-        )
+        # --- Prompt Input Row ---
+        prompt_row = QHBoxLayout()
+        self.prompt_box = QTextEdit()
+        self.prompt_box.setFixedHeight(90)
+        prompt_row.addWidget(self.prompt_box)
+        self.preview_btn = QPushButton("Preview")
+        prompt_row.addWidget(self.preview_btn)
+        main_layout.addLayout(prompt_row)
 
-        # Action buttons
-        self.ask_btn = ctk.CTkButton(self.frame, text="Ask AI")
-        self.save_btn = ctk.CTkButton(self.frame, text="Save Answer", state="disabled")
-        self.split_btn = ctk.CTkButton(
-            self.frame, text="Split & Save", state="disabled"
-        )
-        self.clear_btn = ctk.CTkButton(self.frame, text="Clear History")
-        self.preview_btn = ctk.CTkButton(self.frame, text="Preview", command=None)
+        # --- Output Row ---
+        output_row = QHBoxLayout()
+        self.output_box = QTextEdit()
+        self.output_box.setReadOnly(True)
+        output_row.addWidget(self.output_box)
 
-        self.ask_btn.grid(row=0, column=3, padx=4, pady=(8, 4), sticky="ew")
-        self.save_btn.grid(row=0, column=4, padx=4, pady=(8, 4), sticky="ew")
-        self.split_btn.grid(row=1, column=3, padx=4, pady=(0, 4), sticky="ew")
-        self.clear_btn.grid(row=1, column=4, padx=4, pady=(0, 4), sticky="ew")
-        self.preview_btn.grid(row=0, column=2, padx=(6, 0))
+        # --- Buttons Panel ---
+        button_panel = QVBoxLayout()
+        self.ask_btn = QPushButton("Ask AI")
+        self.save_btn = QPushButton("Save Answer")
+        self.save_btn.setEnabled(False)
+        self.split_btn = QPushButton("Split & Save")
+        self.split_btn.setEnabled(False)
+        self.clear_btn = QPushButton("Clear History")
+        for b in (self.ask_btn, self.save_btn, self.split_btn, self.clear_btn):
+            button_panel.addWidget(b)
+        output_row.addLayout(button_panel)
+        main_layout.addLayout(output_row)
 
-        # AI output display
-        self.output_box = ctk.CTkTextbox(
-            self.frame, wrap="word", state="disabled", undo=True
-        )
-        self.output_box.grid(
-            row=1, column=0, columnspan=3, sticky="nsew", padx=6, pady=(0, 8)
-        )
+        # --- History Box ---
+        self.history_text = QTextEdit()
+        self.history_text.setReadOnly(True)
+        self.history_text.setFixedHeight(100)
+        main_layout.addWidget(self.history_text)
 
-        # Conversation history
-        self.history_text = ctk.CTkTextbox(
-            self.frame, wrap="word", state="disabled", undo=True
-        )
-        self.history_text.grid(
-            row=2, column=0, columnspan=5, sticky="nsew", padx=6, pady=(0, 8)
-        )
-
-        # Status bar
-        self.status_var = tk.StringVar()
-        self.status_label = ctk.CTkLabel(
-            self.frame, textvariable=self.status_var, anchor="w"
-        )
-        self.status_label.grid(
-            row=3, column=0, columnspan=5, sticky="ew", padx=6, pady=(0, 6)
-        )
-
-    def grid(self, **kwargs):
-        """Expose frame.grid for external layout."""
-        self.frame.grid(**kwargs)
+        # --- Status Bar ---
+        self.status_label = QLabel("")
+        main_layout.addWidget(self.status_label)

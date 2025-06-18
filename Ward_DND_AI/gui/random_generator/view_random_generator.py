@@ -1,29 +1,48 @@
-import customtkinter as ctk
+from PyQt6.QtWidgets import (
+    QComboBox,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QSizePolicy,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 
-class RandomGeneratorView:
-    def __init__(self, parent):
-        self.frame = ctk.CTkFrame(parent)
-        self.frame.pack(fill="both", expand=True, padx=20, pady=20)
+class RandomGeneratorView(QWidget):
+    def __init__(self, parent, config):
+        super().__init__(parent)
+        self.config = config
 
-        # Prompt entry
-        ctk.CTkLabel(self.frame, text="Enter Prompt:").pack(anchor="w")
-        self.prompt_entry = ctk.CTkEntry(self.frame)
-        self.prompt_entry.pack(fill="x", pady=(0, 10))
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(8)
 
-        # Generation type (from tags)
-        ctk.CTkLabel(self.frame, text="Select Tag/Type:").pack(anchor="w")
-        self.type_menu = ctk.CTkOptionMenu(self.frame, values=["..."])
-        self.type_menu.pack(fill="x", pady=(0, 10))
+        label_prompt = QLabel("Enter Prompt:")
+        layout.addWidget(label_prompt)
 
-        # Generate and Save buttons
-        self.generate_btn = ctk.CTkButton(self.frame, text="Generate")
-        self.generate_btn.pack(pady=(0, 10))
+        self.prompt_entry = QLineEdit()
+        self.prompt_entry.setPlaceholderText("Type your prompt here")
+        layout.addWidget(self.prompt_entry)
 
-        self.save_btn = ctk.CTkButton(self.frame, text="Save to Vault")
-        self.save_btn.pack(pady=(0, 10))
+        label_type = QLabel("Select Tag/Type:")
+        layout.addWidget(label_type)
 
-        # Output box
-        self.output_text = ctk.CTkTextbox(self.frame, wrap="word")
-        self.output_text.pack(fill="both", expand=True, pady=(10, 0))
-        self.output_text.configure(state="disabled")
+        self.type_menu = QComboBox()
+        self.type_menu.addItems(["..."])  # Populate later as needed
+        self.type_menu.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
+        layout.addWidget(self.type_menu)
+
+        self.generate_btn = QPushButton("Generate")
+        layout.addWidget(self.generate_btn)
+
+        self.save_btn = QPushButton("Save to Vault")
+        layout.addWidget(self.save_btn)
+
+        self.output_text = QTextEdit()
+        self.output_text.setReadOnly(True)
+        self.output_text.setAcceptRichText(False)
+        layout.addWidget(self.output_text, 1)  # Expand output text

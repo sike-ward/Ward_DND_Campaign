@@ -1,34 +1,39 @@
-import tkinter as tk
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
-import customtkinter as ctk
 
+class TimelineView(QWidget):
+    def __init__(self, parent, config):
+        super().__init__(parent)
+        self.config = config
 
-class TimelineView:
-    def __init__(self, parent):
-        # Container frame for the tab
-        self.frame = ctk.CTkFrame(parent)
-        self.frame.pack(fill="both", expand=True, padx=20, pady=20)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(6)
 
-        # Entry for new events
-        ctk.CTkLabel(
-            self.frame, text="New Timeline Event:", font=("Segoe UI", 12)
-        ).pack(anchor="w")
-        self.event_entry = ctk.CTkEntry(self.frame)
-        self.event_entry.pack(fill="x", pady=(0, 10))
+        self.header_label = QLabel("Timeline Events")
+        self.header_label.setStyleSheet("font-weight: bold; font-size: 16pt;")
+        layout.addWidget(self.header_label, alignment=Qt.AlignmentFlag.AlignLeft)
 
-        # Action buttons
-        self.add_btn = ctk.CTkButton(self.frame, text="Add Event")
-        self.add_btn.pack(pady=(0, 6))
+        self.event_list = QTextEdit()
+        self.event_list.setReadOnly(True)
+        self.event_list.setAcceptRichText(False)
+        layout.addWidget(self.event_list, 1)
 
-        self.edit_btn = ctk.CTkButton(self.frame, text="Edit Selected")
-        self.edit_btn.pack(pady=(0, 6))
+        btn_row = QHBoxLayout()
+        layout.addLayout(btn_row)
 
-        self.delete_btn = ctk.CTkButton(self.frame, text="Delete Selected")
-        self.delete_btn.pack(pady=(0, 6))
+        self.add_btn = QPushButton("Add")
+        self.edit_btn = QPushButton("Edit")
+        self.delete_btn = QPushButton("Delete")
 
-        self.clear_btn = ctk.CTkButton(self.frame, text="Clear Timeline")
-        self.clear_btn.pack(pady=(0, 10))
-
-        # Listbox for displaying events
-        self.event_list = tk.Listbox(self.frame, height=15, font=("Consolas", 12))
-        self.event_list.pack(fill="both", expand=True)
+        btn_row.addWidget(self.add_btn)
+        btn_row.addWidget(self.edit_btn)
+        btn_row.addWidget(self.delete_btn)

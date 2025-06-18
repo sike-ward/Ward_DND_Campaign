@@ -1,0 +1,25 @@
+Timestamp: 2025-06-16T17:48:38.822568
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 46, in main
+    app = LoreMainApp(ai_engine=ai_engine, storage_backend=storage_backend, config=config)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 47, in __init__
+    self._setup_browse_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 85, in _setup_browse_tab
+    self._add_tab(BrowseView, BrowseController, "Browse Vault")
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 74, in _add_tab
+    controller = controller_cls(
+        view, self.ai, self.storage, Config, self.status_var
+    )
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\browse\controller_browse.py", line 29, in __init__
+    self.load_notes()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\browse\controller_browse.py", line 47, in load_notes
+    notes = self.storage.list_all_notes(folder)
+TypeError: ObsidianStorage.list_all_notes() takes 1 positional argument but 2 were given

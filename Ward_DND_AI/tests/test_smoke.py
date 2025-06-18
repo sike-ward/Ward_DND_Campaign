@@ -2,14 +2,14 @@ import unittest
 from unittest.mock import Mock
 
 from Ward_DND_AI.gui.gui import LoreMainApp
-from Ward_DND_AI.storage.storage_base import BaseStorageBackend
+from Ward_DND_AI.storage.storage_base import StorageBackend
 
 
 class SmokeTest(unittest.TestCase):
     def test_app_starts(self):
         try:
             # Mock the storage backend with all required methods
-            storage_mock = Mock(spec=BaseStorageBackend)
+            storage_mock = Mock(spec=StorageBackend)
             storage_mock.list_all_notes.return_value = ["lore/note1.md"]
             storage_mock.read_note.return_value = ("Mock Note Title", "Mock note body")
             storage_mock.list_tags.return_value = ["tag1", "tag2"]

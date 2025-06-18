@@ -1,0 +1,21 @@
+Timestamp: 2025-06-16T22:11:01.858117
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 44, in main
+    storage_backend = get_storage_backend(config)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 32, in get_storage_backend
+    return StorageRouter(config).backend
+           ~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 9, in __init__
+    self.backend = self._load_backend()
+                   ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 12, in _load_backend
+    storage_type = self._config.VAULT_TYPE.lower()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\config\config.py", line 108, in __getattr__
+    raise AttributeError(f"Config has no attribute '{name}'")
+AttributeError: Config has no attribute 'VAULT_TYPE'

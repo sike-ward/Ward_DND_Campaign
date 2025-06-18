@@ -1,10 +1,16 @@
 import datetime
 import re
 import threading
-import tkinter as tk
-from tkinter import END, messagebox
 
-import customtkinter as ctk
+from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtWidgets import (
+    QDialog,
+    QInputDialog,
+    QMessageBox,
+    QPushButton,
+    QTextEdit,
+    QVBoxLayout,
+)
 
 from Ward_DND_AI.config.config import log_exception
 from Ward_DND_AI.utils import (
@@ -13,41 +19,49 @@ from Ward_DND_AI.utils import (
     get_note_names,
     make_title_case_filename,
 )
+from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
-class AskController:
-    """
-    Controller for the Ask AI tab. Handles user prompts, AI queries,
-    saving responses, splitting & saving, and clearing history.
-    """
+class AskController(QObject):
+    ai_result_ready = pyqtSignal(
+        str, int, int
+    )  # answer, prompt tokens, response tokens
 
     def __init__(self, view, ai, storage, config, status_var=None):
+        super().__init__()
         self.view = view
         self.ai = ai
         self.storage = storage
         self.config = config
-        self.status_var = status_var or tk.StringVar()
+        self.status_var = status_var or self.view.status_label
 
         self.history = []
         self.last_answer = ""
         self.session_tokens = 0
 
-        # Bind UI events
-        self.view.ask_btn.configure(command=self.on_ask)
-        self.view.save_btn.configure(command=self.on_save)
-        self.view.split_btn.configure(command=self.on_split)
-        self.view.clear_btn.configure(command=self.on_clear)
-        self.view.preview_btn.configure(command=self._on_preview)
+        self.ai_result_ready.connect(self._handle_ai_result)
 
-    def on_ask(self):
-        prompt = self.view.prompt_box.get("1.0", END).strip()
+        self._bind_events()
+
+    def _bind_events(self):
+        self.view.ask_btn.clicked.connect(catch_and_report_crashes(self.on_ask))
+        self.view.save_btn.clicked.connect(catch_and_report_crashes(self.on_save))
+        self.view.split_btn.clicked.connect(catch_and_report_crashes(self.on_split))
+        self.view.clear_btn.clicked.connect(catch_and_report_crashes(self.on_clear))
+        self.view.preview_btn.clicked.connect(
+            catch_and_report_crashes(self._on_preview)
+        )
+
+    @catch_and_report_crashes
+    def on_ask(self, *args, **kwargs):
+        prompt = self.view.prompt_box.toPlainText().strip()
         if not prompt:
-            self.status_var.set("Please enter a prompt.")
+            self.status_var.setText("Please enter a prompt.")
             return
 
-        self.view.save_btn.configure(state="disabled")
-        self.view.split_btn.configure(state="disabled")
-        self.status_var.set("Thinking...")
+        self.view.save_btn.setEnabled(False)
+        self.view.split_btn.setEnabled(False)
+        self.status_var.setText("Thinking...")
 
         threading.Thread(target=self._run_ai, args=(prompt,), daemon=True).start()
 
@@ -55,57 +69,75 @@ class AskController:
         try:
             answer, p_tokens, r_tokens = self.ai.ask(prompt)
         except Exception as e:
-            self.status_var.set(f"AI Error: {e}")
+            self.status_var.setText(f"AI Error: {e}")
             log_exception("AskController AI query failed", e)
             return
+        self.ai_result_ready.emit(answer, p_tokens, r_tokens)
 
+    @catch_and_report_crashes
+    def _handle_ai_result(self, answer, p_tokens, r_tokens):
         self.session_tokens += p_tokens + r_tokens
         self.last_answer = answer
-        self.history.append((prompt, answer))
+        self.history.append((self.view.prompt_box.toPlainText().strip(), answer))
 
-        self.view.output_box.configure(state="normal")
-        self.view.output_box.delete("1.0", END)
-        self.view.output_box.insert("1.0", answer)
-        self.view.output_box.configure(state="disabled")
+        self.view.output_box.setReadOnly(False)
+        self.view.output_box.setPlainText(answer)
+        self.view.output_box.setReadOnly(True)
 
-        self.status_var.set(f"Done. Tokens: +{p_tokens}/{r_tokens}")
-        self.view.save_btn.configure(state="normal")
-        self.view.split_btn.configure(state="normal")
+        self.view.history_text.setReadOnly(False)
+        self.view.history_text.clear()
+        for idx, (q, a) in enumerate(self.history, 1):
+            self.view.history_text.append(f"{idx}. Q: {q}\nA: {a}\n")
+        self.view.history_text.setReadOnly(True)
 
-    def on_save(self):
+        self.status_var.setText(f"Done. Tokens: +{p_tokens}/{r_tokens}")
+        self.view.save_btn.setEnabled(True)
+        self.view.split_btn.setEnabled(True)
+
+    @catch_and_report_crashes
+    def on_save(self, *args, **kwargs):
         folders = get_all_folders(self.config.VAULT_PATH)
-        folder = self._prompt_choice("Save Answer", "Select folder:", folders)
-        if folder is None:
-            return
-
-        filename = make_title_case_filename(
-            self._prompt_text("Enter file name (no extension):")
+        folder, ok = QInputDialog.getItem(
+            self.view, "Save Answer", "Select folder:", folders, 0, False
         )
-        if not filename:
-            self.status_var.set("Save cancelled.")
+        if not ok:
             return
 
+        filename, ok = QInputDialog.getText(
+            self.view, "File Name", "Enter file name (no extension):"
+        )
+        if not ok or not filename.strip():
+            self.status_var.setText("Save cancelled.")
+            return
+
+        filename = make_title_case_filename(filename.strip())
         rel = f"{folder}/{filename}.md" if folder else f"{filename}.md"
         content = f"# {filename}\n\n{self.last_answer}"
 
         try:
             self.storage.write_note(rel, content)
-            self.status_var.set(f"Saved answer to: {rel}")
+            self.status_var.setText(f"Saved answer to: {rel}")
         except Exception as e:
-            messagebox.showerror("Save Failed", f"Could not save note: {e}")
-            self.status_var.set("Save error.")
+            QMessageBox.critical(self.view, "Save Failed", f"Could not save note: {e}")
+            self.status_var.setText("Save error.")
             log_exception("AskController save failed", e)
 
-    def on_split(self):
+    @catch_and_report_crashes
+    def on_split(self, *args, **kwargs):
         if not self.last_answer:
-            self.status_var.set("Nothing to split.")
+            self.status_var.setText("Nothing to split.")
             return
 
         folders = get_all_folders(self.config.VAULT_PATH)
-        dest_folder = self._prompt_choice(
-            "Split & Save", "Select folder for split notes:", folders
+        dest_folder, ok = QInputDialog.getItem(
+            self.view,
+            "Split & Save",
+            "Select folder for split notes:",
+            folders,
+            0,
+            False,
         )
-        if dest_folder is None:
+        if not ok:
             return
 
         parts = [
@@ -136,43 +168,35 @@ class AskController:
         msg = f"Saved {count} notes." + (
             f" Failed: {', '.join(errors)}" if errors else ""
         )
-        messagebox.showinfo("Split & Save", msg)
-        self.status_var.set(msg)
+        QMessageBox.information(self.view, "Split & Save", msg)
+        self.status_var.setText(msg)
 
-    def on_clear(self):
+    @catch_and_report_crashes
+    def on_clear(self, *args, **kwargs):
         self.history.clear()
-        self.view.prompt_box.delete("1.0", END)
-        self.view.output_box.configure(state="normal")
-        self.view.output_box.delete("1.0", END)
-        self.view.output_box.configure(state="disabled")
-        self.status_var.set("History cleared.")
-        self.view.save_btn.configure(state="disabled")
-        self.view.split_btn.configure(state="disabled")
+        self.view.prompt_box.clear()
+        self.view.output_box.setReadOnly(False)
+        self.view.output_box.clear()
+        self.view.output_box.setReadOnly(True)
+        self.view.history_text.setReadOnly(False)
+        self.view.history_text.clear()
+        self.view.history_text.setReadOnly(True)
+        self.status_var.setText("History cleared.")
+        self.view.save_btn.setEnabled(False)
+        self.view.split_btn.setEnabled(False)
 
-    def _prompt_choice(self, title, label, options):
-        dlg = ctk.CTkToplevel()
-        dlg.title(title)
-        dlg.geometry("360x120")
-        ctk.CTkLabel(dlg, text=label).pack(pady=(10, 4))
-        var = tk.StringVar(dlg)
-        var.set(options[0] if options else "")
-        menu = ctk.CTkOptionMenu(dlg, variable=var, values=options)
-        menu.pack(pady=4)
-        result = {"choice": None}
-
-        def on_ok():
-            result["choice"] = var.get()
-            dlg.destroy()
-
-        btn = ctk.CTkButton(dlg, text="OK", command=on_ok)
-        btn.pack(pady=10)
-        dlg.grab_set()
-        dlg.wait_window()
-        return result["choice"]
-
-    def _prompt_text(self, prompt):
-        return tk.simpledialog.askstring("Input", prompt) or ""
-
-    def _on_preview(self):
-        text = self.view.output_box.get("1.0", tk.END)
-        self.view.output_box.winfo_toplevel().open_preview_window(text)
+    @catch_and_report_crashes
+    def _on_preview(self, *args, **kwargs):
+        content = self.view.output_box.toPlainText()
+        dlg = QDialog(self.view)
+        dlg.setWindowTitle("AI Output Preview")
+        dlg.resize(600, 400)
+        layout = QVBoxLayout(dlg)
+        textbox = QTextEdit()
+        textbox.setPlainText(content)
+        textbox.setReadOnly(True)
+        layout.addWidget(textbox)
+        btn = QPushButton("Close")
+        btn.clicked.connect(dlg.accept)
+        layout.addWidget(btn)
+        dlg.exec()

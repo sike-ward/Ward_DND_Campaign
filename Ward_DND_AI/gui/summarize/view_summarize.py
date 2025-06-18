@@ -1,34 +1,48 @@
-import customtkinter as ctk
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QComboBox,
+    QLabel,
+    QPushButton,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 
-class SummarizeView:
-    def __init__(self, parent):
-        self.frame = ctk.CTkFrame(parent)
-        self.frame.pack(fill="both", expand=True, padx=20, pady=20)
+class SummarizeView(QWidget):
+    def __init__(self, parent, config):
+        super().__init__(parent)
+        self.config = config
+        self._build_ui()
 
-        # Folder selection
-        ctk.CTkLabel(
-            self.frame, text="Folder to Summarize:", font=("Segoe UI", 12)
-        ).pack(anchor="w")
-        self.folder_menu = ctk.CTkOptionMenu(self.frame, values=["..."])
-        self.folder_menu.pack(fill="x", pady=(0, 10))
+    def _build_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(10)
 
-        # Style selection
-        ctk.CTkLabel(self.frame, text="Style:", font=("Segoe UI", 12)).pack(anchor="w")
-        self.style_menu = ctk.CTkOptionMenu(
-            self.frame, values=["brief", "bullet points", "detailed"]
-        )
-        self.style_menu.pack(fill="x", pady=(0, 10))
-        self.style_menu.set("brief")
+        title = QLabel("Summarize Tab")
+        title.setStyleSheet("font-weight: bold; font-size: 18pt;")
+        layout.addWidget(title, alignment=Qt.AlignmentFlag.AlignLeft)
 
-        # Summarize button
-        self.summarize_btn = ctk.CTkButton(self.frame, text="Summarize Notes")
-        self.summarize_btn.pack(pady=(0, 10))
+        layout.addWidget(QLabel("Choose a folder to summarize:"))
 
-        # Output
-        ctk.CTkLabel(self.frame, text="Summary Output:", font=("Segoe UI", 12)).pack(
-            anchor="w", pady=(10, 2)
-        )
-        self.output_text = ctk.CTkTextbox(self.frame, wrap="word")
-        self.output_text.pack(fill="both", expand=True)
-        self.output_text.configure(state="disabled")
+        self.folder_menu = QComboBox()
+        layout.addWidget(self.folder_menu)
+
+        layout.addWidget(QLabel("Choose a summary style:"))
+
+        self.style_menu = QComboBox()
+        self.style_menu.addItems(["brief", "detailed", "narrative"])
+        self.style_menu.setCurrentText("brief")
+        layout.addWidget(self.style_menu)
+
+        self.summarize_btn = QPushButton("Summarize")
+        layout.addWidget(self.summarize_btn)
+
+        self.output_text = QTextEdit()
+        self.output_text.setReadOnly(True)
+        self.output_text.setAcceptRichText(False)
+        layout.addWidget(self.output_text, 1)
+
+    def set_output(self, text: str):
+        self.output_text.setPlainText(text)
