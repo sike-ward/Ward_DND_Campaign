@@ -1,3 +1,4 @@
+from Ward_DND_AI.gui.settings.app.controller_app import AppSettingsController
 from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
@@ -26,11 +27,19 @@ class SettingsController:
         self.controllers["help"] = HelpController(
             self.view.help_view, self.config, self.ai_engine, self.storage_backend
         )
+        self.controllers["app"] = AppSettingsController(
+            self.view.app_settings_view,
+            self.config,
+            None,  # pass QApplication.instance() if you need the app
+        )
 
         # Setup stacked widget and button group for switching tabs
         self.view.stacked_widget.addWidget(self.view.ai_view)
         self.view.stacked_widget.addWidget(self.view.campaign_view)
         self.view.stacked_widget.addWidget(self.view.help_view)
+        self.view.stacked_widget.insertWidget(
+            0, self.view.app_settings_view
+        )  # Or correct index for your layout
 
         # Connect tab buttons
         self.view.btn_ai.clicked.connect(
@@ -41,6 +50,9 @@ class SettingsController:
         )
         self.view.btn_help.clicked.connect(
             catch_and_report_crashes(lambda checked=False: self.switch_tab("help"))
+        )
+        self.view.btn_app.clicked.connect(
+            catch_and_report_crashes(lambda checked=False: self.switch_tab("app"))
         )
 
         # Start with AI tab selected
@@ -64,11 +76,16 @@ class SettingsController:
         elif tab_name == "help":
             self.view.stacked_widget.setCurrentWidget(self.view.help_view)
             self._update_button_states("help")
+        elif tab_name == "app":
+            self.view.stacked_widget.setCurrentWidget(self.view.app_settings_view)
+            self._update_button_states("app")
 
+    @catch_and_report_crashes
     def _update_button_states(self, active_tab):
         self.view.btn_ai.setEnabled(active_tab != "ai")
         self.view.btn_campaign.setEnabled(active_tab != "campaign")
         self.view.btn_help.setEnabled(active_tab != "help")
+        self.view.btn_app.setEnabled(active_tab != "app")
 
     # Optional: method to handle config changes at runtime
     def on_config_changed(self, key, value):

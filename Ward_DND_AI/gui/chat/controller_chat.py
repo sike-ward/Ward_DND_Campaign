@@ -22,7 +22,7 @@ from Ward_DND_AI.utils import (
 from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
-class AskController(QObject):
+class ChatController(QObject):
     ai_result_ready = pyqtSignal(
         str, int, int
     )  # answer, prompt tokens, response tokens
@@ -44,7 +44,7 @@ class AskController(QObject):
         self._bind_events()
 
     def _bind_events(self):
-        self.view.ask_btn.clicked.connect(catch_and_report_crashes(self.on_ask))
+        self.view.chat_btn.clicked.connect(catch_and_report_crashes(self.on_chat))
         self.view.save_btn.clicked.connect(catch_and_report_crashes(self.on_save))
         self.view.split_btn.clicked.connect(catch_and_report_crashes(self.on_split))
         self.view.clear_btn.clicked.connect(catch_and_report_crashes(self.on_clear))
@@ -53,7 +53,7 @@ class AskController(QObject):
         )
 
     @catch_and_report_crashes
-    def on_ask(self, *args, **kwargs):
+    def on_chat(self, *args, **kwargs):
         prompt = self.view.prompt_box.toPlainText().strip()
         if not prompt:
             self.status_var.setText("Please enter a prompt.")
@@ -70,7 +70,7 @@ class AskController(QObject):
             answer, p_tokens, r_tokens = self.ai.ask(prompt)
         except Exception as e:
             self.status_var.setText(f"AI Error: {e}")
-            log_exception("AskController AI query failed", e)
+            log_exception("ChatController AI query failed", e)
             return
         self.ai_result_ready.emit(answer, p_tokens, r_tokens)
 
@@ -120,7 +120,7 @@ class AskController(QObject):
         except Exception as e:
             QMessageBox.critical(self.view, "Save Failed", f"Could not save note: {e}")
             self.status_var.setText("Save error.")
-            log_exception("AskController save failed", e)
+            log_exception("ChatController save failed", e)
 
     @catch_and_report_crashes
     def on_split(self, *args, **kwargs):

@@ -6,6 +6,7 @@ from Ward_DND_AI.ai.core.ai_base import AIInterface
 
 # Global mapping: capability name → AIInterface subclass
 _PLUGINS: Dict[str, Type[AIInterface]] = {}
+# --- FORCE PLUGIN MODULES TO REGISTER THEMSELVES ---
 
 
 def register_plugin(name: str):

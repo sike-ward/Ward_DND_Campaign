@@ -4,6 +4,7 @@ from typing import List, Tuple
 
 from openai import OpenAI
 
+from Ward_DND_AI.ai.ai_logging import estimate_cost, log_api_call
 from Ward_DND_AI.ai.core.ai_base import AIInterface
 from Ward_DND_AI.ai.registry import register_plugin
 from Ward_DND_AI.config.config import Config
@@ -44,34 +45,87 @@ class OpenaiAI(AIInterface):
 
     def ask(self, prompt: str) -> Tuple[str, int, int]:
         prompt_tokens = count_tokens(prompt, self.model)
-        resp = self.client.chat.completions.create(
-            model=self.model, messages=[{"role": "user", "content": prompt}]
-        )
-        text = resp.choices[0].message.content.strip()
-        resp_tokens = resp.usage.completion_tokens
-        return text, prompt_tokens, resp_tokens
+        try:
+            resp = self.client.chat.completions.create(
+                model=self.model, messages=[{"role": "user", "content": prompt}]
+            )
+            text = resp.choices[0].message.content.strip()
+            resp_tokens = resp.usage.completion_tokens
+            cost = estimate_cost(self.model, prompt_tokens, resp_tokens)
+            log_api_call(
+                self.model, "ask", prompt_tokens, resp_tokens, cost, success=True
+            )
+            return text, prompt_tokens, resp_tokens
+        except Exception as e:
+            log_api_call(
+                self.model,
+                "ask",
+                prompt_tokens,
+                0,
+                0.0,
+                success=False,
+                error_msg=str(e),
+            )
+            raise
 
     def summarize(self, text: str) -> Tuple[str, int, int]:
         prompt = f"Summarize the following note in one concise paragraph (up to 4 sentences):\n\n{text}"
         prompt_tokens = count_tokens(prompt, self.model)
-        resp = self.client.chat.completions.create(
-            model=self.model, messages=[{"role": "user", "content": prompt}]
-        )
-        summary = resp.choices[0].message.content.strip()
-        resp_tokens = resp.usage.completion_tokens
-        return summary, prompt_tokens, resp_tokens
+        try:
+            resp = self.client.chat.completions.create(
+                model=self.model, messages=[{"role": "user", "content": prompt}]
+            )
+            summary = resp.choices[0].message.content.strip()
+            resp_tokens = resp.usage.completion_tokens
+            cost = estimate_cost(self.model, prompt_tokens, resp_tokens)
+            log_api_call(
+                self.model, "summarize", prompt_tokens, resp_tokens, cost, success=True
+            )
+            return summary, prompt_tokens, resp_tokens
+        except Exception as e:
+            log_api_call(
+                self.model,
+                "summarize",
+                prompt_tokens,
+                0,
+                0.0,
+                success=False,
+                error_msg=str(e),
+            )
+            raise
 
     def suggest_tags(self, text: str) -> Tuple[str, int, int]:
         prompt = (
             "Suggest 3-7 descriptive tags (comma-separated) for this note:\n" + text
         )
         prompt_tokens = count_tokens(prompt, self.model)
-        resp = self.client.chat.completions.create(
-            model=self.model, messages=[{"role": "user", "content": prompt}]
-        )
-        tags = resp.choices[0].message.content.strip()
-        resp_tokens = resp.usage.completion_tokens
-        return tags, prompt_tokens, resp_tokens
+        try:
+            resp = self.client.chat.completions.create(
+                model=self.model, messages=[{"role": "user", "content": prompt}]
+            )
+            tags = resp.choices[0].message.content.strip()
+            resp_tokens = resp.usage.completion_tokens
+            cost = estimate_cost(self.model, prompt_tokens, resp_tokens)
+            log_api_call(
+                self.model,
+                "suggest_tags",
+                prompt_tokens,
+                resp_tokens,
+                cost,
+                success=True,
+            )
+            return tags, prompt_tokens, resp_tokens
+        except Exception as e:
+            log_api_call(
+                self.model,
+                "suggest_tags",
+                prompt_tokens,
+                0,
+                0.0,
+                success=False,
+                error_msg=str(e),
+            )
+            raise
 
     def propose_links(self, text: str, note_names: List[str]) -> Tuple[str, int, int]:
         options = ", ".join(note_names)
@@ -80,12 +134,33 @@ class OpenaiAI(AIInterface):
             + text
         )
         prompt_tokens = count_tokens(prompt, self.model)
-        resp = self.client.chat.completions.create(
-            model=self.model, messages=[{"role": "user", "content": prompt}]
-        )
-        links = resp.choices[0].message.content.strip()
-        resp_tokens = resp.usage.completion_tokens
-        return links, prompt_tokens, resp_tokens
+        try:
+            resp = self.client.chat.completions.create(
+                model=self.model, messages=[{"role": "user", "content": prompt}]
+            )
+            links = resp.choices[0].message.content.strip()
+            resp_tokens = resp.usage.completion_tokens
+            cost = estimate_cost(self.model, prompt_tokens, resp_tokens)
+            log_api_call(
+                self.model,
+                "propose_links",
+                prompt_tokens,
+                resp_tokens,
+                cost,
+                success=True,
+            )
+            return links, prompt_tokens, resp_tokens
+        except Exception as e:
+            log_api_call(
+                self.model,
+                "propose_links",
+                prompt_tokens,
+                0,
+                0.0,
+                success=False,
+                error_msg=str(e),
+            )
+            raise
 
     def update_max_tokens(self, max_tokens: int):
         self.max_tokens = max_tokens

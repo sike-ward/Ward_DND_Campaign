@@ -1,0 +1,116 @@
+Ward_DND_AI/
+├── __init__.py
+├── __pycache__
+├── ai
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── core
+│   │   ├── __pycache__
+│   │   ├── ai_base.py
+│   │   ├── context_engine.py
+│   │   ├── loreai_engine.py
+│   │   ├── model_router.py
+│   │   └── openai_engine.py
+│   └── registry.py
+├── config
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── config.py
+│   └── settings.json
+├── docs
+├── extensions
+├── gui
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── browse
+│   │   ├── __pycache__
+│   │   ├── _init_.py
+│   │   ├── controller_browse.py
+│   │   ├── summarize
+│   │   │   ├── __pycache__
+│   │   │   ├── _init_.py
+│   │   │   ├── controller_summarize.py
+│   │   │   └── view_summarize.py
+│   │   └── view_browse.py
+│   ├── chat
+│   │   ├── __pycache__
+│   │   ├── _init_.py
+│   │   ├── controller_chat.py
+│   │   └── view_chat.py
+│   ├── create
+│   │   ├── __pycache__
+│   │   ├── _init_.py
+│   │   ├── controller_create.py
+│   │   ├── random_generator
+│   │   │   ├── __pycache__
+│   │   │   ├── _init_py
+│   │   │   ├── controller_random_generator.py
+│   │   │   └── view_random_generator.py
+│   │   └── view_create.py
+│   ├── dashboard
+│   │   ├── __pycache__
+│   │   ├── _init_.py
+│   │   ├── controller_dashboard.py
+│   │   └── view_dashboard.py
+│   ├── gui.py
+│   ├── settings
+│   │   ├── __pycache__
+│   │   ├── _init_.py
+│   │   ├── ai
+│   │   │   ├── __pycache__
+│   │   │   ├── _init_.py
+│   │   │   ├── controller_ai.py
+│   │   │   └── view_ai.py
+│   │   ├── campaign
+│   │   │   ├── __pycache__
+│   │   │   ├── _init_.py
+│   │   │   ├── controller_campaign_settings.py
+│   │   │   └── view_campaign.py
+│   │   ├── controller_settings.py
+│   │   ├── help
+│   │   │   ├── __pycache__
+│   │   │   ├── _init_.py
+│   │   │   ├── controller_help.py
+│   │   │   └── view_help.py
+│   │   └── view_settings.py
+│   ├── tooltip
+│   │   ├── _init_.py
+│   │   ├── controller_tooltip.py
+│   │   └── view_tooltip.py
+│   ├── tooltip.py
+│   └── universe
+│       ├── __pycache__
+│       ├── _init_.py
+│       ├── controller_universe.py
+│       ├── timeline
+│       │   ├── __pycache__
+│       │   ├── _init_.py
+│       │   ├── controller_timeline.py
+│       │   └── view_timeline.py
+│       └── view_universe.py
+├── main.py
+├── scan_tkinter.py
+├── storage
+│   ├── __pycache__
+│   ├── _init_.py
+│   ├── file_storage.py
+│   ├── obsidian_storage.py
+│   ├── storage_base.py
+│   └── storage_router.py
+├── tests
+│   ├── _init_.py
+│   ├── conftest.py
+│   ├── test_controller_campaign_settings.py
+│   ├── test_controller_help.py
+│   ├── test_controller_random_generator.py
+│   ├── test_controller_summarize.py
+│   ├── test_controller_timeline.py
+│   ├── test_controller_token.py
+│   ├── test_controllers_smoke.py
+│   └── test_smoke.py
+├── tree.py
+└── utils
+    ├── __init__.py
+    ├── __pycache__
+    ├── crash_handler.py
+    └── utils.py

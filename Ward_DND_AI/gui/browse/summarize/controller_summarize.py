@@ -38,14 +38,14 @@ class SummarizeController(QObject):
         if not folder:
             self.view.set_output("[No folder selected]")
             if self.status_var:
-                self.status_var.set("❌ No folder selected.")
+                self.status_var.setText("❌ No folder selected.")
             return
 
         notes = self.storage.list_notes(folder)
         if not notes:
             self.view.set_output("[No notes found in folder]")
             if self.status_var:
-                self.status_var.set("⚠️ Folder is empty.")
+                self.status_var.setText("⚠️ Folder is empty.")
             return
 
         try:
@@ -60,10 +60,13 @@ class SummarizeController(QObject):
 
             prompt = f"Summarize the following notes in a {style} format:\n\n{content}"
             summary = self.ai.summarize(prompt)
+            if isinstance(summary, tuple):
+                summary = summary[0]
             self.view.set_output(summary)
+
             if self.status_var:
-                self.status_var.set(f"✅ {len(notes)} notes summarized.")
+                self.status_var.setText(f"✅ {len(notes)} notes summarized.")
         except Exception as e:
             self.view.set_output(f"[Error: {e}]")
             if self.status_var:
-                self.status_var.set("❌ Summarization failed.")
+                self.status_var.setText("❌ Summarization failed.")

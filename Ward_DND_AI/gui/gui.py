@@ -2,31 +2,38 @@ import sys
 
 from PyQt6.QtWidgets import (
     QApplication,
-    QLabel,
     QMainWindow,
     QMenu,
     QMenuBar,
     QMessageBox,
     QStatusBar,
     QTabWidget,
-    QVBoxLayout,
-    QWidget,
 )
 
-from Ward_DND_AI.gui.ask.controller_ask import AskController
-from Ward_DND_AI.gui.ask.view_ask import AskView
+# Browse tab
 from Ward_DND_AI.gui.browse.controller_browse import BrowseController
 from Ward_DND_AI.gui.browse.view_browse import BrowseView
-from Ward_DND_AI.gui.random_generator.controller_random_generator import (
-    RandomGeneratorController,
-)
-from Ward_DND_AI.gui.random_generator.view_random_generator import RandomGeneratorView
+
+# Ask AI tab
+from Ward_DND_AI.gui.chat.controller_chat import ChatController
+from Ward_DND_AI.gui.chat.view_chat import ChatView
+
+# Create tab (Random Generator)
+from Ward_DND_AI.gui.create.controller_create import CreateController
+from Ward_DND_AI.gui.create.view_create import CreateView
+
+# New Dashboard tab (stub)
+from Ward_DND_AI.gui.dashboard.controller_dashboard import DashboardController
+from Ward_DND_AI.gui.dashboard.view_dashboard import DashboardView
+
+# Settings tab
 from Ward_DND_AI.gui.settings.controller_settings import SettingsController
 from Ward_DND_AI.gui.settings.view_settings import SettingsView
-from Ward_DND_AI.gui.summarize.controller_summarize import SummarizeController
-from Ward_DND_AI.gui.summarize.view_summarize import SummarizeView
-from Ward_DND_AI.gui.timeline.controller_timeline import TimelineController
-from Ward_DND_AI.gui.timeline.view_timeline import TimelineView
+
+# New World Builder tab
+# World tab (Timeline)
+from Ward_DND_AI.gui.universe.timeline.controller_timeline import TimelineController
+from Ward_DND_AI.gui.universe.timeline.view_timeline import TimelineView
 
 
 class LoreMainApp(QMainWindow):
@@ -43,65 +50,56 @@ class LoreMainApp(QMainWindow):
         self.tabview = QTabWidget()
         self.setCentralWidget(self.tabview)
 
-        # --- Add tabs (placeholders, real views wired later) ---
+        # --- Add tabs: Dashboard, AI, Browse, Create, World, Settings ---
         self.tabs = {}
-        tab_names = [
-            ("Ask AI", "Ask AI Tab Placeholder"),
-            ("Browse Vault", "Browse Vault Tab Placeholder"),
-            ("Summarize", "Summarize Tab Placeholder"),
-            ("Random Generator", "Random Generator Tab Placeholder"),
-            ("Timeline", "Timeline Tab Placeholder"),
-            ("Settings", "Settings Tab Placeholder"),
-        ]
-        for tab_id, label in tab_names:
-            if tab_id == "Browse Vault":
-                browse_view = BrowseView(self.tabview, self._config)
-                self.browse_controller = BrowseController(
-                    browse_view, self.ai, self.storage, self._config
-                )
-                self.tabview.addTab(browse_view, tab_id)
-                self.tabs[tab_id] = browse_view
-            elif tab_id == "Ask AI":
-                ask_view = AskView(self.tabview, self._config)
-                self.ask_controller = AskController(
-                    ask_view, self.ai, self.storage, self._config
-                )
-                self.tabview.addTab(ask_view, tab_id)
-                self.tabs[tab_id] = ask_view
-            elif tab_id == "Settings":
-                settings_view = SettingsView(self.tabview, self.ai, self._config)
-                self.settings_controller = SettingsController(
-                    settings_view, self._config, self.ai, self.storage
-                )
-                self.tabview.addTab(settings_view, tab_id)
-                self.tabs[tab_id] = settings_view
-            elif tab_id == "Summarize":
-                summarize_view = SummarizeView(self.tabview, self._config)
-                self.summarize_controller = SummarizeController(
-                    summarize_view, self.ai, self.storage, self._config
-                )
-                self.tabview.addTab(summarize_view, tab_id)
-                self.tabs[tab_id] = summarize_view
-            elif tab_id == "Random Generator":
-                random_gen_view = RandomGeneratorView(self.tabview, self._config)
-                self.random_gen_controller = RandomGeneratorController(
-                    random_gen_view, self.ai, self.storage, self._config
-                )
-                self.tabview.addTab(random_gen_view, tab_id)
-                self.tabs[tab_id] = random_gen_view
-            elif tab_id == "Timeline":
-                timeline_view = TimelineView(self.tabview, self._config)
-                self.timeline_controller = TimelineController(
-                    timeline_view, self.ai, self.storage, self._config
-                )
-                self.tabview.addTab(timeline_view, tab_id)
-                self.tabs[tab_id] = timeline_view
-            else:
-                w = QWidget()
-                layout = QVBoxLayout(w)
-                layout.addWidget(QLabel(label))
-                self.tabview.addTab(w, tab_id)
-                self.tabs[tab_id] = w
+        # Dashboard (real view/controller)
+        dash_view = DashboardView(self.tabview, self._config)
+        self.dashboard_controller = DashboardController(
+            dash_view, self.ai, self.storage, self._config
+        )
+        self.tabview.addTab(dash_view, "Dashboard")
+        self.tabs["Dashboard"] = dash_view
+
+        # AI (formerly Ask)
+        ai_view = ChatView(self.tabview, self._config)
+        self.ask_controller = ChatController(
+            ai_view, self.ai, self.storage, self._config
+        )
+        self.tabview.addTab(ai_view, "AI")
+        self.tabs["AI"] = ai_view
+
+        # Browse (formerly Browse Vault)
+        browse_view = BrowseView(self.tabview, self._config)
+        self.browse_controller = BrowseController(
+            browse_view, self.ai, self.storage, self._config
+        )
+        self.tabview.addTab(browse_view, "Browse")
+        self.tabs["Browse"] = browse_view
+
+        # Create (Random Generator)
+        # Create (composite)
+        create_view = CreateView(self.tabview, self._config)
+        self.create_controller = CreateController(
+            create_view, self.ai, self.storage, self._config
+        )
+        self.tabview.addTab(create_view, "Create")
+        self.tabs["Create"] = create_view
+
+        # Universe (Timeline)
+        universe_view = TimelineView(self.tabview, self._config)
+        self.timeline_controller = TimelineController(
+            universe_view, self.ai, self.storage, self._config
+        )
+        self.tabview.addTab(universe_view, "Universe")
+        self.tabs["Universe"] = universe_view
+
+        # Settings
+        settings_view = SettingsView(self.tabview, self.ai, self._config)
+        self.settings_controller = SettingsController(
+            settings_view, self._config, self.ai, self.storage
+        )
+        self.tabview.addTab(settings_view, "Settings")
+        self.tabs["Settings"] = settings_view
 
         # --- Status Bar ---
         self.statusbar = QStatusBar()

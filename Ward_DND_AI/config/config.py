@@ -19,6 +19,12 @@ DEFAULT_CONFIG = {
     "AUTO_REFRESH_INTERVAL": 300,
     "ENABLE_EXPERIMENTAL": False,
     "AI_BACKENDS": {"ask": "openai", "summarize": "openai", "search": "openai"},
+    # App Settings below
+    "THEME": "Light",
+    "FONT_SIZE": "Medium",
+    "SHOW_TOOLTIPS": True,
+    "STARTUP_TAB": "Dashboard",
+    "COMPACT_MODE": False,
 }
 
 
@@ -126,3 +132,47 @@ class Config:
 def log_exception(e: Exception, context: str = ""):
     err_msg = f"Unhandled exception: {e}\n{traceback.format_exc()}"
     print(f"[ERROR] {context} - {err_msg}")
+
+
+def load_note_templates():
+    """
+    Loads and merges built-in and user note templates.
+    Returns: dict of {template_name: {"description": str, "content": str}}
+    """
+    import yaml
+
+    # Built-in templates
+    builtins = {
+        "Blank Note": {
+            "description": "Empty note",
+            "content": "# Title\n\n",
+        },
+        "NPC": {
+            "description": "D&D non-player character",
+            "content": "# NPC Name\n\n## Appearance\n\n## Personality\n\n## Background\n",
+        },
+        "Place": {
+            "description": "Location/setting",
+            "content": "# Place Name\n\n## Description\n\n## Secrets\n",
+        },
+        "Item": {
+            "description": "Magic item",
+            "content": "# Item Name\n\n## Description\n\n## Abilities\n",
+        },
+    }
+    # Try to load note_templates.yaml (must be in same dir as settings.json)
+    config_dir = Path(__file__).parent
+    user_templates_path = config_dir / "note_templates.yaml"
+    user_templates = {}
+    if user_templates_path.exists():
+        try:
+            with user_templates_path.open("r", encoding="utf-8") as f:
+                user_templates = yaml.safe_load(f) or {}
+        except Exception as e:
+            print(f"Could not load note_templates.yaml: {e}")
+
+    # Merge: user templates override built-ins
+    templates = builtins.copy()
+    for k, v in (user_templates or {}).items():
+        templates[k] = v
+    return templates

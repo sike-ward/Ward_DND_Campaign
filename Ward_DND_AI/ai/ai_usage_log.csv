@@ -1,0 +1,2 @@
+timestamp,model,task,prompt_tokens,completion_tokens,total_tokens,cost_usd,success,error_msg,prompt
+2025-06-20T11:40:42.791592,gpt-3.5-turbo,summarize,1360,118,1478,0.002217,True,,

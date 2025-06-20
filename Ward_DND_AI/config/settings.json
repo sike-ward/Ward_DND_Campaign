@@ -15,5 +15,10 @@
     "search_context": "loreai",
     "suggest_tags": "openai",
     "propose_links": "openai"
-  }
+  },
+  "THEME": "Light",
+  "FONT_SIZE": "Small",
+  "SHOW_TOOLTIPS": true,
+  "STARTUP_TAB": "Dashboard",
+  "COMPACT_MODE": false
 }

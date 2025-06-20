@@ -1,6 +1,8 @@
 import os
 import re
 
+import yaml
+
 
 def make_title_case_filename(text):
     text = text.strip().replace(" ", "_")
@@ -146,3 +148,31 @@ def highlight_markdown(text_widget):
         tv.tag_configure(
             f"heading{lvl}", font=("Consolas", size, "bold"), foreground=color
         )
+
+
+def read_note_metadata(note_text):
+    """
+    Returns (metadata_dict, body_text)
+    If no YAML frontmatter, metadata_dict is empty.
+    """
+    match = re.match(r"^---\s*\n(.*?)\n---\s*\n(.*)", note_text, re.DOTALL)
+    if match:
+        yaml_str, body = match.group(1), match.group(2)
+        try:
+            meta = yaml.safe_load(yaml_str) or {}
+            if not isinstance(meta, dict):
+                meta = {}
+        except Exception:
+            meta = {}
+        return meta, body
+    else:
+        # No YAML, treat entire note as body
+        return {}, note_text
+
+
+def write_note_metadata(metadata_dict, body_text):
+    """
+    Returns note text with YAML frontmatter and body.
+    """
+    yaml_str = yaml.safe_dump(metadata_dict, sort_keys=False).strip()
+    return f"---\n{yaml_str}\n---\n{body_text.lstrip()}"

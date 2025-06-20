@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
 )
 
 
-class AskView(QWidget):
+class ChatView(QWidget):
     def __init__(self, parent, config):
         super().__init__(parent)
         self.config = config
@@ -33,13 +33,13 @@ class AskView(QWidget):
 
         # --- Buttons Panel ---
         button_panel = QVBoxLayout()
-        self.ask_btn = QPushButton("Ask AI")
+        self.chat_btn = QPushButton("Chat")
         self.save_btn = QPushButton("Save Answer")
         self.save_btn.setEnabled(False)
         self.split_btn = QPushButton("Split & Save")
         self.split_btn.setEnabled(False)
         self.clear_btn = QPushButton("Clear History")
-        for b in (self.ask_btn, self.save_btn, self.split_btn, self.clear_btn):
+        for b in (self.chat_btn, self.save_btn, self.split_btn, self.clear_btn):
             button_panel.addWidget(b)
         output_row.addLayout(button_panel)
         main_layout.addLayout(output_row)

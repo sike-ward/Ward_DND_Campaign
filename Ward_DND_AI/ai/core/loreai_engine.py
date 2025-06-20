@@ -57,14 +57,31 @@ class LoreaiAI(AIInterface):
 
     def _initialize_index(self) -> None:
         """
-        Build an in-memory document index for context retrieval.
+        Build or load a persistent document index for context retrieval.
+        This avoids rebuilding the index on every startup.
         """
+        import os
+
+        from llama_index.core import StorageContext, load_index_from_storage
+
         Settings.embed_model = OpenAIEmbedding(api_key=os.getenv("OPENAI_API_KEY"))
-        docs = SimpleDirectoryReader(str(self.vault_path), recursive=True).load_data()
-        for doc in docs:
-            if hasattr(doc, "get_doc_id"):
-                doc.id_ = doc.get_doc_id()
-        index = VectorStoreIndex.from_documents(docs)
+        index_dir = str(self.vault_path / "loreai_index")
+
+        if os.path.exists(index_dir):
+            # Fast path: load saved index
+            storage_context = StorageContext.from_defaults(persist_dir=index_dir)
+            index = load_index_from_storage(storage_context)
+        else:
+            # First time: build and persist index
+            docs = SimpleDirectoryReader(
+                str(self.vault_path), recursive=True
+            ).load_data()
+            for doc in docs:
+                if hasattr(doc, "get_doc_id"):
+                    doc.id_ = doc.get_doc_id()
+            index = VectorStoreIndex.from_documents(docs)
+            index.storage_context.persist(persist_dir=index_dir)
+
         self._retriever = index.as_retriever()
         self._engine = RetrieverQueryEngine(retriever=self._retriever)
 

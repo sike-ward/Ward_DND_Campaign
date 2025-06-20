@@ -18,7 +18,7 @@ class RandomGeneratorController(QObject):
         self.view.save_btn.clicked.connect(catch_and_report_crashes(self.on_save))
 
     @catch_and_report_crashes
-    def on_generate(self):
+    def on_generate(self, *args, **kwargs):
         prompt = self.view.prompt_entry.text().strip()
         if not prompt:
             self._show_output("[Please enter a prompt]")
