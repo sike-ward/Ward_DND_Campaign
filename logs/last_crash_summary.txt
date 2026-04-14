@@ -1,2 +1,2 @@
-TypeError: BrowseController.__init__() missing 2 required positional arguments: 'storage' and 'config'
-See full log: C:\Users\Evan\Desktop\Ward_DND_Campaign\logs\crash_2026-04-14_15-17-20.log
+TypeError: HelpController.__init__() takes from 3 to 4 positional arguments but 5 were given
+See full log: C:\Users\Evan\Desktop\Ward_DND_Campaign\logs\crash_2026-04-14_15-27-31.log

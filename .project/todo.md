@@ -2,29 +2,29 @@
 
 ---
 
-## 1. Core Data Models & Types
+## 1. Core Data Models & Types ✅
 
-- [ ] List all core data types (notes, folders, vaults, users, campaigns, attachments, characters, maps, etc.)
-- [ ] Design typed, validated models (`pydantic` or `dataclass`) for every core entity
-- [ ] Every model has a `schema_version` field
-- [ ] Each model has `created_at`, `last_modified`, and `owner_user_id/group_id` fields
-- [ ] Docstrings for every class and field (required by lint/type check/review)
-- [ ] Any new model type gets added to the models folder immediately
+- [x] List all core data types (notes, folders, vaults, users, campaigns, attachments, characters, maps, etc.)
+- [x] Design typed, validated models (`pydantic` or `dataclass`) for every core entity
+- [x] Every model has a `schema_version` field
+- [x] Each model has `created_at`, `last_modified`, and `owner_user_id/group_id` fields
+- [x] Docstrings for every class and field (required by lint/type check/review)
+- [x] Any new model type gets added to the models folder immediately
 
 ---
 
-## 2. AppContext / Service Registry
+## 2. AppContext / Service Registry ✅
 
-- [ ] Single `AppContext` class holds all managers/services (config, storage, ai, session, user manager, etc.)
-- [ ] All controllers/views receive `AppContext` (no raw globals/direct imports)
-- [ ] Every field in `AppContext` is documented
+- [x] Single `AppContext` class holds all managers/services (config, storage, ai, session, user manager, etc.)
+- [x] All controllers/views receive `AppContext` (no raw globals/direct imports)
+- [x] Every field in `AppContext` is documented
 
 ---
 
 ## 3. Config, Secrets, and Environment
 
-- [ ] `.env` and/or `config.py` loads all secrets/paths/env (never hardcoded)
-- [ ] `AppContext` references config, not raw env vars
+- [x] `.env` and/or `config.py` loads all secrets/paths/env (never hardcoded)
+- [x] `AppContext` references config, not raw env vars
 - [ ] Dev/prod/test config separation, documented
 - [ ] All file/folder paths use `pathlib.Path` or are platform-agnostic
 
@@ -44,7 +44,7 @@
 - [ ] Basic audit/event logging (every create/update/delete logs a line in `audit.log`)
 - [ ] Set up automatic backups (user-accessible, test restore)
 - [ ] Smoke/integration test for every model’s CRUD (manual script or pytest)
-- [ ] Lint and type-check the codebase (`black`, `ruff`, `mypy` all pass on every commit)
+- [ ] Lint and type-check the codebase (`ruff`, `mypy` all pass on every commit)
 - [ ] Add mypy config to repo
 
 ---
@@ -105,7 +105,7 @@
 
 - [ ] Set up CI/CD (tests, build, release)
 - [ ] Accessibility and localization ready (screen reader, font scaling, i18n)
-- [ ] Global error/crash handler with user-friendly logs
+- [x] Global error/crash handler with user-friendly logs
 - [ ] Data export/delete/backup fully documented for users
 - [ ] Privacy/compliance docs (if public/online)
 - [ ] Plugin/extension API planned and stubbed
