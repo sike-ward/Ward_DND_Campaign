@@ -33,8 +33,10 @@ class UserManager:
             raise ValueError("Email already in use.")
 
         password_hash = self._hash_password(password)
+        user_id = self._generate_id()
         user = User(
-            id=self._generate_id(),
+            id=user_id,
+            owner_id=user_id,  # users own themselves
             email=email,
             username=username,
             password_hash=password_hash,
@@ -42,8 +44,6 @@ class UserManager:
             groups=groups or [],
             is_active=True,
             last_login=None,
-            created_at=datetime.utcnow(),
-            schema_version=1,
         )
         self.storage.save_user(user)
         return user
