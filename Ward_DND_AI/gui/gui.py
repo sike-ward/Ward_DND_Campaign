@@ -36,11 +36,12 @@ from Ward_DND_AI.gui.universe.timeline.view_timeline import TimelineView
 
 
 class LoreMainApp(QMainWindow):
-    def __init__(self, ai_engine=None, storage=None, config=None):
+    def __init__(self, ctx):
         super().__init__()
-        self.ai = ai_engine
-        self.storage = storage
-        self._config = config
+        self.ctx = ctx
+        self.ai = ctx.ai
+        self.storage = ctx.storage
+        self._config = ctx.config
 
         self.setWindowTitle("Obsidian Lore Assistant")
         self.resize(1024, 768)
@@ -52,37 +53,37 @@ class LoreMainApp(QMainWindow):
 
         # --- Dashboard Tab ---
         dash_view = DashboardView(self.tabview, self._config)
-        self.dashboard_controller = DashboardController(dash_view, self.ai, self.storage, self._config)
+        self.dashboard_controller = DashboardController(dash_view, self.ctx)
         self.tabview.addTab(dash_view, "Dashboard")
         self.tabs["Dashboard"] = dash_view
 
         # --- AI (Ask) Tab ---
         ai_view = ChatView(self.tabview, self._config)
-        self.ask_controller = ChatController(ai_view, self.ai, self.storage, self._config)
+        self.ask_controller = ChatController(ai_view, self.ctx)
         self.tabview.addTab(ai_view, "AI")
         self.tabs["AI"] = ai_view
 
         # --- Browse Tab ---
         browse_view = BrowseView(self.tabview, self._config)
-        self.browse_controller = BrowseController(browse_view, self.ai, self.storage, self._config)
+        self.browse_controller = BrowseController(browse_view, self.ctx)
         self.tabview.addTab(browse_view, "Browse")
         self.tabs["Browse"] = browse_view
 
         # --- Create Tab ---
         create_view = CreateView(self.tabview, self._config)
-        self.create_controller = CreateController(create_view, self.ai, self.storage, self._config)
+        self.create_controller = CreateController(create_view, self.ctx)
         self.tabview.addTab(create_view, "Create")
         self.tabs["Create"] = create_view
 
         # --- Universe (Timeline) Tab ---
         universe_view = TimelineView(self.tabview, self._config)
-        self.timeline_controller = TimelineController(universe_view, self.ai, self.storage, self._config)
+        self.timeline_controller = TimelineController(universe_view, self.ctx)
         self.tabview.addTab(universe_view, "Universe")
         self.tabs["Universe"] = universe_view
 
         # --- Settings Tab ---
-        settings_view = SettingsView(self.tabview, self.ai, self._config)
-        self.settings_controller = SettingsController(settings_view, self._config, self.storage)
+        settings_view = SettingsView(self.tabview, self.ctx)
+        self.settings_controller = SettingsController(settings_view, self.ctx)
         self.tabview.addTab(settings_view, "Settings")
         self.tabs["Settings"] = settings_view
 
@@ -157,6 +158,6 @@ if __name__ == "__main__":
     from Ward_DND_AI.utils.crash_handler import ExceptionCatchingApplication
 
     app = ExceptionCatchingApplication(sys.argv)
-    window = LoreMainApp()
-    window.show()
+    # window = LoreMainApp()  # requires ctx — use main.py for full launch
+    # window.show()  # requires ctx
     sys.exit(app.exec())

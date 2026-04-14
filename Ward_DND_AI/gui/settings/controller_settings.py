@@ -3,11 +3,12 @@ from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
 class SettingsController:
-    def __init__(self, view, config, ai_engine=None, storage_backend=None):
+    def __init__(self, view, ctx):
         self.view = view
-        self.config = config
-        self.ai_engine = ai_engine
-        self.storage_backend = storage_backend
+        self.ctx = ctx
+        self.config = ctx.config
+        self.ai_engine = ctx.ai
+        self.storage_backend = ctx.storage
 
         # Initialize subcontrollers with their views and shared resources
         from Ward_DND_AI.gui.settings.ai.controller_ai import AIController
@@ -18,10 +19,8 @@ class SettingsController:
 
         self.controllers = {}
 
-        self.controllers["ai"] = AIController(self.view.ai_view, self.config, self.ai_engine, self.storage_backend)
-        self.controllers["campaign"] = CampaignSettingsController(
-            self.view.campaign_view, self.config, self.ai_engine, self.storage_backend
-        )
+        self.controllers["ai"] = AIController(self.view.ai_view, self.ctx)
+        self.controllers["campaign"] = CampaignSettingsController(self.view.campaign_view, self.ctx)
         self.controllers["help"] = HelpController(
             self.view.help_view, self.config, self.ai_engine, self.storage_backend
         )

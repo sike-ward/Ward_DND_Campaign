@@ -5,12 +5,13 @@ from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
 class UniverseController(QObject):
-    def __init__(self, view, ai_engine, storage_backend, config, status_var=None):
+    def __init__(self, view, ctx, status_var=None):
         super().__init__()
         self.view = view
-        self.ai = ai_engine
-        self.storage = storage_backend
-        self.config = config
+        self.ctx = ctx
+        self.ai = ctx.ai
+        self.storage = ctx.storage
+        self.config = ctx.config
         self.status_var = status_var
 
         self.events = []
@@ -19,9 +20,7 @@ class UniverseController(QObject):
         # Wire up buttons
         self.view.add_btn.clicked.connect(catch_and_report_crashes(self.add_event))
         self.view.edit_btn.clicked.connect(catch_and_report_crashes(self.edit_event))
-        self.view.delete_btn.clicked.connect(
-            catch_and_report_crashes(self.delete_event)
-        )
+        self.view.delete_btn.clicked.connect(catch_and_report_crashes(self.delete_event))
 
     def _refresh_event_list(self):
         self.view.event_list.clear()
@@ -42,9 +41,7 @@ class UniverseController(QObject):
         if not current:
             QMessageBox.warning(self.view, "Edit Event", "Select text to edit.")
             return
-        new_text, ok = QInputDialog.getText(
-            self.view, "Edit Event", "Event description:", text=current
-        )
+        new_text, ok = QInputDialog.getText(self.view, "Edit Event", "Event description:", text=current)
         if ok and new_text:
             cursor.insertText(new_text)
             self.events = self.view.event_list.toPlainText().split("\n")

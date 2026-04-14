@@ -9,10 +9,11 @@ from Ward_DND_AI.utils.logging_setup import APP_SESSION_LOG_HANDLER
 
 
 class DebugController(QObject):
-    def __init__(self, view, config):
+    def __init__(self, view, ctx):
         super().__init__()
         self.v = view
-        self.config = config
+        self.ctx = ctx
+        self.config = ctx.config
 
         # Connect crash logs tab signals
         self.v.refresh_crash_logs.connect(self.load_crash_logs)

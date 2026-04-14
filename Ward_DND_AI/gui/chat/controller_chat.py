@@ -23,16 +23,15 @@ from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
 class ChatController(QObject):
-    ai_result_ready = pyqtSignal(
-        str, int, int
-    )  # answer, prompt tokens, response tokens
+    ai_result_ready = pyqtSignal(str, int, int)  # answer, prompt tokens, response tokens
 
-    def __init__(self, view, ai, storage, config, status_var=None):
+    def __init__(self, view, ctx, status_var=None):
         super().__init__()
         self.view = view
-        self.ai = ai
-        self.storage = storage
-        self.config = config
+        self.ctx = ctx
+        self.ai = ctx.ai
+        self.storage = ctx.storage
+        self.config = ctx.config
         self.status_var = status_var or self.view.status_label
 
         self.history = []
@@ -48,9 +47,7 @@ class ChatController(QObject):
         self.view.save_btn.clicked.connect(catch_and_report_crashes(self.on_save))
         self.view.split_btn.clicked.connect(catch_and_report_crashes(self.on_split))
         self.view.clear_btn.clicked.connect(catch_and_report_crashes(self.on_clear))
-        self.view.preview_btn.clicked.connect(
-            catch_and_report_crashes(self._on_preview)
-        )
+        self.view.preview_btn.clicked.connect(catch_and_report_crashes(self._on_preview))
 
     @catch_and_report_crashes
     def on_chat(self, *args, **kwargs):
@@ -97,15 +94,11 @@ class ChatController(QObject):
     @catch_and_report_crashes
     def on_save(self, *args, **kwargs):
         folders = get_all_folders(self.config.VAULT_PATH)
-        folder, ok = QInputDialog.getItem(
-            self.view, "Save Answer", "Select folder:", folders, 0, False
-        )
+        folder, ok = QInputDialog.getItem(self.view, "Save Answer", "Select folder:", folders, 0, False)
         if not ok:
             return
 
-        filename, ok = QInputDialog.getText(
-            self.view, "File Name", "Enter file name (no extension):"
-        )
+        filename, ok = QInputDialog.getText(self.view, "File Name", "Enter file name (no extension):")
         if not ok or not filename.strip():
             self.status_var.setText("Save cancelled.")
             return
@@ -140,11 +133,7 @@ class ChatController(QObject):
         if not ok:
             return
 
-        parts = [
-            p
-            for p in re.split(r"(?=^# )", self.last_answer, flags=re.MULTILINE)
-            if p.strip()
-        ]
+        parts = [p for p in re.split(r"(?=^# )", self.last_answer, flags=re.MULTILINE) if p.strip()]
         existing = get_note_names(self.config.VAULT_PATH)
         count, errors = 0, []
 
@@ -165,9 +154,7 @@ class ChatController(QObject):
                 errors.append(heading)
                 log_exception(f"Split failed for: {heading}", e)
 
-        msg = f"Saved {count} notes." + (
-            f" Failed: {', '.join(errors)}" if errors else ""
-        )
+        msg = f"Saved {count} notes." + (f" Failed: {', '.join(errors)}" if errors else "")
         QMessageBox.information(self.view, "Split & Save", msg)
         self.status_var.setText(msg)
 

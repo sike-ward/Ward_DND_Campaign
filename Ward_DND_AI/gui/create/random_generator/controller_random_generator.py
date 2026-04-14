@@ -4,17 +4,16 @@ from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
 class RandomGeneratorController(QObject):
-    def __init__(self, view, ai_engine, storage_backend, config, status_var=None):
+    def __init__(self, view, ctx, status_var=None):
         super().__init__()
         self.view = view
-        self.ai = ai_engine
-        self.storage = storage_backend
-        self.config = config
+        self.ctx = ctx
+        self.ai = ctx.ai
+        self.storage = ctx.storage
+        self.config = ctx.config
         self.status_var = status_var  # optional for status bar updates
 
-        self.view.generate_btn.clicked.connect(
-            catch_and_report_crashes(self.on_generate)
-        )
+        self.view.generate_btn.clicked.connect(catch_and_report_crashes(self.on_generate))
         self.view.save_btn.clicked.connect(catch_and_report_crashes(self.on_save))
 
     @catch_and_report_crashes

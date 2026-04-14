@@ -7,12 +7,13 @@ from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
 class HelpController(QObject):
-    def __init__(self, view, ai, storage, config, status_var=None):
+    def __init__(self, view, ctx, status_var=None):
         super().__init__()
         self.v = view
-        self.ai = ai
-        self.storage = storage
-        self.config = config
+        self.ctx = ctx
+        self.ai = ctx.ai
+        self.storage = ctx.storage
+        self.config = ctx.config
         self.status_var = status_var or ""
 
         # --- Documentation Tab Wiring ---
@@ -21,7 +22,7 @@ class HelpController(QObject):
         self._populate()
 
         # --- Debug/Log Tab Wiring ---
-        self.debug_controller = DebugController(self.v.debug_view, config)
+        self.debug_controller = DebugController(self.v.debug_view, self.ctx)
 
     @catch_and_report_crashes
     def _populate(self):

@@ -35,13 +35,10 @@ def main():
 
     ctx = AppContext(config)
     ai_engine = get_model_backend(config, storage=ctx.storage)
+    ctx.ai = ai_engine  # wire AI into context
 
     qapp = QApplication(sys.argv)
-    window = LoreMainApp(
-        ai_engine=ai_engine,
-        storage=ctx.storage,
-        config=config,
-    )
+    window = LoreMainApp(ctx=ctx)
     window.show()
 
     logger.info("Application exited cleanly.")

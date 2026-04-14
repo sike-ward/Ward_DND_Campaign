@@ -2,10 +2,11 @@ from PyQt6.QtCore import QObject
 
 
 class AppSettingsController(QObject):
-    def __init__(self, view, config, app):
+    def __init__(self, view, ctx, app):
         super().__init__()
         self.view = view
-        self.config = config
+        self.ctx = ctx
+        self.config = ctx.config
         self.app = app
 
         # --- Connect UI to Logic ---
@@ -13,9 +14,7 @@ class AppSettingsController(QObject):
         self.view.font_size_combo.currentTextChanged.connect(self.on_font_size_changed)
         self.view.compact_mode_checkbox.toggled.connect(self.on_compact_mode_changed)
         self.view.tooltips_checkbox.toggled.connect(self.on_tooltips_changed)
-        self.view.startup_tab_combo.currentTextChanged.connect(
-            self.on_startup_tab_changed
-        )
+        self.view.startup_tab_combo.currentTextChanged.connect(self.on_startup_tab_changed)
 
     def on_theme_changed(self, theme):
         self.config.THEME = theme  # auto-saves
@@ -45,9 +44,7 @@ class AppSettingsController(QObject):
 
         font_map = {"Small": 10, "Medium": 12, "Large": 16}
         font_size = font_map.get(size, 12)
-        QApplication = __import__(
-            "PyQt6.QtWidgets", fromlist=["QApplication"]
-        ).QApplication
+        QApplication = __import__("PyQt6.QtWidgets", fromlist=["QApplication"]).QApplication
         QApplication.instance().setFont(QFont("Segoe UI", font_size))
 
     def on_compact_mode_changed(self, enabled):
@@ -60,9 +57,7 @@ class AppSettingsController(QObject):
             QWidget { padding: 2px; }
             QVBoxLayout, QHBoxLayout { spacing: 2px; }
             """
-            QApplication.instance().setStyleSheet(
-                QApplication.instance().styleSheet() + qss
-            )
+            QApplication.instance().setStyleSheet(QApplication.instance().styleSheet() + qss)
         else:
             # Re-apply current theme only
             self.on_theme_changed(self.config.THEME)
@@ -78,9 +73,7 @@ class AppSettingsController(QObject):
             # Reset by reloading module (advanced) or do nothing (Qt will use defaults)
             import importlib
 
-            importlib.reload(
-                __import__("PyQt6.QtWidgets.QToolTip", fromlist=["QToolTip"])
-            )
+            importlib.reload(__import__("PyQt6.QtWidgets.QToolTip", fromlist=["QToolTip"]))
 
     def on_startup_tab_changed(self, tab):
         self.config.STARTUP_TAB = tab

@@ -4,12 +4,13 @@ from PyQt6.QtCore import QObject
 
 
 class DashboardController(QObject):
-    def __init__(self, view, ai_engine, storage_backend, config, status_var=None):
+    def __init__(self, view, ctx, status_var=None):
         super().__init__()
         self.view = view
-        self.ai_engine = ai_engine
-        self.storage = storage_backend
-        self.config = config
+        self.ctx = ctx
+        self.ai_engine = ctx.ai
+        self.storage = ctx.storage
+        self.config = ctx.config
 
         self._bind_events()
         self.refresh()

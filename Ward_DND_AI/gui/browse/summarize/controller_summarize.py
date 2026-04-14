@@ -13,12 +13,13 @@ class SummarizeController(QObject):
     core_storage folder ("summaries") for later retrieval.
     """
 
-    def __init__(self, view, ai_engine, storage, config, status_var=None):
+    def __init__(self, view, ctx, status_var=None):
         super().__init__()
         self.view = view
-        self.ai = ai_engine
-        self.storage = storage  # Obsidian or file store
-        self.config = config
+        self.ctx = ctx
+        self.ai = ctx.ai
+        self.storage = ctx.storage  # Obsidian or file store
+        self.config = ctx.config
         self.status_var = status_var or getattr(self.view, "status_label", None)
 
         # ensure our summaries folder exists in core

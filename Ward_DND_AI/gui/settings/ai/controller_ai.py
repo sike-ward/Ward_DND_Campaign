@@ -4,12 +4,13 @@ from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
 class AIController(QObject):
-    def __init__(self, view, config, ai_engine, storage_backend=None):
+    def __init__(self, view, ctx):
         super().__init__()
         self.view = view
-        self.config = config
-        self.ai_engine = ai_engine
-        self.storage_backend = storage_backend
+        self.ctx = ctx
+        self.config = ctx.config
+        self.ai_engine = ctx.ai
+        self.storage_backend = ctx.storage
 
         self._load_settings()
 
@@ -18,9 +19,7 @@ class AIController(QObject):
     def _load_settings(self):
         # Load config values into view
         self.view.set_api_key(self.config.OPENAI_API_KEY or "")
-        self.view.set_embedding_model(
-            self.config.EMBEDDING_MODEL or "text-embedding-3-small"
-        )
+        self.view.set_embedding_model(self.config.EMBEDDING_MODEL or "text-embedding-3-small")
         self.view.set_completion_model(self.config.COMPLETION_MODEL or "gpt-4o")
         self.view.set_max_tokens(self.config.MAX_TOKENS or 4000)
 
@@ -50,6 +49,4 @@ class AIController(QObject):
         self.ai_engine.update_models(embedding_model, completion_model)
         self.ai_engine.update_max_tokens(max_tokens)
 
-        self.view.set_token_usage(
-            0, max_tokens
-        )  # Reset token usage display for example
+        self.view.set_token_usage(0, max_tokens)  # Reset token usage display for example

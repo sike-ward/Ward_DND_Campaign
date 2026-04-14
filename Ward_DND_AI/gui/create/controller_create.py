@@ -6,16 +6,15 @@ from Ward_DND_AI.gui.create.random_generator.controller_random_generator import 
 
 
 class CreateController(QObject):
-    def __init__(self, view, ai_engine, storage, config, status_var=None):
+    def __init__(self, view, ctx, status_var=None):
         super().__init__()
         self.view = view
-        self.ai_engine = ai_engine
-        self.storage = storage
-        self.config = config
+        self.ctx = ctx
+        self.ai_engine = ctx.ai
+        self.storage = ctx.storage
+        self.config = ctx.config
         self.status_var = status_var
 
         # Hook up Random Generator inside Create
-        self.random_ctrl = RandomGeneratorController(
-            self.view.random_view, ai_engine, storage, config
-        )
+        self.random_ctrl = RandomGeneratorController(self.view.random_view, ctx)
         # TODO: instantiate other sub-controllers here

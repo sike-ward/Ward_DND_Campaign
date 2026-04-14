@@ -4,12 +4,13 @@ from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
 class CampaignSettingsController(QObject):
-    def __init__(self, view, config, storage_backend, ai_engine=None):
+    def __init__(self, view, ctx):
         super().__init__()
         self.view = view
-        self.config = config
-        self.storage = storage_backend
-        self.ai_engine = ai_engine
+        self.ctx = ctx
+        self.config = ctx.config
+        self.storage = ctx.storage
+        self.ai_engine = ctx.ai
 
         self._load_settings()
 
