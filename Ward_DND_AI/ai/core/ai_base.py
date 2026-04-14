@@ -25,10 +25,6 @@ class AIInterface(ABC):
 
     @abstractmethod
     def summarize(self, text: str) -> Tuple[str, int, int]:
-        """
-        Summarize the given text into a concise paragraph. Returns:
-        (summary_text, prompt_tokens, response_tokens).
-        """
         pass
 
     @abstractmethod

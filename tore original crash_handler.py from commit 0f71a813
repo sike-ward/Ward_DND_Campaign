@@ -1,0 +1,11 @@
+[33mcommit 75bcde7da57f8968d1b80322fec32fcbd32e1aec[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: sike-ward <eward96@comcast.net>
+Date:   Tue Jun 17 21:45:48 2025 -0500
+
+    Fix  variables and reformat code to pass hook PYQT6
+
+[33mcommit 0f71a8134a5d17e4d3f0c20b2126f65850d5e5e4[m[33m ([m[1;33mtag: [m[1;33mv0.0.0[m[33m)[m
+Author: sike-ward <eward96@comcast.net>
+Date:   Sat Jun 14 01:51:06 2025 -0500
+
+    refactoring

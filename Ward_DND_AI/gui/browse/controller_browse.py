@@ -60,12 +60,8 @@ class BrowseController:
         self.starred_notes = self.load_starred()
 
     def _bind_events(self):
-        self.v.folder_menu.currentTextChanged.connect(
-            catch_and_report_crashes(self.on_folder_changed)
-        )
-        self.v.tag_filter.textChanged.connect(
-            catch_and_report_crashes(self.on_tag_changed)
-        )
+        self.v.folder_menu.currentTextChanged.connect(catch_and_report_crashes(self.on_folder_changed))
+        self.v.tag_filter.textChanged.connect(catch_and_report_crashes(self.on_tag_changed))
         self.v.import_btn.clicked.connect(catch_and_report_crashes(self.import_notes))
         self.v.export_btn.clicked.connect(catch_and_report_crashes(self.export_notes))
         self.v.delete_btn.clicked.connect(catch_and_report_crashes(self.delete_notes))
@@ -74,52 +70,24 @@ class BrowseController:
         self.v.edit_btn.clicked.connect(catch_and_report_crashes(self.enable_edit))
         self.v.save_btn.clicked.connect(catch_and_report_crashes(self.save_note))
         self.v.cancel_btn.clicked.connect(catch_and_report_crashes(self.cancel_edit))
-        self.v.summarize_btn.clicked.connect(
-            catch_and_report_crashes(self.open_summarize_dialog)
-        )
-        self.v.notes_tree.itemClicked.connect(
-            catch_and_report_crashes(self._on_note_item_clicked)
-        )
-        self.v.notes_tree.itemDoubleClicked.connect(
-            catch_and_report_crashes(self._on_note_item_double_clicked)
-        )
-        self.v.show_source_btn.clicked.connect(
-            catch_and_report_crashes(self.toggle_source_view)
-        )
-        self.v.multi_select_cb.toggled.connect(
-            catch_and_report_crashes(self.on_multi_select_toggled)
-        )
+        self.v.summarize_btn.clicked.connect(catch_and_report_crashes(self.open_summarize_dialog))
+        self.v.notes_tree.itemClicked.connect(catch_and_report_crashes(self._on_note_item_clicked))
+        self.v.notes_tree.itemDoubleClicked.connect(catch_and_report_crashes(self._on_note_item_double_clicked))
+        self.v.show_source_btn.clicked.connect(catch_and_report_crashes(self.toggle_source_view))
+        self.v.multi_select_cb.toggled.connect(catch_and_report_crashes(self.on_multi_select_toggled))
         self.v.notes_tree.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self.v.notes_tree.customContextMenuRequested.connect(
-            catch_and_report_crashes(self.show_notes_context_menu)
-        )
-        self.v.undo_move_btn.clicked.connect(
-            catch_and_report_crashes(self.undo_last_move)
-        )
-        self.v.star_btn.clicked.connect(
-            catch_and_report_crashes(self.toggle_star_selected_note)
-        )
-        self.v.history_btn.clicked.connect(
-            catch_and_report_crashes(self.open_history_dialog)
-        )
-        self.v.links_btn.clicked.connect(
-            catch_and_report_crashes(self.open_links_dialog)
-        )
-        self.v.metadata_btn.clicked.connect(
-            catch_and_report_crashes(self.open_metadata_dialog)
-        )
+        self.v.notes_tree.customContextMenuRequested.connect(catch_and_report_crashes(self.show_notes_context_menu))
+        self.v.undo_move_btn.clicked.connect(catch_and_report_crashes(self.undo_last_move))
+        self.v.star_btn.clicked.connect(catch_and_report_crashes(self.toggle_star_selected_note))
+        self.v.history_btn.clicked.connect(catch_and_report_crashes(self.open_history_dialog))
+        self.v.links_btn.clicked.connect(catch_and_report_crashes(self.open_links_dialog))
+        self.v.metadata_btn.clicked.connect(catch_and_report_crashes(self.open_metadata_dialog))
         self.v.fav_filter_cb.toggled.connect(catch_and_report_crashes(self.load_tree))
 
         self.v.search_btn.clicked.connect(catch_and_report_crashes(self.search_notes))
-        self.v.search_input.returnPressed.connect(
-            catch_and_report_crashes(self.search_notes)
-        )
-        self.v.clear_search_btn.clicked.connect(
-            catch_and_report_crashes(self.load_tree)
-        )
-        self.v.create_btn.clicked.connect(
-            catch_and_report_crashes(self.new_note_from_template)
-        )
+        self.v.search_input.returnPressed.connect(catch_and_report_crashes(self.search_notes))
+        self.v.clear_search_btn.clicked.connect(catch_and_report_crashes(self.load_tree))
+        self.v.create_btn.clicked.connect(catch_and_report_crashes(self.new_note_from_template))
 
     # --- Folder, Tag, and Tree Operations ---
 
@@ -131,7 +99,7 @@ class BrowseController:
     def load_tags(self):
         tags = set()
         wikilink_pattern = re.compile(r"\[\[([^\[\]]+)\]\]")
-        for note in self.storage.list_all_notes():
+        for note in self.storage.list_notes():
             content = self.storage.read_note(note)
             tags.update(wikilink_pattern.findall(content))
         tag_list = sorted(tags)
@@ -141,7 +109,7 @@ class BrowseController:
 
     def load_tree(self, *args, **kwargs):
         folders = list(self.storage.list_folders())
-        notes = list(self.storage.list_all_notes())
+        notes = list(self.storage.list_notes())
         self.v.set_tree_data(
             folders,
             notes,
@@ -150,7 +118,7 @@ class BrowseController:
             self.v.multi_select_cb.isChecked(),
         )
         if hasattr(self.v, "update_search_completer"):
-            self.v.update_search_completer(self.storage.list_all_notes())
+            self.v.update_search_completer(self.storage.list_notes())
 
     def on_folder_changed(self, *_):
         self.load_tree()
@@ -181,9 +149,7 @@ class BrowseController:
             menu.addAction("Export Note…", lambda: self.export_specific(note))
             menu.addAction("Delete Note", lambda: self.delete_specific(note))
             menu.addAction("Summarize Note", lambda: self.summarize_note(note))
-            menu.addAction(
-                "Switch View (Preview/Edit)", lambda: self.toggle_note_view_for(note)
-            )  # <-- add this line!
+            menu.addAction("Switch View (Preview/Edit)", lambda: self.toggle_note_view_for(note))  # <-- add this line!
             menu.addSeparator()
         menu.addAction("New Note", self.new_note)
         menu.addAction("Import Notes…", self.import_notes)
@@ -242,19 +208,20 @@ class BrowseController:
             try:
                 self.v.show_metadata(note_path)
             except Exception as e:
-                self.v.metadata_label.setText(
-                    f"<b>File:</b> {note_path}<br>(metadata unavailable: {e})"
-                )
+                self.v.metadata_label.setText(f"<b>File:</b> {note_path}<br>(metadata unavailable: {e})")
         else:
             self.v.show_metadata("")
 
+    def open_note_by_path(self, rel_path: str):
+        """Open a note directly by its vault-relative path (used by Dashboard)."""
+        try:
+            content = self.storage.read_note(rel_path)
+            self.v.open_note_tab(rel_path, content, editable=False)
+            self.preview_note(rel_path)
+        except Exception as e:
+            self.status_var.setText(f"Could not open note: {e}")
+
     def _on_note_item_clicked(self, item, column):
-        print(
-            "Item clicked:",
-            item.text(0),
-            "note_path:",
-            getattr(item, "note_path", None),
-        )
         if hasattr(item, "note_path"):
             # Only open a tab if NO tab is open (single select)
             if self.v.preview_tabs.count() == 0:
@@ -401,9 +368,7 @@ class BrowseController:
             self.v.show_status("No note(s) selected to delete.")
             return
 
-        if not self.v.ask_user_confirm(
-            "Delete Notes", f"Delete {len(to_delete)} note(s)?"
-        ):
+        if not self.v.ask_user_confirm("Delete Notes", f"Delete {len(to_delete)} note(s)?"):
             return
 
         errors = []
@@ -431,9 +396,7 @@ class BrowseController:
             self.v.show_status("No note(s) selected to tag.")
             return
 
-        tags, ok = QInputDialog.getText(
-            self.v, "Add Tags", "Enter tags (comma-separated):"
-        )
+        tags, ok = QInputDialog.getText(self.v, "Add Tags", "Enter tags (comma-separated):")
         if not ok or not tags.strip():
             return
 
@@ -441,11 +404,7 @@ class BrowseController:
         for note in to_tag:
             try:
                 old_content = self.storage.read_note(note)
-                new_content = (
-                    old_content
-                    + "\n\n"
-                    + " ".join(f"[[{t.strip()}]]" for t in tags.split(","))
-                )
+                new_content = old_content + "\n\n" + " ".join(f"[[{t.strip()}]]" for t in tags.split(","))
                 self.storage.write_note(note, new_content)
                 self.move_undo_stack.append(("tag_note", note, old_content))
             except Exception as e:
@@ -467,9 +426,7 @@ class BrowseController:
             self.v.show_status("No note(s) selected to move.")
             return
 
-        target_folder, ok = QInputDialog.getText(
-            self.v, "Move Notes", "Enter target folder:"
-        )
+        target_folder, ok = QInputDialog.getText(self.v, "Move Notes", "Enter target folder:")
         if not ok or not target_folder.strip():
             return
 
@@ -532,9 +489,7 @@ class BrowseController:
         dlg.setWindowTitle("Summarize Notes")
         dlg.resize(600, 400)
         view = SummarizeView(dlg, self.config)
-        SummarizeController(
-            view, self.ai, self.storage, self.config, status_var=self.v.status_label
-        )
+        SummarizeController(view, self.ai, self.storage, self.config, status_var=self.v.status_label)
         layout = QVBoxLayout(dlg)
         layout.addWidget(view)
         dlg.exec()
@@ -557,9 +512,7 @@ class BrowseController:
             if hasattr(tab, "toPlainText"):
                 md = tab.toPlainText()
             else:
-                md = getattr(tab, "_markdown_content", None) or self.storage.read_note(
-                    name
-                )
+                md = getattr(tab, "_markdown_content", None) or self.storage.read_note(name)
             import markdown2
 
             html = markdown2.markdown(md)
@@ -574,9 +527,7 @@ class BrowseController:
             try:
                 self.v.show_metadata(note_path)
             except Exception as e:
-                self.v.metadata_label.setText(
-                    f"<b>File:</b> {note_path}<br>(metadata unavailable: {e})"
-                )
+                self.v.metadata_label.setText(f"<b>File:</b> {note_path}<br>(metadata unavailable: {e})")
         else:
             self.v.show_metadata("")
 
@@ -618,14 +569,10 @@ class BrowseController:
             return
 
         if mode == "title":
-            results = [
-                n
-                for n in self.storage.list_all_notes()
-                if query.lower() in os.path.basename(n).lower()
-            ]
+            results = [n for n in self.storage.list_notes() if query.lower() in os.path.basename(n).lower()]
         elif mode == "tag":
             results = []
-            for n in self.storage.list_all_notes():
+            for n in self.storage.list_notes():
                 content = self.storage.read_note(n)
                 # Find all tags and check if query is a substring
                 tags = [
@@ -680,11 +627,9 @@ class BrowseController:
         full_path = os.path.join(self.config.VAULT_PATH, note_path)
         if not os.path.exists(full_path):
             return
-        version_dir = os.path.join(
-            self.config.VAULT_PATH, ".versions", os.path.dirname(note_path)
-        )
+        version_dir = os.path.join(self.config.VAULT_PATH, ".versions", os.path.dirname(note_path))
         os.makedirs(version_dir, exist_ok=True)
-        timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         version_name = f"{os.path.basename(note_path)}.{timestamp}.bak"
         backup_path = os.path.join(version_dir, version_name)
         shutil.copy2(full_path, backup_path)
@@ -694,9 +639,7 @@ class BrowseController:
         if not note:
             self.v.show_status("Select a note to view history.")
             return
-        version_dir = os.path.join(
-            self.config.VAULT_PATH, ".versions", os.path.dirname(note)
-        )
+        version_dir = os.path.join(self.config.VAULT_PATH, ".versions", os.path.dirname(note))
         pattern = os.path.splitext(os.path.basename(note))[0]
         if not os.path.isdir(version_dir):
             self.v.show_status("No versions saved for this note.")
@@ -726,11 +669,9 @@ class BrowseController:
         full_path = os.path.join(self.config.VAULT_PATH, note_path)
         if not os.path.exists(full_path):
             return
-        version_dir = os.path.join(
-            self.config.VAULT_PATH, ".versions", os.path.dirname(note_path)
-        )
+        version_dir = os.path.join(self.config.VAULT_PATH, ".versions", os.path.dirname(note_path))
         os.makedirs(version_dir, exist_ok=True)
-        timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         version_name = f"{os.path.basename(note_path)}.{timestamp}.bak"
         backup_path = os.path.join(version_dir, version_name)
         shutil.copy2(full_path, backup_path)
@@ -739,11 +680,7 @@ class BrowseController:
         MAX_BACKUPS = 20
         # Only keep backups for this note (by basename)
         backups = sorted(
-            [
-                f
-                for f in os.listdir(version_dir)
-                if f.startswith(os.path.basename(note_path)) and f.endswith(".bak")
-            ]
+            [f for f in os.listdir(version_dir) if f.startswith(os.path.basename(note_path)) and f.endswith(".bak")]
         )
         while len(backups) > MAX_BACKUPS:
             to_delete = backups.pop(0)
@@ -763,12 +700,8 @@ class BrowseController:
         # File stats
         if os.path.exists(full_path):
             stat = os.stat(full_path)
-            meta["Date Created"] = datetime.datetime.fromtimestamp(
-                stat.st_ctime
-            ).strftime("%Y-%m-%d %H:%M")
-            meta["Date Modified"] = datetime.datetime.fromtimestamp(
-                stat.st_mtime
-            ).strftime("%Y-%m-%d %H:%M")
+            meta["Date Created"] = datetime.fromtimestamp(stat.st_ctime).strftime("%Y-%m-%d %H:%M")
+            meta["Date Modified"] = datetime.fromtimestamp(stat.st_mtime).strftime("%Y-%m-%d %H:%M")
         else:
             meta["Date Created"] = meta["Date Modified"] = "N/A"
 
@@ -784,7 +717,7 @@ class BrowseController:
 
         # Optional: Backlinks (notes that mention this note)
         backlinks = []
-        for n in self.storage.list_all_notes():
+        for n in self.storage.list_notes():
             if n == note_name:
                 continue
             try:
@@ -841,7 +774,7 @@ class BrowseController:
         # --- Backlinks: any other note that links to this note
         note_base = os.path.splitext(os.path.basename(note))[0]
         backlinks = set()
-        for n in self.storage.list_all_notes():
+        for n in self.storage.list_notes():
             if n == note:
                 continue
             c = self.storage.read_note(n)
@@ -854,11 +787,8 @@ class BrowseController:
         def open_note_callback(link_name):
             # Try to resolve link to note path
             link_path = None
-            for n in self.storage.list_all_notes():
-                if (
-                    os.path.splitext(os.path.basename(n))[0].lower()
-                    == link_name.lower()
-                ):
+            for n in self.storage.list_notes():
+                if os.path.splitext(os.path.basename(n))[0].lower() == link_name.lower():
                     link_path = n
                     break
             if link_path:

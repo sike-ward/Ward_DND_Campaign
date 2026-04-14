@@ -1,0 +1,25 @@
+Timestamp: 2025-06-21T13:38:27.994970
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 181, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 51, in main
+    window = LoreMainApp(
+        ai_engine=ai_engine, storage_backend=storage_backend, config=config
+    )
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 97, in __init__
+    settings_view = SettingsView(self.tabview, self.ai, self._config)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\view_settings.py", line 74, in __init__
+    self.help_view = HelpView(self, self.config)
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\view_help.py", line 43, in __init__
+    self.debug_view = DebugView(self)
+                      ~~~~~~~~~^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\debug\view_debug.py", line 109, in __init__
+    self.runtime_save_btn.clicked.connect(self.save_runtime_log.emit)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'function' object has no attribute 'emit'

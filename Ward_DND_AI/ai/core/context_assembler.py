@@ -70,12 +70,14 @@ class ContextAssembler:
         if cache_key in self._context_cache:
             return self._context_cache[cache_key]
 
-        # 1. Get relevant note IDs
-        ids = self.index_manager.search(query, top_k)
+        # 1. Get relevant note IDs (safeguard: skip search if query is empty/None)
+        if not query or not query.strip():
+            ids = []
+        else:
+            ids = self.index_manager.search(query, top_k)
         if extra_ids:
             ids = list(dict.fromkeys(ids + extra_ids))  # Remove dups, keep order
-
-        # 2. Load note texts
+            # 2. Load note texts
         note_texts = []
         id_list = []
         for note_id in ids:

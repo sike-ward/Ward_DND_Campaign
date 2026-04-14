@@ -1,0 +1,30 @@
+Timestamp: 2025-06-26T14:50:28.192474
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 23, in _load_backend
+    instance = backend_cls(vault_path)
+TypeError: Can't instantiate abstract class ObsidianStorage without an implementation for abstract methods 'add_attachment', 'copy_note', 'create_folder', 'delete_attachment', 'delete_folder', 'delete_note', 'folder_exists', 'get_folder_metadata', 'get_note_metadata', 'get_user_by_email', 'list_attachments', 'read_note', 'write_note'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 269, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 46, in main
+    storage_backend = get_storage_backend(config)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 48, in get_storage_backend
+    return StorageRouter(config).backend
+           ~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 11, in __init__
+    self.backend = self._load_backend()
+                   ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\storage\storage_router.py", line 29, in _load_backend
+    raise ImportError(
+    ...<2 lines>...
+    )
+ImportError: Could not load storage backend 'obsidian': Can't instantiate abstract class ObsidianStorage without an implementation for abstract methods 'add_attachment', 'copy_note', 'create_folder', 'delete_attachment', 'delete_folder', 'delete_note', 'folder_exists', 'get_folder_metadata', 'get_note_metadata', 'get_user_by_email', 'list_attachments', 'read_note', 'write_note'
+Valid storage types: file, obsidian, (add your own...)

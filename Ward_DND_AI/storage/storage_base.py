@@ -1,194 +1,232 @@
-# Ward_DND_AI/storage/storage_base.py
-
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional, Set
+
+from Ward_DND_AI.models.character import Character
+from Ward_DND_AI.models.folder import Folder
+from Ward_DND_AI.models.group import Group
+from Ward_DND_AI.models.image import Image
+from Ward_DND_AI.models.map import Map
+from Ward_DND_AI.models.note import Note
+from Ward_DND_AI.models.session import Session
+from Ward_DND_AI.models.sound import Sound
+from Ward_DND_AI.models.user import User
+from Ward_DND_AI.models.vault import Vault
 
 
 class StorageBackend(ABC):
-    """
-    Abstract base class for all storage backends.
-    Every backend must implement these methods so that controllers
-    can interact with notes in a uniform way.
-    """
-
+    # --- CRUD for ALL MODELS ---
     @abstractmethod
-    def list_folders(self) -> List[str]:
-        """
-        Return a list of all folder names in the vault.
-        """
+    def save_user(self, user: User) -> None:
         pass
 
     @abstractmethod
-    def list_notes(self, folder: str) -> List[str]:
-        """
-        Return a list of note filenames (without path) in the given folder.
-        """
+    def get_user_by_id(self, user_id: str) -> Optional[User]:
         pass
 
     @abstractmethod
-    def list_all_notes(self) -> List[str]:
-        """
-        Return a list of all note paths (relative) across all folders.
-        """
+    def get_user_by_email(self, email: str) -> Optional[User]:
         pass
 
     @abstractmethod
-    def read_note(self, path: str) -> str:
-        """
-        Return the full raw content of the note at the given relative path.
-        """
+    def delete_user_by_id(self, user_id: str) -> None:
         pass
 
     @abstractmethod
-    def write_note(self, path: str, content: str) -> None:
-        """
-        Create or overwrite the note at the given relative path with the provided content.
-        """
+    def save_group(self, group: Group) -> None:
         pass
 
     @abstractmethod
-    def delete_note(self, path: str) -> None:
-        """
-        Delete the note at the given relative path.
-        """
+    def get_group_by_id(self, group_id: str) -> Optional[Group]:
         pass
 
     @abstractmethod
-    def list_tags(self) -> List[str]:
-        """
-        Return a deduplicated list of all tags found across notes.
-        """
+    def delete_group_by_id(self, group_id: str) -> None:
         pass
 
     @abstractmethod
-    def search_notes(self, query: str, top_k: int = 10) -> List[str]:
-        """
-        Search across notes for the given query string (or embedding).
-        Return up to `top_k` matching note paths.
-        """
-        pass
-        # --- Note Operations ---
-
-    @abstractmethod
-    def exists(self, path: str) -> bool:
-        """
-        Return True if the note exists at the given relative path.
-        """
+    def save_vault(self, vault: Vault) -> None:
         pass
 
     @abstractmethod
-    def move_note(self, src_path: str, dest_path: str) -> None:
-        """
-        Move a note from src_path to dest_path (overwriting if exists).
-        """
+    def get_vault_by_id(self, vault_id: str) -> Optional[Vault]:
         pass
 
     @abstractmethod
-    def copy_note(self, src_path: str, dest_path: str) -> None:
-        """
-        Duplicate a note from src_path to dest_path (overwriting if exists).
-        """
+    def delete_vault_by_id(self, vault_id: str) -> None:
         pass
 
-    # --- Folder Operations ---
+    @abstractmethod
+    def save_folder(self, folder: Folder) -> None:
+        pass
+
+    @abstractmethod
+    def get_folder_by_id(self, folder_id: str) -> Optional[Folder]:
+        pass
+
+    @abstractmethod
+    def delete_folder_by_id(self, folder_id: str) -> None:
+        pass
+
+    @abstractmethod
+    def save_note(self, note: Note) -> None:
+        pass
+
+    @abstractmethod
+    def get_note_by_id(self, note_id: str) -> Optional[Note]:
+        pass
+
+    @abstractmethod
+    def delete_note_by_id(self, note_id: str) -> None:
+        pass
+
+    @abstractmethod
+    def save_character(self, character: Character) -> None:
+        pass
+
+    @abstractmethod
+    def get_character_by_id(self, character_id: str) -> Optional[Character]:
+        pass
+
+    @abstractmethod
+    def delete_character_by_id(self, character_id: str) -> None:
+        pass
+
+    @abstractmethod
+    def save_map(self, map_obj: Map) -> None:
+        pass
+
+    @abstractmethod
+    def get_map_by_id(self, map_id: str) -> Optional[Map]:
+        pass
+
+    @abstractmethod
+    def delete_map_by_id(self, map_id: str) -> None:
+        pass
+
+    @abstractmethod
+    def save_image(self, image: Image) -> None:
+        pass
+
+    @abstractmethod
+    def get_image_by_id(self, image_id: str) -> Optional[Image]:
+        pass
+
+    @abstractmethod
+    def delete_image_by_id(self, image_id: str) -> None:
+        pass
+
+    @abstractmethod
+    def save_sound(self, sound: Sound) -> None:
+        pass
+
+    @abstractmethod
+    def get_sound_by_id(self, sound_id: str) -> Optional[Sound]:
+        pass
+
+    @abstractmethod
+    def delete_sound_by_id(self, sound_id: str) -> None:
+        pass
+
+    @abstractmethod
+    def save_session(self, session: Session) -> None:
+        pass
+
+    @abstractmethod
+    def get_session_by_id(self, session_id: str) -> Optional[Session]:
+        pass
+
+    @abstractmethod
+    def delete_session_by_id(self, session_id: str) -> None:
+        pass
+
+    # --- GENERIC FILE & FOLDER HELPERS ---
+    @abstractmethod
+    def list_folders(self, parent: str = "") -> List[str]:
+        pass
+
+    @abstractmethod
+    def list_notes(self, folder: str = "") -> List[str]:
+        pass
+
     @abstractmethod
     def create_folder(self, path: str) -> None:
-        """
-        Create a new folder at the given relative path.
-        """
         pass
 
     @abstractmethod
     def delete_folder(self, path: str) -> None:
-        """
-        Delete the folder at the given relative path, including all subfolders and notes.
-        """
         pass
 
     @abstractmethod
     def move_folder(self, src_path: str, dest_path: str) -> None:
-        """
-        Move/rename a folder (and its contents) from src_path to dest_path.
-        """
         pass
 
     @abstractmethod
     def folder_exists(self, path: str) -> bool:
-        """
-        Return True if the folder exists at the given relative path.
-        """
         pass
 
-    # --- Metadata and Utility ---
+    @abstractmethod
+    def read_note(self, path: str) -> str:
+        pass
+
+    @abstractmethod
+    def write_note(self, path: str, content: str) -> None:
+        pass
+
+    @abstractmethod
+    def delete_note(self, path: str) -> None:
+        pass
+
+    @abstractmethod
+    def note_exists(self, path: str) -> bool:
+        pass
+
+    @abstractmethod
+    def move_note(self, src_path: str, dest_path: str) -> None:
+        pass
+
+    @abstractmethod
+    def copy_note(self, src_path: str, dest_path: str) -> None:
+        pass
+
     @abstractmethod
     def get_note_metadata(self, path: str) -> dict:
-        """
-        Return metadata for a note (size, timestamps, tags, etc.) as a dict.
-        """
         pass
 
     @abstractmethod
     def get_folder_metadata(self, path: str) -> dict:
-        """
-        Return metadata for a folder (creation time, note count, total size, etc.) as a dict.
-        """
         pass
 
-    # --- Advanced/Optional Features for future-proofing ---
+    # --- FAVORITES/STARS ---
     @abstractmethod
-    def rename_note(self, old_path: str, new_path: str) -> None:
-        """
-        Rename a note (same as move_note, but clearer for UI logic).
-        """
+    def read_starred(self) -> Set[str]:
         pass
 
     @abstractmethod
-    def list_attachments(self, folder: str = "") -> list:
-        """
-        Return a list of non-note files (e.g., images, PDFs, media) in the given folder or whole vault.
-        """
+    def write_starred(self, stars: Set[str]) -> None:
+        pass
+
+    # --- VERSIONING/BACKUPS ---
+    @abstractmethod
+    def backup_note(self, note_path: str) -> str:
+        pass
+
+    @abstractmethod
+    def list_note_versions(self, note_path: str) -> List[str]:
+        pass
+
+    @abstractmethod
+    def restore_note_version(self, note_path: str, version: str) -> None:
+        pass
+
+    # --- ATTACHMENTS ---
+    @abstractmethod
+    def list_attachments(self, folder: str = "") -> List[str]:
         pass
 
     @abstractmethod
     def add_attachment(self, folder: str, filename: str, data: bytes) -> None:
-        """
-        Save a binary attachment (e.g., image, file) to the given folder.
-        """
         pass
 
     @abstractmethod
     def delete_attachment(self, path: str) -> None:
-        """
-        Delete an attachment file at the given relative path.
-        """
-        pass
-
-    # --- For Multiplayer/Cloud Support ---
-    @abstractmethod
-    def sync(self) -> None:
-        """
-        (Optional) Sync storage with remote/cloud if backend supports it.
-        """
-        pass
-
-    @abstractmethod
-    def get_change_log(self, since_timestamp: float = 0) -> list:
-        """
-        (Optional) Return a list of changes (add, edit, delete) since a given timestamp.
-        Used for collaborative/multiplayer sync.
-        """
-        pass
-
-    @abstractmethod
-    def lock_note(self, path: str, user_id: str) -> bool:
-        """
-        (Optional) Lock a note for editing by a given user; return True if lock is acquired.
-        """
-        pass
-
-    @abstractmethod
-    def unlock_note(self, path: str, user_id: str) -> None:
-        """
-        (Optional) Release the lock for a note by a given user.
-        """
         pass

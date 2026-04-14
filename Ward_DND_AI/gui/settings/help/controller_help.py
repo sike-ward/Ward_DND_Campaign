@@ -2,6 +2,7 @@ import webbrowser
 
 from PyQt6.QtCore import QObject
 
+from Ward_DND_AI.gui.settings.help.debug.controller_debug import DebugController
 from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes
 
 
@@ -14,8 +15,13 @@ class HelpController(QObject):
         self.config = config
         self.status_var = status_var or ""
 
+        # --- Documentation Tab Wiring ---
+        self.v.link_button.clicked.connect(catch_and_report_crashes(self.open_docs))
+
         self._populate()
-        self.v.open_docs_clicked.connect(catch_and_report_crashes(self.open_docs))
+
+        # --- Debug/Log Tab Wiring ---
+        self.debug_controller = DebugController(self.v.debug_view, config)
 
     @catch_and_report_crashes
     def _populate(self):

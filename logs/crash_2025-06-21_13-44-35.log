@@ -1,0 +1,13 @@
+Timestamp: 2025-06-21T13:44:35.088882
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 262, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 31, in main
+    logger = logging.getLogger(__name__)
+             ^^^^^^^
+UnboundLocalError: cannot access local variable 'logging' where it is not associated with a value

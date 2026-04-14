@@ -49,9 +49,7 @@ class SplitNoteEditor(QWidget):
         layout.addWidget(self.preview, 1)
         self.editor.setReadOnly(read_only)
 
-        self.editor.textChanged.connect(
-            self.update_preview if not read_only else lambda: None
-        )
+        self.editor.textChanged.connect(self.update_preview if not read_only else lambda: None)
 
     def update_preview(self):
         import markdown2
@@ -110,22 +108,17 @@ class NotesTree(QTreeWidget):
                             self,
                             "Overwrite Note",
                             f"Note '{filename}' already exists in '{target_folder}'. Overwrite?",
-                            QMessageBox.StandardButton.Yes
-                            | QMessageBox.StandardButton.No,
+                            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                         )
                         if confirm != QMessageBox.StandardButton.Yes:
                             continue
 
                     try:
                         self.controller.storage.move_note(note_path, new_path)
-                        self.controller.move_undo_stack.append(
-                            ("note", new_path, note_path)
-                        )
+                        self.controller.move_undo_stack.append(("note", new_path, note_path))
                         moved_any = True
                         self.controller.v.rename_tab_by_note(note_path, new_path)
-                        self.controller.v.show_status(
-                            f"Moved note: {note_path} → {new_path}"
-                        )
+                        self.controller.v.show_status(f"Moved note: {note_path} → {new_path}")
                     except Exception as e:
                         error_msgs.append(f"Failed to move note: {note_path}: {e}")
 
@@ -167,13 +160,9 @@ class NotesTree(QTreeWidget):
 
                 try:
                     self.controller.storage.move_folder(folder_path, new_path)
-                    self.controller.move_undo_stack.append(
-                        ("folder", new_path, folder_path)
-                    )
+                    self.controller.move_undo_stack.append(("folder", new_path, folder_path))
                     moved_any = True
-                    self.controller.v.show_status(
-                        f"Moved folder: {folder_path} → {new_path}"
-                    )
+                    self.controller.v.show_status(f"Moved folder: {folder_path} → {new_path}")
                 except Exception as e:
                     error_msgs.append(f"Failed to move folder: {folder_path}: {e}")
 
@@ -205,9 +194,7 @@ class BrowseView(QWidget):
         top_layout.addWidget(self.folder_menu)
 
         self.tag_filter = QLineEdit()
-        self.tag_filter.setPlaceholderText(
-            "Tag(s), comma-separated or leave blank for all"
-        )
+        self.tag_filter.setPlaceholderText("Tag(s), comma-separated or leave blank for all")
         self.tag_completer = QCompleter([])
         self.tag_completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self.tag_completer.setFilterMode(Qt.MatchFlag.MatchContains)
@@ -289,15 +276,11 @@ class BrowseView(QWidget):
 
         self.notes_tree = NotesTree()
         self.notes_tree.setHeaderHidden(True)
-        self.notes_tree.setSelectionMode(
-            QAbstractItemView.SelectionMode.SingleSelection
-        )
+        self.notes_tree.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.notes_tree.setDragDropMode(QAbstractItemView.DragDropMode.InternalMove)
         left_layout.addWidget(self.notes_tree)
         body_layout.addWidget(left, 1)
-        self.notes_tree.setHorizontalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOn
-        )
+        self.notes_tree.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.notes_tree.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.notes_tree.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
@@ -352,9 +335,7 @@ class BrowseView(QWidget):
         self.metadata_label.setTextFormat(Qt.TextFormat.RichText)
         self.metadata_label.setWordWrap(True)
         self.metadata_label.setMinimumHeight(30)
-        self.metadata_label.setMaximumHeight(
-            600
-        )  # or whatever looks right for your layout
+        self.metadata_label.setMaximumHeight(600)  # or whatever looks right for your layout
 
         meta_scroll = QScrollArea()
         meta_scroll.setWidgetResizable(True)
@@ -371,9 +352,7 @@ class BrowseView(QWidget):
         self.tag_filter.returnPressed.connect(lambda: self.controller.load_tree())
         self.tag_logic.currentTextChanged.connect(lambda: self.controller.load_tree())
 
-        self.notes_tree.setSelectionMode(
-            QAbstractItemView.SelectionMode.SingleSelection
-        )
+        self.notes_tree.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.toggle_multi_select(self.multi_select_cb.isChecked())
         self.status_label.setText("Ready")
 
@@ -411,18 +390,14 @@ class BrowseView(QWidget):
         try:
             meta = self.controller.get_full_metadata(note_name)
             if not meta or "File Name" not in meta:  # Defensive
-                self.metadata_label.setText(
-                    f"<b>File:</b> {note_name}<br>(No metadata)"
-                )
+                self.metadata_label.setText(f"<b>File:</b> {note_name}<br>(No metadata)")
                 return
             lines = []
             for k, v in meta.items():
                 lines.append(f"<b>{k}:</b> {v}")
             self.metadata_label.setText("<br>".join(lines))
         except Exception as e:
-            self.metadata_label.setText(
-                f"<b>File:</b> {note_name}<br>(metadata unavailable: {e})"
-            )
+            self.metadata_label.setText(f"<b>File:</b> {note_name}<br>(metadata unavailable: {e})")
 
     def enable_buttons(self, save=False, cancel=False, edit=True):
         self.save_btn.setEnabled(save)
@@ -433,9 +408,7 @@ class BrowseView(QWidget):
         self.status_label.setText(message)
 
     def ask_user_folder(self, title, label):
-        return QInputDialog.getItem(
-            self, title, label, self._get_all_folders(), 0, False
-        )
+        return QInputDialog.getItem(self, title, label, self._get_all_folders(), 0, False)
 
     def _get_all_folders(self):
         # Always fetch from storage backend, never direct FS
@@ -556,9 +529,7 @@ class BrowseView(QWidget):
                 self,
                 "Unsaved Changes",
                 f"Save changes to '{editor.note_name}' before closing?",
-                QMessageBox.StandardButton.Yes
-                | QMessageBox.StandardButton.No
-                | QMessageBox.StandardButton.Cancel,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No | QMessageBox.StandardButton.Cancel,
             )
             if reply == QMessageBox.StandardButton.Cancel:
                 return
@@ -617,9 +588,7 @@ class BrowseView(QWidget):
 
         editor.textChanged.connect(update_preview)
 
-        self.preview_tabs.addTab(
-            widget, os.path.basename(note_name) + " (HTML Editing)"
-        )
+        self.preview_tabs.addTab(widget, os.path.basename(note_name) + " (HTML Editing)")
         self.preview_tabs.setCurrentWidget(widget)
 
     def show_markdown_editor(self, note_name, markdown_content):
@@ -640,15 +609,11 @@ class BrowseView(QWidget):
 
     def toggle_multi_select(self, enabled):
         if enabled:
-            self.notes_tree.setSelectionMode(
-                QAbstractItemView.SelectionMode.ExtendedSelection
-            )
+            self.notes_tree.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
             self.select_btn.setVisible(True)
             self.undo_move_btn.setVisible(True)
         else:
-            self.notes_tree.setSelectionMode(
-                QAbstractItemView.SelectionMode.SingleSelection
-            )
+            self.notes_tree.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
             self.select_btn.setVisible(False)
             self.undo_move_btn.setVisible(False)
 
@@ -662,22 +627,15 @@ class BrowseView(QWidget):
             return item.note_path
         return None
 
-    def set_tree_data(
-        self, folders, notes, current_folder, current_tag, multi_select_enabled
-    ):
+    def set_tree_data(self, folders, notes, current_folder, current_tag, multi_select_enabled):
         self.notes_tree.clear()
         # Build all folder nodes first, in order from root downward
         folder_items = {}
         all_folders = set([""] + folders)
         # Sort so parents are created before children (by depth then name)
-        for folder_path in sorted(
-            all_folders, key=lambda x: (x.count("/"), x.replace("\\", "/"))
-        ):
+        for folder_path in sorted(all_folders, key=lambda x: (x.count("/"), x.replace("\\", "/"))):
             # Filter by current_folder (if any)
-            if current_folder and not (
-                folder_path == current_folder
-                or folder_path.startswith(current_folder + "\\")
-            ):
+            if current_folder and not (folder_path == current_folder or folder_path.startswith(current_folder + "\\")):
                 continue
             name = folder_path if folder_path else "<root>"
             item = QTreeWidgetItem([name])
@@ -709,13 +667,9 @@ class BrowseView(QWidget):
                     continue
 
             starred = False
-            if hasattr(self, "controller") and hasattr(
-                self.controller, "is_note_starred"
-            ):
+            if hasattr(self, "controller") and hasattr(self.controller, "is_note_starred"):
                 starred = self.controller.is_note_starred(note)
-            display_name = (
-                f"★ {os.path.basename(note)}" if starred else os.path.basename(note)
-            )
+            display_name = f"★ {os.path.basename(note)}" if starred else os.path.basename(note)
             note_item = QTreeWidgetItem([display_name])
             note_item.note_path = note
             note_item.display_name = display_name
@@ -766,9 +720,34 @@ class BrowseView(QWidget):
 
     def update_search_completer(self, note_names):
         # note_names: list of all note filenames (not full paths, just the visible names)
-        self.search_completer.model().setStringList(
-            [os.path.basename(n) for n in note_names]
-        )
+        self.search_completer.model().setStringList([os.path.basename(n) for n in note_names])
+
+    def save_all_unsaved_tabs_to_recovery_folder(self, recovery_dir):
+        """
+        Save all open note tabs (editors only) to recovery folder.
+        """
+        import os
+        from datetime import datetime
+
+        for i in range(self.preview_tabs.count()):
+            widget = self.preview_tabs.widget(i)
+            # Only care about tabs that are editors, not just previewers
+            # (QTextEdit, SplitNoteEditor, etc.)
+            if hasattr(widget, "note_name"):
+                note_name = widget.note_name
+                # Try to get markdown/text content
+                if hasattr(widget, "toPlainText"):
+                    content = widget.toPlainText()
+                elif hasattr(widget, "editor") and hasattr(widget.editor, "toPlainText"):
+                    content = widget.editor.toPlainText()
+                else:
+                    continue
+                # Save to file
+                safe_name = note_name.replace("/", "__").replace("\\", "__")
+                fname = f"recovery_{safe_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+                path = os.path.join(recovery_dir, fname)
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write(content)
 
 
 class NoteLinksDialog(QDialog):
@@ -787,12 +766,8 @@ class NoteLinksDialog(QDialog):
         for note in sorted(backlinks):
             self.bw_list.addItem(note)
         layout.addWidget(self.bw_list)
-        self.fw_list.itemDoubleClicked.connect(
-            lambda item: self._open(item, open_callback)
-        )
-        self.bw_list.itemDoubleClicked.connect(
-            lambda item: self._open(item, open_callback)
-        )
+        self.fw_list.itemDoubleClicked.connect(lambda item: self._open(item, open_callback))
+        self.bw_list.itemDoubleClicked.connect(lambda item: self._open(item, open_callback))
 
     def _open(self, item, cb):
         cb(item.text())
@@ -812,9 +787,7 @@ class VersionHistoryDialog(QDialog):
         self.list = QListWidget()
         for vfile, vtime in versions:
             self.list.addItem(f"{vtime} – {os.path.basename(vfile)}")
-        layout.addWidget(
-            QLabel("Double-click to preview. Select and Restore to roll back.")
-        )
+        layout.addWidget(QLabel("Double-click to preview. Select and Restore to roll back."))
         layout.addWidget(self.list)
         self.restore_btn = QPushButton("Restore Selected")
         layout.addWidget(self.restore_btn)
@@ -880,9 +853,7 @@ class QuickSwitcherDialog(QDialog):
     def filter_notes(self, text):
         self.list.clear()
         text = text.lower()
-        self.filtered = [
-            n for n in self.all_notes if text in os.path.basename(n).lower()
-        ]
+        self.filtered = [n for n in self.all_notes if text in os.path.basename(n).lower()]
         for n in self.filtered:
             item = QListWidgetItem(os.path.basename(n))
             item.setData(256, n)  # 256 = Qt.UserRole, full path

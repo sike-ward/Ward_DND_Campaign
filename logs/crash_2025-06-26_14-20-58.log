@@ -1,0 +1,27 @@
+Timestamp: 2025-06-26T14:20:58.047946
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 269, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 51, in main
+    window = LoreMainApp(
+        ai_engine=ai_engine, storage_backend=storage_backend, config=config
+    )
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 73, in __init__
+    self.browse_controller = BrowseController(
+                             ~~~~~~~~~~~~~~~~^
+        browse_view, self.ai, self.storage, self._config
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\browse\controller_browse.py", line 57, in __init__
+    self.load_tags()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\browse\controller_browse.py", line 134, in load_tags
+    for note in self.storage.list_all_notes():
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ObsidianStorage' object has no attribute 'list_all_notes'. Did you mean: 'list_notes'?

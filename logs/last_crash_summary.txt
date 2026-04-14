@@ -1,2 +1,2 @@
-AttributeError: Config has no attribute 'AI_MODEL'
-See full log: C:\Users\Evan\Desktop\Ward_DND_Campaign\logs\crash_2025-06-16_22-38-50.log
+AttributeError: 'SummarizeController' object has no attribute 'core_storage'
+See full log: C:\Users\Evan\Desktop\Ward_DND_Campaign\logs\crash_2025-06-27_23-18-33.log

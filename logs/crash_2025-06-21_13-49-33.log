@@ -1,0 +1,33 @@
+Timestamp: 2025-06-21T13:49:33.295479
+Platform: Windows-10-10.0.19045-SP0
+Python: 3.13.4
+Executable: C:\Users\Evan\Desktop\Ward_DND_Campaign\.venv\Scripts\python.exe
+Args: Ward_DND_AI\main.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 266, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 60, in main
+    raise Exception("Test: This is a simulated crash to test the handler UI")
+Exception: Test: This is a simulated crash to test the handler UI
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 73, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 269, in wrapper
+    CrashHandler.handle_exception(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 254, in handle_exception
+    cls.show_error_dialog(error_msg, log_file)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 65, in show_error_dialog
+    CrashHandler._show_gui_error_dialog(error_msg, log_file)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 181, in _show_gui_error_dialog
+    cursor = dev_text.find("[KCrash Handler]", cursor)
+TypeError: arguments did not match any overloaded call:
+  find(self, exp: Optional[str], options: QTextDocument.FindFlag = QTextDocument.FindFlags()): argument 2 has unexpected type 'QTextCursor'
+  find(self, exp: QRegularExpression, options: QTextDocument.FindFlag = QTextDocument.FindFlags()): argument 1 has unexpected type 'str'

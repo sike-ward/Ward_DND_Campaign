@@ -1,11 +1,9 @@
 import sys
 
 from PyQt6.QtWidgets import (
-    QApplication,
     QMainWindow,
     QMenu,
     QMenuBar,
-    QMessageBox,
     QStatusBar,
     QTabWidget,
 )
@@ -22,7 +20,7 @@ from Ward_DND_AI.gui.chat.view_chat import ChatView
 from Ward_DND_AI.gui.create.controller_create import CreateController
 from Ward_DND_AI.gui.create.view_create import CreateView
 
-# New Dashboard tab (stub)
+# Dashboard tab
 from Ward_DND_AI.gui.dashboard.controller_dashboard import DashboardController
 from Ward_DND_AI.gui.dashboard.view_dashboard import DashboardView
 
@@ -30,17 +28,18 @@ from Ward_DND_AI.gui.dashboard.view_dashboard import DashboardView
 from Ward_DND_AI.gui.settings.controller_settings import SettingsController
 from Ward_DND_AI.gui.settings.view_settings import SettingsView
 
-# New World Builder tab
-# World tab (Timeline)
+# Universe (Timeline) tab
 from Ward_DND_AI.gui.universe.timeline.controller_timeline import TimelineController
 from Ward_DND_AI.gui.universe.timeline.view_timeline import TimelineView
 
+# ... imports as before ...
+
 
 class LoreMainApp(QMainWindow):
-    def __init__(self, ai_engine=None, storage_backend=None, config=None):
+    def __init__(self, ai_engine=None, storage=None, config=None):
         super().__init__()
         self.ai = ai_engine
-        self.storage = storage_backend
+        self.storage = storage
         self._config = config
 
         self.setWindowTitle("Obsidian Lore Assistant")
@@ -49,55 +48,41 @@ class LoreMainApp(QMainWindow):
         # --- Central Tab Widget ---
         self.tabview = QTabWidget()
         self.setCentralWidget(self.tabview)
-
-        # --- Add tabs: Dashboard, AI, Browse, Create, World, Settings ---
         self.tabs = {}
-        # Dashboard (real view/controller)
+
+        # --- Dashboard Tab ---
         dash_view = DashboardView(self.tabview, self._config)
-        self.dashboard_controller = DashboardController(
-            dash_view, self.ai, self.storage, self._config
-        )
+        self.dashboard_controller = DashboardController(dash_view, self.ai, self.storage, self._config)
         self.tabview.addTab(dash_view, "Dashboard")
         self.tabs["Dashboard"] = dash_view
 
-        # AI (formerly Ask)
+        # --- AI (Ask) Tab ---
         ai_view = ChatView(self.tabview, self._config)
-        self.ask_controller = ChatController(
-            ai_view, self.ai, self.storage, self._config
-        )
+        self.ask_controller = ChatController(ai_view, self.ai, self.storage, self._config)
         self.tabview.addTab(ai_view, "AI")
         self.tabs["AI"] = ai_view
 
-        # Browse (formerly Browse Vault)
+        # --- Browse Tab ---
         browse_view = BrowseView(self.tabview, self._config)
-        self.browse_controller = BrowseController(
-            browse_view, self.ai, self.storage, self._config
-        )
+        self.browse_controller = BrowseController(browse_view, self.ai, self.storage, self._config)
         self.tabview.addTab(browse_view, "Browse")
         self.tabs["Browse"] = browse_view
 
-        # Create (Random Generator)
-        # Create (composite)
+        # --- Create Tab ---
         create_view = CreateView(self.tabview, self._config)
-        self.create_controller = CreateController(
-            create_view, self.ai, self.storage, self._config
-        )
+        self.create_controller = CreateController(create_view, self.ai, self.storage, self._config)
         self.tabview.addTab(create_view, "Create")
         self.tabs["Create"] = create_view
 
-        # Universe (Timeline)
+        # --- Universe (Timeline) Tab ---
         universe_view = TimelineView(self.tabview, self._config)
-        self.timeline_controller = TimelineController(
-            universe_view, self.ai, self.storage, self._config
-        )
+        self.timeline_controller = TimelineController(universe_view, self.ai, self.storage, self._config)
         self.tabview.addTab(universe_view, "Universe")
         self.tabs["Universe"] = universe_view
 
-        # Settings
+        # --- Settings Tab ---
         settings_view = SettingsView(self.tabview, self.ai, self._config)
-        self.settings_controller = SettingsController(
-            settings_view, self._config, self.ai, self.storage
-        )
+        self.settings_controller = SettingsController(settings_view, self._config, self.storage)
         self.tabview.addTab(settings_view, "Settings")
         self.tabs["Settings"] = settings_view
 
@@ -106,11 +91,11 @@ class LoreMainApp(QMainWindow):
         self.setStatusBar(self.statusbar)
         self.statusbar.showMessage("Ready")
 
-        # --- Menu Bar ---
+        # --- Menu and Shortcuts ---
         self._setup_menubar()
-
-        # --- Keyboard Shortcuts ---
         self._setup_shortcuts()
+
+    # ... rest of the file unchanged ...
 
     def _setup_menubar(self):
         from PyQt6.QtGui import QAction, QKeySequence
@@ -147,29 +132,31 @@ class LoreMainApp(QMainWindow):
         self.setMenuBar(menubar)
 
     def _setup_shortcuts(self):
-        # Will wire these to Ask tab after that migration step
+        # Placeholder for keyboard shortcuts wiring
         pass
 
-    # --- Menu Actions (Stubbed, to be filled in with tab logic) ---
+    # --- Menu Actions ---
     def _menu_new_note(self):
-        QMessageBox.information(
-            self, "Stub", "New Note action (wire to Browse tab later)"
-        )
+        self.tabview.setCurrentWidget(self.tabs.get("Browse", self.centralWidget()))
+        if hasattr(self, "browse_controller"):
+            self.browse_controller.new_note()
 
     def _menu_import_note(self):
-        QMessageBox.information(
-            self, "Stub", "Import Note action (wire to Browse tab later)"
-        )
+        self.tabview.setCurrentWidget(self.tabs.get("Browse", self.centralWidget()))
+        if hasattr(self, "browse_controller"):
+            self.browse_controller.import_notes()
 
     def _menu_export_note(self):
-        QMessageBox.information(
-            self, "Stub", "Export Note action (wire to Browse tab later)"
-        )
+        self.tabview.setCurrentWidget(self.tabs.get("Browse", self.centralWidget()))
+        if hasattr(self, "browse_controller"):
+            self.browse_controller.export_notes()
 
 
-# Standalone run for testing window only (will not break import)
+# Standalone run for testing window only
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    from Ward_DND_AI.utils.crash_handler import ExceptionCatchingApplication
+
+    app = ExceptionCatchingApplication(sys.argv)
     window = LoreMainApp()
     window.show()
     sys.exit(app.exec())

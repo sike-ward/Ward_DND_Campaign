@@ -6,7 +6,6 @@ from Ward_DND_AI.ai.core.ai_base import AIInterface
 
 # Global mapping: capability name → AIInterface subclass
 _PLUGINS: Dict[str, Type[AIInterface]] = {}
-# --- FORCE PLUGIN MODULES TO REGISTER THEMSELVES ---
 
 
 def register_plugin(name: str):
@@ -34,5 +33,11 @@ def get_plugin(name: str) -> Type[AIInterface]:
 
 
 def list_plugins() -> Dict[str, Type[AIInterface]]:
-    """Return the full mapping of capability names → plugin classes."""
+    """
+    Return the full mapping of capability names → plugin classes.
+    """
     return dict(_PLUGINS)
+
+
+# Force import of core plugin modules so they register themselves
+# This avoids circular imports and ensures @register_plugin decorators run

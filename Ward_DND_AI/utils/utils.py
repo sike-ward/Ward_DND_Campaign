@@ -2,6 +2,7 @@ import os
 import re
 
 import yaml
+from PyQt6.QtGui import QColor, QFont, QSyntaxHighlighter, QTextCharFormat
 
 
 def make_title_case_filename(text):
@@ -39,115 +40,75 @@ def get_all_folders(vault_path):
     return sorted(folders)
 
 
-# ─── utils.py ─── Markdown highlighter ────────────────────────────────
+# ─── Markdown syntax highlighter (PyQt6) ──────────────────────────────
 
 
-# map :icon_name: → emoji
-ICON_MAP = {
-    "warning": "⚠️",
-    "info": "ℹ️",
-    "star": "⭐",
-    "check": "✅",
-    # …add more here
-}
+class MarkdownHighlighter(QSyntaxHighlighter):
+    """
+    PyQt6 QSyntaxHighlighter for Markdown / Obsidian notes.
+    Attach to any QTextDocument: MarkdownHighlighter(text_edit.document())
+    """
+
+    HEADING_COLORS = ["#bf616a", "#d08770", "#ebcb8b", "#a3be8c", "#88c0d0", "#5e81ac"]
+    HEADING_SIZES = [20, 18, 16, 14, 13, 12]
+
+    def __init__(self, document):
+        super().__init__(document)
+        self._rules = []
+        self._build_rules()
+
+    def _fmt(self, color, bold=False, italic=False, size=None):
+        fmt = QTextCharFormat()
+        fmt.setForeground(QColor(color))
+        if bold:
+            fmt.setFontWeight(QFont.Weight.Bold)
+        if italic:
+            fmt.setFontItalic(True)
+        if size:
+            fmt.setFontPointSize(size)
+        return fmt
+
+    def _build_rules(self):
+        # Headings #–######
+        for lvl in range(1, 7):
+            hashes = "#" * lvl
+            pattern = re.compile(rf"^{hashes}(?!#)\s*.+$", re.MULTILINE)
+            fmt = self._fmt(
+                self.HEADING_COLORS[lvl - 1],
+                bold=True,
+                size=self.HEADING_SIZES[lvl - 1],
+            )
+            self._rules.append((pattern, fmt))
+
+        # Bold **text**
+        self._rules.append((re.compile(r"\*\*.+?\*\*"), self._fmt("#d8dee9", bold=True)))
+        # Italic *text*
+        self._rules.append((re.compile(r"(?<!\*)\*(?!\*).+?(?<!\*)\*(?!\*)"), self._fmt("#d8dee9", italic=True)))
+        # Inline code `code`
+        self._rules.append((re.compile(r"`[^`]+?`"), self._fmt("#88c0d0")))
+        # Blockquotes
+        self._rules.append((re.compile(r"^>\s+.+$", re.MULTILINE), self._fmt("#657b83", italic=True)))
+        # Unordered lists
+        self._rules.append((re.compile(r"^[-*+]\s+.+$", re.MULTILINE), self._fmt("#d8dee9")))
+        # Wiki links [[...]]
+        self._rules.append((re.compile(r"\[\[.+?\]\]"), self._fmt("#81a1c1")))
+        # Markdown links [text](url)
+        self._rules.append((re.compile(r"\[.+?\]\(.+?\)"), self._fmt("#81a1c1")))
+        # Tags #tag
+        self._rules.append((re.compile(r"(?<!\[)#\w+"), self._fmt("#a3be8c")))
+
+    def highlightBlock(self, text: str):
+        for pattern, fmt in self._rules:
+            for m in pattern.finditer(text):
+                self.setFormat(m.start(), m.end() - m.start(), fmt)
 
 
-def highlight_markdown(text_widget):
-    import re
-
-    # get the real tk.Text inside CTkTextbox, or fallback to widget itself
-    tv = getattr(text_widget, "_textbox", text_widget)
-
-    # 1) clear all existing tags
-    for tag in tv.tag_names():
-        tv.tag_remove(tag, "1.0", "end")
-    content = tv.get("1.0", "end-1c")
-
-    # 2) Headings (#–######)
-    for m in re.finditer(r"^(#{1,6})\s*(.+)$", content, flags=re.MULTILINE):
-        lvl = len(m.group(1))
-        start = f"1.0+{m.start(2)}c"
-        end = f"1.0+{m.end(2)}c"
-        tv.tag_add(f"heading{lvl}", start, end)
-
-    # 3) Bold **text**
-    for m in re.finditer(r"\*\*(.+?)\*\*", content):
-        s = f"1.0+{m.start(1)}c"
-        e = f"1.0+{m.end(1)}c"
-        tv.tag_add("bold", s, e)
-
-    # 4) Italic *text*
-    for m in re.finditer(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", content):
-        s = f"1.0+{m.start(1)}c"
-        e = f"1.0+{m.end(1)}c"
-        tv.tag_add("italic", s, e)
-
-    # 5) Inline code `code`
-    for m in re.finditer(r"`([^`]+?)`", content):
-        s = f"1.0+{m.start(1)}c"
-        e = f"1.0+{m.end(1)}c"
-        tv.tag_add("code", s, e)
-
-    # 6) Blockquotes > text
-    for m in re.finditer(r"^(>\s+.+)$", content, flags=re.MULTILINE):
-        s = f"1.0+{m.start(1)}c"
-        e = f"1.0+{m.end(1)}c"
-        tv.tag_add("blockquote", s, e)
-
-    # 7) Lists (-, *, +)
-    for m in re.finditer(r"^(?:[-\*\+])\s+(.+)$", content, flags=re.MULTILINE):
-        s = f"1.0+{m.start(1)}c"
-        e = f"1.0+{m.end(1)}c"
-        tv.tag_add("list", s, e)
-
-    # 8) Links [text](url)
-    for m in re.finditer(r"\[([^\]]+)\]\([^)]+\)", content):
-        s = f"1.0+{m.start(1)}c"
-        e = f"1.0+{m.end(1)}c"
-        tv.tag_add("link", s, e)
-
-    # 9) Icons :icon_name:
-    repls = []
-    for m in re.finditer(r":(\w+):", content):
-        name = m.group(1)
-        if name in ICON_MAP:
-            repls.append((m.start(), m.end(), ICON_MAP[name]))
-    offset = 0
-    for a, b, emoji in repls:
-        s = f"1.0+{a+offset}c"
-        e = f"1.0+{b+offset}c"
-        tv.configure(state="normal")
-        tv.delete(s, e)
-        tv.insert(s, emoji, ("icon",))
-        offset += len(emoji) - (b - a)
-        tv.configure(state="disabled")
-
-    # 10) Configure tag styles
-    tv.tag_configure("bold", font=("Consolas", 12, "bold"))
-    tv.tag_configure("italic", font=("Consolas", 12, "italic"))
-    tv.tag_configure(
-        "code", font=("Consolas", 12), background="#2e3440", foreground="#88c0d0"
-    )
-    tv.tag_configure(
-        "blockquote", font=("Consolas", 12, "italic"), foreground="#657b83"
-    )
-    tv.tag_configure("list", foreground="#d8dee9")
-    tv.tag_configure("link", foreground="#81a1c1", underline=True)
-    tv.tag_configure("icon", font=("Consolas", 12))
-    for lvl, (size, color) in enumerate(
-        [
-            (20, "#bf616a"),
-            (18, "#d08770"),
-            (16, "#ebcb8b"),
-            (14, "#a3be8c"),
-            (13, "#88c0d0"),
-            (12, "#5e81ac"),
-        ],
-        start=1,
-    ):
-        tv.tag_configure(
-            f"heading{lvl}", font=("Consolas", size, "bold"), foreground=color
-        )
+def highlight_markdown(text_edit):
+    """
+    Attach a MarkdownHighlighter to a QTextEdit or QPlainTextEdit.
+    Returns the highlighter instance (keep a reference so it isn't GC'd).
+    """
+    return MarkdownHighlighter(text_edit.document())
 
 
 def read_note_metadata(note_text):
@@ -176,3 +137,40 @@ def write_note_metadata(metadata_dict, body_text):
     """
     yaml_str = yaml.safe_dump(metadata_dict, sort_keys=False).strip()
     return f"---\n{yaml_str}\n---\n{body_text.lstrip()}"
+
+
+class TracebackHighlighter(QSyntaxHighlighter):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        # Format for "Traceback (most recent call last):"
+        self.traceback_format = QTextCharFormat()
+        self.traceback_format.setForeground(QColor("#ffb347"))
+        self.traceback_format.setFontWeight(QFont.Weight.Bold)
+
+        # Format for file/line blocks
+        self.fileline_format = QTextCharFormat()
+        self.fileline_format.setForeground(QColor("#5fc4ff"))
+        self.fileline_format.setFontItalic(True)
+
+        # Format for error types
+        self.error_format = QTextCharFormat()
+        self.error_format.setForeground(QColor("#ff6767"))
+        self.error_format.setFontWeight(QFont.Weight.Bold)
+
+        # Format for code lines
+        self.code_format = QTextCharFormat()
+        self.code_format.setForeground(QColor("#bbbbbb"))
+
+        self.re_traceback = re.compile(r"^Traceback \(most recent call last\):")
+        self.re_fileline = re.compile(r'  File ".*", line \d+, in .+')
+        self.re_error = re.compile(r"^[\w.]+Error: |^[\w.]+Exception:")
+
+    def highlightBlock(self, text):
+        if self.re_traceback.match(text):
+            self.setFormat(0, len(text), self.traceback_format)
+        elif self.re_fileline.match(text):
+            self.setFormat(0, len(text), self.fileline_format)
+        elif self.re_error.match(text):
+            self.setFormat(0, len(text), self.error_format)
+        elif text.strip().startswith("    "):
+            self.setFormat(0, len(text), self.code_format)

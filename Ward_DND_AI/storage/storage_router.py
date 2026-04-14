@@ -28,7 +28,7 @@ class StorageRouter:
             # Show available backends to help debug
             raise ImportError(
                 f"Could not load storage backend '{storage_type}': {e}\n"
-                "Valid storage types: file, obsidian, (add your own...)"
+                "Valid storage types: file, obsidian, hybrid, (add your own...)"
             )
 
     def reload_backend(self, config=None):

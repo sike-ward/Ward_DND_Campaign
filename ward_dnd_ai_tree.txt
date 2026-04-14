@@ -4,21 +4,38 @@ Ward_DND_AI/
 ├── ai
 │   ├── __init__.py
 │   ├── __pycache__
+│   ├── ai_logging.py
+│   ├── ai_usage_log.csv
 │   ├── core
 │   │   ├── __pycache__
 │   │   ├── ai_base.py
-│   │   ├── context_engine.py
+│   │   ├── context_assembler.py
+│   │   ├── index_manager.py
 │   │   ├── loreai_engine.py
 │   │   ├── model_router.py
 │   │   └── openai_engine.py
 │   └── registry.py
+├── auth
+│   ├── _init_.py
+│   ├── auth_manager.py
+│   ├── permissions.py
+│   ├── security.py
+│   ├── session_manager.py
+│   └── token.py
 ├── config
 │   ├── __init__.py
 │   ├── __pycache__
 │   ├── config.py
+│   ├── note_templates.yaml
 │   └── settings.json
+├── context
+│   ├── __pycache__
+│   ├── _init_.py
+│   └── app_context.py
+├── data
 ├── docs
 ├── extensions
+├── forbidden_access.py
 ├── gui
 │   ├── __init__.py
 │   ├── __pycache__
@@ -61,6 +78,11 @@ Ward_DND_AI/
 │   │   │   ├── _init_.py
 │   │   │   ├── controller_ai.py
 │   │   │   └── view_ai.py
+│   │   ├── app
+│   │   │   ├── __pycache__
+│   │   │   ├── _init_.py
+│   │   │   ├── controller_app.py
+│   │   │   └── view_app.py
 │   │   ├── campaign
 │   │   │   ├── __pycache__
 │   │   │   ├── _init_.py
@@ -71,6 +93,11 @@ Ward_DND_AI/
 │   │   │   ├── __pycache__
 │   │   │   ├── _init_.py
 │   │   │   ├── controller_help.py
+│   │   │   ├── debug
+│   │   │   │   ├── __pycache__
+│   │   │   │   ├── _init_.py
+│   │   │   │   ├── controller_debug.py
+│   │   │   │   └── view_debug.py
 │   │   │   └── view_help.py
 │   │   └── view_settings.py
 │   ├── tooltip
@@ -79,7 +106,6 @@ Ward_DND_AI/
 │   │   └── view_tooltip.py
 │   ├── tooltip.py
 │   └── universe
-│       ├── __pycache__
 │       ├── _init_.py
 │       ├── controller_universe.py
 │       ├── timeline
@@ -89,7 +115,32 @@ Ward_DND_AI/
 │       │   └── view_timeline.py
 │       └── view_universe.py
 ├── main.py
-├── scan_tkinter.py
+├── managers
+│   ├── _init_.py
+│   ├── character_manager.py
+│   ├── folder_manager.py
+│   ├── group_manager.py
+│   ├── image_manager.py
+│   ├── map_manager.py
+│   ├── note_manager.py
+│   ├── session_manager.py
+│   ├── sound_manager.py
+│   ├── user_manager.py
+│   └── vault_manager.py
+├── models
+│   ├── __pycache__
+│   ├── _init_.py
+│   ├── base.py
+│   ├── character.py
+│   ├── folder.py
+│   ├── group.py
+│   ├── image.py
+│   ├── map.py
+│   ├── note.py
+│   ├── session.py
+│   ├── sound.py
+│   ├── user.py
+│   └── vault.py
 ├── storage
 │   ├── __pycache__
 │   ├── _init_.py
@@ -98,6 +149,7 @@ Ward_DND_AI/
 │   ├── storage_base.py
 │   └── storage_router.py
 ├── tests
+│   ├── __pycache__
 │   ├── _init_.py
 │   ├── conftest.py
 │   ├── test_controller_campaign_settings.py
@@ -107,10 +159,12 @@ Ward_DND_AI/
 │   ├── test_controller_timeline.py
 │   ├── test_controller_token.py
 │   ├── test_controllers_smoke.py
-│   └── test_smoke.py
+│   ├── test_smoke.py
+│   └── test_summarize.py
 ├── tree.py
 └── utils
     ├── __init__.py
     ├── __pycache__
     ├── crash_handler.py
+    ├── logging_setup.py
     └── utils.py

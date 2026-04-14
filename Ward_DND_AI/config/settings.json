@@ -1,6 +1,7 @@
 {
   "VAULT_PATH": "C:/Users/Evan/Desktop/Ward_DND_Campaign/Obsidian",
-  "VAULT_TYPE": "obsidian",
+  "VAULT_TYPE": "hybrid",
+  "CORE_DATA_PATH": "./Ward_DND_AI/data",
   "OPENAI_API_KEY": "REDACTED_KEY_REMOVED_FROM_HISTORY",
   "EMBEDDING_MODEL": "text-embedding-3-small",
   "COMPLETION_MODEL": "gpt-3.5-turbo",

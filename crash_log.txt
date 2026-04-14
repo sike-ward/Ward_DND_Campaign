@@ -1,0 +1,903 @@
+[2025-06-20 16:03:20.342624] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:20.344494] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:20.345888] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:21.433318] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:21.434431] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:21.435874] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:21.929096] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:21.930217] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:21.931636] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.113985] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.115109] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.116424] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.275146] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.276234] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.277635] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.435385] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.436461] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.438082] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.586062] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.587144] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.588484] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.736146] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.737381] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.738864] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.890900] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.891979] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:22.893322] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:23.041974] AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:23.043094] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:03:23.044451] AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 35, in show_log_dialog
+    if cls._live_log_dialog is not None:
+       ^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute '_live_log_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 131, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 134, in wrapper
+    handle_crash(exc_type, exc_value, exc_tb)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 123, in handle_crash
+    CrashHandler.log_exception(exc_type, exc_value, exc_tb, show_dialog=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 27, in log_exception
+    cls.show_crash_dialog(force_tab="general", entry=entry)
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'CrashHandler' has no attribute 'show_crash_dialog'. Did you mean: 'show_log_dialog'?
+
+
+[2025-06-20 16:20:05.754985] NameError: name 'ExceptionCatchingApplication' is not defined
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 49, in main
+    qapp = ExceptionCatchingApplication(sys.argv)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'ExceptionCatchingApplication' is not defined
+
+
+[2025-06-20 16:58:29.350868] UnboundLocalError: cannot access local variable 'tb_box' where it is not associated with a value
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 161, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 50, in show_error_log
+    CrashHandler.show_log_dialog()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 129, in show_log_dialog
+    cls.show_dialog(force_tab="developer", modal=False)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 73, in show_dialog
+    gen_l.addWidget(tb_box)
+                    ^^^^^^
+UnboundLocalError: cannot access local variable 'tb_box' where it is not associated with a value
+
+
+[2025-06-20 17:20:53.453486] ImportError: cannot import name 'ExceptionCatchingApplication' from 'Ward_DND_AI.utils.crash_handler' (C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py)
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 12, in <module>
+    from Ward_DND_AI.utils.crash_handler import ExceptionCatchingApplication
+ImportError: cannot import name 'ExceptionCatchingApplication' from 'Ward_DND_AI.utils.crash_handler' (C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py)
+
+
+[2025-06-20 17:22:13.408644] ImportError: cannot import name 'CrashHandler' from 'Ward_DND_AI.utils.crash_handler' (C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py)
+Traceback (most recent call last):
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py", line 178, in wrapper
+    return fn(*args, **kwargs)
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 49, in main
+    window = LoreMainApp(
+        ai_engine=ai_engine, storage_backend=storage_backend, config=config
+    )
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\gui.py", line 98, in __init__
+    self.settings_controller = SettingsController(
+                               ~~~~~~~~~~~~~~~~~~^
+        settings_view, self._config, self.ai, self.storage
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\controller_settings.py", line 17, in __init__
+    from Ward_DND_AI.gui.settings.help.controller_help import HelpController
+  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\gui\settings\help\controller_help.py", line 4, in <module>
+    from Ward_DND_AI.utils.crash_handler import catch_and_report_crashes, CrashHandler
+ImportError: cannot import name 'CrashHandler' from 'Ward_DND_AI.utils.crash_handler' (C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\utils\crash_handler.py)
+
+

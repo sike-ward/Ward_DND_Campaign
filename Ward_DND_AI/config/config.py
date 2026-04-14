@@ -9,7 +9,8 @@ from typing import Any
 CONFIG_FILENAME = "settings.json"
 DEFAULT_CONFIG = {
     "VAULT_PATH": "./Obsidian",
-    "VAULT_TYPE": "obsidian",
+    "VAULT_TYPE": "hybrid",
+    "CORE_DATA_PATH": "./Ward_DND_AI/data",
     "OPENAI_API_KEY": "",
     "EMBEDDING_MODEL": "text-embedding-3-small",
     "COMPLETION_MODEL": "gpt-4o",
@@ -18,7 +19,13 @@ DEFAULT_CONFIG = {
     "LOG_LEVEL": "INFO",
     "AUTO_REFRESH_INTERVAL": 300,
     "ENABLE_EXPERIMENTAL": False,
-    "AI_BACKENDS": {"ask": "openai", "summarize": "openai", "search": "openai"},
+    "AI_BACKENDS": {
+        "ask": "openai",
+        "summarize": "openai",
+        "suggest_tags": "openai",
+        "propose_links": "openai",
+        "search_context": "loreai",
+    },
     # App Settings below
     "THEME": "Light",
     "FONT_SIZE": "Medium",
@@ -32,23 +39,15 @@ class Config:
     def __init__(self):
         self._path = Path(__file__).parent / "settings.json"
 
-        print(">>> [config] Will load from:", self._path)
-        print(
-            ">>> [DEBUG] Files in config dir:",
-            list(Path(__file__).parent.parent.parent.glob("*")),
-        )
-
         self._data = DEFAULT_CONFIG.copy()
         self._load()
         self._init_logger()
 
     def _load(self):
-        print(">>> [config] Loading settings from:", self._path)
         if self._path.exists():
             try:
                 with self._path.open("r", encoding="utf-8") as f:
                     raw = json.load(f)
-                print(">>> [config] Loaded raw JSON:", raw)
                 self._data.clear()
                 for key in DEFAULT_CONFIG:
                     val = raw.get(key, DEFAULT_CONFIG[key])
@@ -60,7 +59,6 @@ class Config:
                 print(f"[config] Failed to load or parse config file: {e}")
                 self._data = DEFAULT_CONFIG.copy()
         else:
-            print(">>> [config] settings.json file not found.")
             self._data = DEFAULT_CONFIG.copy()
 
     def _cast_value(self, val: str, default: Any) -> Any:

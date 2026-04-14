@@ -53,3 +53,23 @@ class ChatView(QWidget):
         # --- Status Bar ---
         self.status_label = QLabel("")
         main_layout.addWidget(self.status_label)
+
+    def save_chat_state_to_recovery_folder(self, recovery_dir):
+        """
+        Save current prompt, output, and history text to recovery folder.
+        """
+        import os
+        from datetime import datetime
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        fname = f"recovery_chat_{timestamp}.txt"
+        path = os.path.join(recovery_dir, fname)
+        prompt = self.prompt_box.toPlainText()
+        output = self.output_box.toPlainText()
+        history = self.history_text.toPlainText()
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("# Chat Tab Crash Recovery\n\n")
+            f.write(f"Prompt:\n{prompt}\n\n")
+            f.write(f"Output:\n{output}\n\n")
+            f.write(f"History:\n{history}\n")

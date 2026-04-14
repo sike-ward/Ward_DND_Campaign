@@ -18,9 +18,7 @@ class SettingsController:
 
         self.controllers = {}
 
-        self.controllers["ai"] = AIController(
-            self.view.ai_view, self.config, self.ai_engine, self.storage_backend
-        )
+        self.controllers["ai"] = AIController(self.view.ai_view, self.config, self.ai_engine, self.storage_backend)
         self.controllers["campaign"] = CampaignSettingsController(
             self.view.campaign_view, self.config, self.ai_engine, self.storage_backend
         )
@@ -37,30 +35,19 @@ class SettingsController:
         self.view.stacked_widget.addWidget(self.view.ai_view)
         self.view.stacked_widget.addWidget(self.view.campaign_view)
         self.view.stacked_widget.addWidget(self.view.help_view)
-        self.view.stacked_widget.insertWidget(
-            0, self.view.app_settings_view
-        )  # Or correct index for your layout
+        self.view.stacked_widget.insertWidget(0, self.view.app_settings_view)  # Or correct index for your layout
 
         # Connect tab buttons
-        self.view.btn_ai.clicked.connect(
-            catch_and_report_crashes(lambda checked=False: self.switch_tab("ai"))
-        )
+        self.view.btn_ai.clicked.connect(catch_and_report_crashes(lambda checked=False: self.switch_tab("ai")))
         self.view.btn_campaign.clicked.connect(
             catch_and_report_crashes(lambda checked=False: self.switch_tab("campaign"))
         )
-        self.view.btn_help.clicked.connect(
-            catch_and_report_crashes(lambda checked=False: self.switch_tab("help"))
-        )
-        self.view.btn_app.clicked.connect(
-            catch_and_report_crashes(lambda checked=False: self.switch_tab("app"))
-        )
+        self.view.btn_help.clicked.connect(catch_and_report_crashes(lambda checked=False: self.switch_tab("help")))
+        self.view.btn_app.clicked.connect(catch_and_report_crashes(lambda checked=False: self.switch_tab("app")))
 
         # Start with AI tab selected
         self.switch_tab("ai")
-        # Initialize button states
         self._update_button_states("ai")
-        # Optionally, set up any initial state or configuration
-        self.view.setWindowTitle("Ward DND AI Settings")
 
         # Setup config change handling if config supports signals or callbacks (optional)
         # Example:
