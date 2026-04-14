@@ -1,4 +1,8 @@
-import json
+"""Run once to rewrite config.py with no null bytes."""
+
+from pathlib import Path
+
+content = r'''import json
 import logging
 import os
 import traceback
@@ -174,3 +178,9 @@ def load_note_templates():
     for k, v in (user_templates or {}).items():
         templates[k] = v
     return templates
+'''
+
+out = Path(__file__).parent / "Ward_DND_AI" / "config" / "config.py"
+out.write_text(content, encoding="utf-8")
+print(f"Written {out.stat().st_size} bytes to {out}")
+print("Null bytes:", b"\x00" in out.read_bytes())
