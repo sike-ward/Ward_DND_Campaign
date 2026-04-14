@@ -1,5 +1,4 @@
-# Ward_DND_AI/ai/openai_engine.py
-
+# Ward_DND_AI/ai/core/openai_engine.py
 from typing import List, Tuple
 
 from openai import OpenAI
@@ -24,9 +23,7 @@ def count_tokens(text: str, model: str) -> int:
 
 @register_plugin("openai")
 class OpenaiAI(AIInterface):
-    """
-    OpenAI backend for ChatCompletion-based tasks: ask, summarize, suggest_tags, propose_links.
-    """
+    """OpenAI backend for ChatCompletion-based tasks."""
 
     def __init__(self, config: Config):
         self.config = config
@@ -41,7 +38,6 @@ class OpenaiAI(AIInterface):
     def update_models(self, embedding_model: str, completion_model: str):
         self.embedding_model = embedding_model
         self.model = completion_model
-        # Reinitialize client or parameters if needed
 
     def ask(self, prompt: str) -> Tuple[str, int, int]:
         prompt_tokens = count_tokens(prompt, self.model) or 0
@@ -53,21 +49,10 @@ class OpenaiAI(AIInterface):
             log_api_call(self.model, "ask", prompt_tokens, resp_tokens, cost, success=True)
             return text, prompt_tokens, resp_tokens
         except Exception as e:
-            log_api_call(
-                self.model,
-                "ask",
-                prompt_tokens or 0,
-                0,
-                0.0,
-                success=False,
-                error_msg=str(e),
-            )
+            log_api_call(self.model, "ask", prompt_tokens or 0, 0, 0.0, success=False, error_msg=str(e))
             raise
 
     def summarize(self, text: str) -> Tuple[str, int, int]:
-        """
-        Summarize the given text into a concise paragraph. Returns (summary_text, prompt_tokens, response_tokens).
-        """
         try:
             prompt = f"Summarize the following note in one concise paragraph (up to 4 sentences):\n\n{text}"
             prompt_tokens = count_tokens(prompt, self.model) or 0
@@ -77,8 +62,7 @@ class OpenaiAI(AIInterface):
             cost = estimate_cost(self.model, prompt_tokens, resp_tokens)
             log_api_call(self.model, "summarize", prompt_tokens, resp_tokens, cost, success=True)
             return summary, prompt_tokens, resp_tokens
-        except Exception as e:
-            print("[FATAL ERROR in OpenaiAI.summarize]:", e)
+        except Exception:
             import traceback
 
             traceback.print_exc()
@@ -92,25 +76,10 @@ class OpenaiAI(AIInterface):
             tags = resp.choices[0].message.content.strip()
             resp_tokens = getattr(resp.usage, "completion_tokens", 0) or 0
             cost = estimate_cost(self.model, prompt_tokens, resp_tokens)
-            log_api_call(
-                self.model,
-                "suggest_tags",
-                prompt_tokens,
-                resp_tokens,
-                cost,
-                success=True,
-            )
+            log_api_call(self.model, "suggest_tags", prompt_tokens, resp_tokens, cost, success=True)
             return tags, prompt_tokens, resp_tokens
         except Exception as e:
-            log_api_call(
-                self.model,
-                "suggest_tags",
-                prompt_tokens or 0,
-                0,
-                0.0,
-                success=False,
-                error_msg=str(e),
-            )
+            log_api_call(self.model, "suggest_tags", prompt_tokens or 0, 0, 0.0, success=False, error_msg=str(e))
             raise
 
     def propose_links(self, text: str, note_names: List[str]) -> Tuple[str, int, int]:
@@ -122,30 +91,14 @@ class OpenaiAI(AIInterface):
             links = resp.choices[0].message.content.strip()
             resp_tokens = getattr(resp.usage, "completion_tokens", 0) or 0
             cost = estimate_cost(self.model, prompt_tokens, resp_tokens)
-            log_api_call(
-                self.model,
-                "propose_links",
-                prompt_tokens,
-                resp_tokens,
-                cost,
-                success=True,
-            )
+            log_api_call(self.model, "propose_links", prompt_tokens, resp_tokens, cost, success=True)
             return links, prompt_tokens, resp_tokens
         except Exception as e:
-            log_api_call(
-                self.model,
-                "propose_links",
-                prompt_tokens or 0,
-                0,
-                0.0,
-                success=False,
-                error_msg=str(e),
-            )
+            log_api_call(self.model, "propose_links", prompt_tokens or 0, 0, 0.0, success=False, error_msg=str(e))
             raise
 
     def update_max_tokens(self, max_tokens: int):
         self.max_tokens = max_tokens
-        # Reconfigure client if needed
 
     def search_context(self, query: str, top_k: int = 10) -> List[str]:
         raise NotImplementedError("Use LoreaiAI plugin for search_context tasks.")

@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\Evan\Desktop\Ward_DND_Campaign\Ward_DND_AI\main.py", line 52, in main
-    raise RuntimeError("Simulated crash to test crash handler")
-RuntimeError: Simulated crash to test crash handler

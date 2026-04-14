@@ -1,2 +1,2 @@
-AttributeError: 'SummarizeController' object has no attribute 'core_storage'
-See full log: C:\Users\Evan\Desktop\Ward_DND_Campaign\logs\crash_2025-06-27_23-18-33.log
+ImportError: No AI plugin registered under name 'loreai'
+See full log: C:\Users\Evan\Desktop\Ward_DND_Campaign\logs\crash_2026-04-14_14-33-13.log
