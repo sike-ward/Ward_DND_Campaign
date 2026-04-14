@@ -21,21 +21,21 @@
 
 ---
 
-## 3. Config, Secrets, and Environment
+## 3. Config, Secrets, and Environment ✅
 
 - [x] `.env` and/or `config.py` loads all secrets/paths/env (never hardcoded)
 - [x] `AppContext` references config, not raw env vars
-- [ ] Dev/prod/test config separation, documented
-- [ ] All file/folder paths use `pathlib.Path` or are platform-agnostic
+- [x] Dev/prod/test config separation, documented (APP_ENV + .env.{env} system)
+- [x] All file/folder paths use `pathlib.Path` or are platform-agnostic
 
 ---
 
-## 4. Storage, Dependency, and Code Hygiene
+## 4. Storage, Dependency, and Code Hygiene ✅
 
-- [ ] Use only one storage backend everywhere (`storage`)
-- [ ] Move/refactor any business/data logic out of views into controllers or services
-- [ ] Delete all legacy backends, split variables, and dead code (no `file_storage.py`, `obsidian_storage.py`, or “core_storage” remains)
-- [ ] Any hacks/tech debt found is logged in `TECH_DEBT.md` immediately
+- [x] Use only one storage backend everywhere (`storage`)
+- [x] Move/refactor any business/data logic out of views into controllers or services
+- [x] Delete all legacy backends, split variables, and dead code (`file_storage.py` deleted)
+- [x] Any hacks/tech debt found is logged in `TECH_DEBT.md` immediately
 
 ---
 

@@ -1,4 +1,9 @@
-import json
+"""Fix config.py null bytes and PyPath -> Path in controller_browse.py"""
+
+from pathlib import Path
+
+# Fix 1: config.py null bytes
+config_content = r'''import json
 import logging
 import os
 import traceback
@@ -184,3 +189,26 @@ def load_note_templates():
     for k, v in (user_templates or {}).items():
         templates[k] = v
     return templates
+'''
+
+config_path = Path(__file__).parent / "Ward_DND_AI" / "config" / "config.py"
+config_path.write_text(config_content, encoding="utf-8")
+print(f"Written config.py: {config_path.stat().st_size} bytes, nulls: {b'\\x00' in config_path.read_bytes()}")
+
+# Fix 2: PyPath -> Path in controller_browse.py
+browse_path = Path(__file__).parent / "Ward_DND_AI" / "gui" / "browse" / "controller_browse.py"
+src = browse_path.read_bytes().replace(b"\x00", b"").decode("utf-8")
+
+# Replace PyPath with Path (we used PyPath as alias to avoid name collision)
+src = src.replace("PyPath(", "Path(")
+
+# Make sure pathlib.Path is imported
+if "from pathlib import Path" not in src and "import pathlib" not in src:
+    src = "from pathlib import Path\n" + src
+    print("Added pathlib import to controller_browse.py")
+else:
+    print("pathlib already imported in controller_browse.py")
+
+browse_path.write_text(src, encoding="utf-8")
+print(f"Fixed controller_browse.py: {browse_path.stat().st_size} bytes")
+print("Done!")

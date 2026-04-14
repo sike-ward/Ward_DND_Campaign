@@ -230,3 +230,26 @@ class StorageBackend(ABC):
     @abstractmethod
     def delete_attachment(self, path: str) -> None:
         pass
+
+    # --- SEARCH & EXISTENCE ---
+    @abstractmethod
+    def exists(self, rel_path: str) -> bool:
+        """Return True if a note or folder at rel_path exists in the vault."""
+        pass
+
+    @abstractmethod
+    def search_notes(self, query: str, vault_id: str = "", top_k: int = 100) -> List[Note]:
+        """
+        Full-text search across all notes in the vault.
+        Returns up to top_k Note objects whose content or title matches query.
+        vault_id filters to a specific vault when provided (multiuser use).
+        """
+        pass
+
+    @abstractmethod
+    def update_note_metadata(self, note_id: str, meta: dict) -> None:
+        """
+        Merge meta dict into the stored metadata for note_id.
+        Only updates provided keys — does not overwrite the full record.
+        """
+        pass

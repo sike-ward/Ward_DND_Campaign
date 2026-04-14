@@ -1,7 +1,18 @@
+"""
+HybridStorage — the primary storage backend for Ward DND AI.
+
+Notes and folders live as markdown files inside the vault directory.
+All structured DND model data (characters, maps, etc.) is stored as JSON
+in a hidden .dnd_meta subfolder inside the vault.
+Users and groups are stored in a global data directory (~/.ward_dnd_ai/).
+
+All path handling uses pathlib.Path for cross-platform compatibility.
+"""
+
 import json
-import os
 import shutil
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, List, Optional, Set
 
 from Ward_DND_AI.models.character import Character
@@ -19,56 +30,64 @@ from Ward_DND_AI.storage.storage_base import StorageBackend
 
 class HybridStorage(StorageBackend):
     """
-    Hybrid backend: notes/folders as markdown+folders in vault,
+    Hybrid backend: notes/folders as markdown in vault,
     DND models as JSON in .dnd_meta,
     users/groups in global storage.
     """
 
-    def __init__(self, vault_path, global_data_path="~/.ward_dnd_ai/"):
-        self.vault_path = os.path.abspath(vault_path)
-        self.global_data_path = os.path.expanduser(global_data_path)
-        os.makedirs(self.global_data_path, exist_ok=True)
+    def __init__(self, vault_path: str, global_data_path: str = "~/.ward_dnd_ai/"):
+        self.vault_path: Path = Path(vault_path).resolve()
+        self.global_data_path: Path = Path(global_data_path).expanduser()
+        self.global_data_path.mkdir(parents=True, exist_ok=True)
 
-    # --- Helpers ---
-    def _dnd_meta_path(self, subfolder: str, obj_id: str) -> str:
-        d = os.path.join(self.vault_path, ".dnd_meta", subfolder)
-        os.makedirs(d, exist_ok=True)
-        return os.path.join(d, f"{obj_id}.json")
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
 
-    def _dnd_meta_dir(self, subfolder: str) -> str:
-        d = os.path.join(self.vault_path, ".dnd_meta", subfolder)
-        os.makedirs(d, exist_ok=True)
+    def _dnd_meta_path(self, subfolder: str, obj_id: str) -> Path:
+        """Return the JSON path for a model object, creating the dir if needed."""
+        d = self.vault_path / ".dnd_meta" / subfolder
+        d.mkdir(parents=True, exist_ok=True)
+        return d / f"{obj_id}.json"
+
+    def _dnd_meta_dir(self, subfolder: str) -> Path:
+        """Return the directory for a model subfolder, creating it if needed."""
+        d = self.vault_path / ".dnd_meta" / subfolder
+        d.mkdir(parents=True, exist_ok=True)
         return d
 
-    def _global_path(self, model: str) -> str:
-        return os.path.join(self.global_data_path, f"{model}s.json")
+    def _global_path(self, model: str) -> Path:
+        return self.global_data_path / f"{model}s.json"
 
     def _load_global(self, model: str) -> Dict:
         path = self._global_path(model)
-        if not os.path.isfile(path):
+        if not path.is_file():
             return {}
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+        return json.loads(path.read_text(encoding="utf-8"))
 
-    def _save_global(self, model: str, data: Dict):
+    def _save_global(self, model: str, data: Dict) -> None:
         path = self._global_path(model)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
-    # --- USERS ---
+    def _abs(self, rel: str) -> Path:
+        """Resolve a relative vault path to an absolute Path."""
+        return self.vault_path / rel
+
+    # ------------------------------------------------------------------
+    # Users
+    # ------------------------------------------------------------------
+
     def save_user(self, user: User) -> None:
         users = self._load_global("user")
         users[user.id] = user.model_dump()
         self._save_global("user", users)
 
     def get_user_by_id(self, user_id: str) -> Optional[User]:
-        users = self._load_global("user")
-        data = users.get(user_id)
+        data = self._load_global("user").get(user_id)
         return User.model_validate(data) if data else None
 
     def get_user_by_email(self, email: str) -> Optional[User]:
-        users = self._load_global("user")
-        for data in users.values():
+        for data in self._load_global("user").values():
             if data.get("email") == email:
                 return User.model_validate(data)
         return None
@@ -79,15 +98,17 @@ class HybridStorage(StorageBackend):
             del users[user_id]
             self._save_global("user", users)
 
-    # --- GROUPS ---
+    # ------------------------------------------------------------------
+    # Groups
+    # ------------------------------------------------------------------
+
     def save_group(self, group: Group) -> None:
         groups = self._load_global("group")
         groups[group.id] = group.model_dump()
         self._save_global("group", groups)
 
     def get_group_by_id(self, group_id: str) -> Optional[Group]:
-        groups = self._load_global("group")
-        data = groups.get(group_id)
+        data = self._load_global("group").get(group_id)
         return Group.model_validate(data) if data else None
 
     def delete_group_by_id(self, group_id: str) -> None:
@@ -96,333 +117,353 @@ class HybridStorage(StorageBackend):
             del groups[group_id]
             self._save_global("group", groups)
 
-    # --- VAULTS ---
+    # ------------------------------------------------------------------
+    # Vaults
+    # ------------------------------------------------------------------
+
     def save_vault(self, vault: Vault) -> None:
         path = self._dnd_meta_path("vaults", vault.id)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(vault.model_dump(), f, indent=2)
+        path.write_text(json.dumps(vault.model_dump(), indent=2), encoding="utf-8")
 
     def get_vault_by_id(self, vault_id: str) -> Optional[Vault]:
         path = self._dnd_meta_path("vaults", vault_id)
-        if not os.path.isfile(path):
+        if not path.is_file():
             return None
-        with open(path, "r", encoding="utf-8") as f:
-            return Vault.model_validate(json.load(f))
+        return Vault.model_validate(json.loads(path.read_text(encoding="utf-8")))
 
     def delete_vault_by_id(self, vault_id: str) -> None:
         path = self._dnd_meta_path("vaults", vault_id)
-        if os.path.isfile(path):
-            os.remove(path)
+        if path.is_file():
+            path.unlink()
 
-    # --- FOLDERS ---
+    # ------------------------------------------------------------------
+    # Folders
+    # ------------------------------------------------------------------
+
     def save_folder(self, folder: Folder) -> None:
         if folder.path:
-            abs_path = os.path.join(self.vault_path, folder.path)
-            os.makedirs(abs_path, exist_ok=True)
-        # Save folder metadata
+            self._abs(folder.path).mkdir(parents=True, exist_ok=True)
         meta_path = self._dnd_meta_path("folders", folder.id)
-        with open(meta_path, "w", encoding="utf-8") as f:
-            json.dump(folder.model_dump(), f, indent=2)
+        meta_path.write_text(json.dumps(folder.model_dump(), indent=2), encoding="utf-8")
 
     def get_folder_by_id(self, folder_id: str) -> Optional[Folder]:
-        abs_path = os.path.join(self.vault_path, folder_id)
+        abs_path = self._abs(folder_id)
         meta_path = self._dnd_meta_path("folders", folder_id)
-        if os.path.isdir(abs_path) and os.path.isfile(meta_path):
-            with open(meta_path, "r", encoding="utf-8") as f:
-                return Folder.model_validate(json.load(f))
-        elif os.path.isdir(abs_path):
-            return Folder(id=folder_id, name=os.path.basename(folder_id), path=folder_id)
+        if abs_path.is_dir() and meta_path.is_file():
+            return Folder.model_validate(json.loads(meta_path.read_text(encoding="utf-8")))
+        if abs_path.is_dir():
+            return Folder(id=folder_id, owner_id="system", name=abs_path.name, path=folder_id)
         return None
 
     def delete_folder_by_id(self, folder_id: str) -> None:
-        abs_path = os.path.join(self.vault_path, folder_id)
-        if os.path.isdir(abs_path):
+        abs_path = self._abs(folder_id)
+        if abs_path.is_dir():
             shutil.rmtree(abs_path)
         meta_path = self._dnd_meta_path("folders", folder_id)
-        if os.path.isfile(meta_path):
-            os.remove(meta_path)
+        if meta_path.is_file():
+            meta_path.unlink()
 
     def list_folders(self, parent: str = "") -> List[str]:
-        root = self.vault_path if not parent else os.path.join(self.vault_path, parent)
-        folders = []
-        for dirpath, dirnames, _ in os.walk(root):
-            for d in dirnames:
-                rel_path = os.path.relpath(os.path.join(dirpath, d), self.vault_path)
-                folders.append(rel_path)
-        return folders
+        root = self._abs(parent) if parent else self.vault_path
+        return [
+            str(p.relative_to(self.vault_path)) for p in root.rglob("*") if p.is_dir() and not p.name.startswith(".")
+        ]
 
     def create_folder(self, path: str) -> None:
-        abs_path = os.path.join(self.vault_path, path)
-        os.makedirs(abs_path, exist_ok=True)
+        self._abs(path).mkdir(parents=True, exist_ok=True)
 
     def delete_folder(self, path: str) -> None:
-        abs_path = os.path.join(self.vault_path, path)
-        if os.path.isdir(abs_path):
+        abs_path = self._abs(path)
+        if abs_path.is_dir():
             shutil.rmtree(abs_path)
 
     def folder_exists(self, path: str) -> bool:
-        abs_path = os.path.join(self.vault_path, path)
-        return os.path.isdir(abs_path)
+        return self._abs(path).is_dir()
 
     def move_folder(self, src_path: str, dest_path: str) -> None:
-        src = os.path.join(self.vault_path, src_path)
-        dst = os.path.join(self.vault_path, dest_path)
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.move(src, dst)
+        src = self._abs(src_path)
+        dst = self._abs(dest_path)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(src), str(dst))
 
     def get_folder_metadata(self, path: str) -> Dict:
-        abs_path = os.path.join(self.vault_path, path)
+        abs_path = self._abs(path)
+        stat = abs_path.stat()
         return {
             "path": path,
-            "created": datetime.fromtimestamp(os.path.getctime(abs_path)).isoformat(),
-            "modified": datetime.fromtimestamp(os.path.getmtime(abs_path)).isoformat(),
+            "created": datetime.fromtimestamp(stat.st_ctime).isoformat(),
+            "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
         }
 
-    # --- NOTES ---
+    # ------------------------------------------------------------------
+    # Notes
+    # ------------------------------------------------------------------
+
     def save_note(self, note: Note) -> None:
-        if note.path:
-            abs_path = os.path.join(self.vault_path, note.path)
-            os.makedirs(os.path.dirname(abs_path), exist_ok=True)
-            with open(abs_path, "w", encoding="utf-8") as f:
-                f.write(note.content)
+        if hasattr(note, "path") and note.path:
+            abs_path = self._abs(note.path)
+            abs_path.parent.mkdir(parents=True, exist_ok=True)
+            abs_path.write_text(note.content, encoding="utf-8")
         meta_path = self._dnd_meta_path("notes", note.id)
-        with open(meta_path, "w", encoding="utf-8") as f:
-            json.dump(note.model_dump(), f, indent=2)
+        meta_path.write_text(json.dumps(note.model_dump(), indent=2), encoding="utf-8")
 
     def get_note_by_id(self, note_id: str) -> Optional[Note]:
-        abs_path = os.path.join(self.vault_path, note_id)
+        abs_path = self._abs(note_id)
         meta_path = self._dnd_meta_path("notes", note_id)
-        if not os.path.isfile(abs_path):
+        if not abs_path.is_file():
             return None
-        # Prefer metadata if present
-        if os.path.isfile(meta_path):
-            with open(meta_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                content = self.read_note(note_id)
-                data["content"] = content
-                return Note.model_validate(data)
-        # Otherwise, just basic Note
-        with open(abs_path, "r", encoding="utf-8") as f:
-            content = f.read()
-        return Note(id=note_id, name=os.path.basename(note_id), path=note_id, content=content)
+        if meta_path.is_file():
+            data = json.loads(meta_path.read_text(encoding="utf-8"))
+            data["content"] = self.read_note(note_id)
+            return Note.model_validate(data)
+        content = abs_path.read_text(encoding="utf-8")
+        return Note(
+            id=note_id,
+            owner_id="system",
+            vault_id="",
+            title=abs_path.name,
+            content=content,
+        )
 
     def delete_note_by_id(self, note_id: str) -> None:
-        abs_path = os.path.join(self.vault_path, note_id)
-        if os.path.isfile(abs_path):
-            os.remove(abs_path)
+        abs_path = self._abs(note_id)
+        if abs_path.is_file():
+            abs_path.unlink()
         meta_path = self._dnd_meta_path("notes", note_id)
-        if os.path.isfile(meta_path):
-            os.remove(meta_path)
+        if meta_path.is_file():
+            meta_path.unlink()
 
     def list_notes(self, folder: str = "") -> List[str]:
-        folder_path = self.vault_path if not folder else os.path.join(self.vault_path, folder)
-        notes = []
-        for dirpath, _, filenames in os.walk(folder_path):
-            for fname in filenames:
-                if fname.endswith(".md"):
-                    rel_path = os.path.relpath(os.path.join(dirpath, fname), self.vault_path)
-                    notes.append(rel_path)
-        return notes
+        root = self._abs(folder) if folder else self.vault_path
+        return [str(p.relative_to(self.vault_path)) for p in root.rglob("*.md") if p.is_file()]
 
     def read_note(self, path: str) -> str:
-        abs_path = os.path.join(self.vault_path, path)
-        with open(abs_path, "r", encoding="utf-8") as f:
-            return f.read()
+        return self._abs(path).read_text(encoding="utf-8")
 
     def write_note(self, path: str, content: str) -> None:
-        abs_path = os.path.join(self.vault_path, path)
-        os.makedirs(os.path.dirname(abs_path), exist_ok=True)
-        with open(abs_path, "w", encoding="utf-8") as f:
-            f.write(content)
+        abs_path = self._abs(path)
+        abs_path.parent.mkdir(parents=True, exist_ok=True)
+        abs_path.write_text(content, encoding="utf-8")
 
     def delete_note(self, path: str) -> None:
-        abs_path = os.path.join(self.vault_path, path)
-        if os.path.isfile(abs_path):
-            os.remove(abs_path)
+        abs_path = self._abs(path)
+        if abs_path.is_file():
+            abs_path.unlink()
 
     def note_exists(self, path: str) -> bool:
-        abs_path = os.path.join(self.vault_path, path)
-        return os.path.isfile(abs_path)
+        return self._abs(path).is_file()
 
     def move_note(self, src_path: str, dest_path: str) -> None:
-        src = os.path.join(self.vault_path, src_path)
-        dst = os.path.join(self.vault_path, dest_path)
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.move(src, dst)
+        src = self._abs(src_path)
+        dst = self._abs(dest_path)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(src), str(dst))
 
     def copy_note(self, src_path: str, dest_path: str) -> None:
-        src = os.path.join(self.vault_path, src_path)
-        dst = os.path.join(self.vault_path, dest_path)
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.copy2(src, dst)
+        src = self._abs(src_path)
+        dst = self._abs(dest_path)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(str(src), str(dst))
 
     def get_note_metadata(self, path: str) -> Dict:
-        abs_path = os.path.join(self.vault_path, path)
+        abs_path = self._abs(path)
+        stat = abs_path.stat()
         return {
             "path": path,
-            "created": datetime.fromtimestamp(os.path.getctime(abs_path)).isoformat(),
-            "modified": datetime.fromtimestamp(os.path.getmtime(abs_path)).isoformat(),
+            "created": datetime.fromtimestamp(stat.st_ctime).isoformat(),
+            "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
         }
 
-    # --- CHARACTERS ---
+    # ------------------------------------------------------------------
+    # Characters, Maps, Images, Sounds, Sessions — JSON model storage
+    # ------------------------------------------------------------------
+
     def save_character(self, character: Character) -> None:
-        path = self._dnd_meta_path("characters", character.id)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(character.model_dump(), f, indent=2)
+        p = self._dnd_meta_path("characters", character.id)
+        p.write_text(json.dumps(character.model_dump(), indent=2), encoding="utf-8")
 
     def get_character_by_id(self, character_id: str) -> Optional[Character]:
-        path = self._dnd_meta_path("characters", character_id)
-        if not os.path.isfile(path):
-            return None
-        with open(path, "r", encoding="utf-8") as f:
-            return Character.model_validate(json.load(f))
+        p = self._dnd_meta_path("characters", character_id)
+        return Character.model_validate(json.loads(p.read_text(encoding="utf-8"))) if p.is_file() else None
 
     def delete_character_by_id(self, character_id: str) -> None:
-        path = self._dnd_meta_path("characters", character_id)
-        if os.path.isfile(path):
-            os.remove(path)
+        p = self._dnd_meta_path("characters", character_id)
+        if p.is_file():
+            p.unlink()
 
-    # --- MAPS ---
     def save_map(self, map_obj: Map) -> None:
-        path = self._dnd_meta_path("maps", map_obj.id)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(map_obj.model_dump(), f, indent=2)
+        p = self._dnd_meta_path("maps", map_obj.id)
+        p.write_text(json.dumps(map_obj.model_dump(), indent=2), encoding="utf-8")
 
     def get_map_by_id(self, map_id: str) -> Optional[Map]:
-        path = self._dnd_meta_path("maps", map_id)
-        if not os.path.isfile(path):
-            return None
-        with open(path, "r", encoding="utf-8") as f:
-            return Map.model_validate(json.load(f))
+        p = self._dnd_meta_path("maps", map_id)
+        return Map.model_validate(json.loads(p.read_text(encoding="utf-8"))) if p.is_file() else None
 
     def delete_map_by_id(self, map_id: str) -> None:
-        path = self._dnd_meta_path("maps", map_id)
-        if os.path.isfile(path):
-            os.remove(path)
+        p = self._dnd_meta_path("maps", map_id)
+        if p.is_file():
+            p.unlink()
 
-    # --- IMAGES ---
     def save_image(self, image: Image) -> None:
-        path = self._dnd_meta_path("images", image.id)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(image.model_dump(), f, indent=2)
+        p = self._dnd_meta_path("images", image.id)
+        p.write_text(json.dumps(image.model_dump(), indent=2), encoding="utf-8")
 
     def get_image_by_id(self, image_id: str) -> Optional[Image]:
-        path = self._dnd_meta_path("images", image_id)
-        if not os.path.isfile(path):
-            return None
-        with open(path, "r", encoding="utf-8") as f:
-            return Image.model_validate(json.load(f))
+        p = self._dnd_meta_path("images", image_id)
+        return Image.model_validate(json.loads(p.read_text(encoding="utf-8"))) if p.is_file() else None
 
     def delete_image_by_id(self, image_id: str) -> None:
-        path = self._dnd_meta_path("images", image_id)
-        if os.path.isfile(path):
-            os.remove(path)
+        p = self._dnd_meta_path("images", image_id)
+        if p.is_file():
+            p.unlink()
 
-    # --- SOUNDS ---
     def save_sound(self, sound: Sound) -> None:
-        path = self._dnd_meta_path("sounds", sound.id)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(sound.model_dump(), f, indent=2)
+        p = self._dnd_meta_path("sounds", sound.id)
+        p.write_text(json.dumps(sound.model_dump(), indent=2), encoding="utf-8")
 
     def get_sound_by_id(self, sound_id: str) -> Optional[Sound]:
-        path = self._dnd_meta_path("sounds", sound_id)
-        if not os.path.isfile(path):
-            return None
-        with open(path, "r", encoding="utf-8") as f:
-            return Sound.model_validate(json.load(f))
+        p = self._dnd_meta_path("sounds", sound_id)
+        return Sound.model_validate(json.loads(p.read_text(encoding="utf-8"))) if p.is_file() else None
 
     def delete_sound_by_id(self, sound_id: str) -> None:
-        path = self._dnd_meta_path("sounds", sound_id)
-        if os.path.isfile(path):
-            os.remove(path)
+        p = self._dnd_meta_path("sounds", sound_id)
+        if p.is_file():
+            p.unlink()
 
-    # --- SESSIONS ---
     def save_session(self, session: Session) -> None:
-        path = self._dnd_meta_path("sessions", session.id)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(session.model_dump(), f, indent=2)
+        p = self._dnd_meta_path("sessions", session.id)
+        p.write_text(json.dumps(session.model_dump(), indent=2), encoding="utf-8")
 
     def get_session_by_id(self, session_id: str) -> Optional[Session]:
-        path = self._dnd_meta_path("sessions", session_id)
-        if not os.path.isfile(path):
-            return None
-        with open(path, "r", encoding="utf-8") as f:
-            return Session.model_validate(json.load(f))
+        p = self._dnd_meta_path("sessions", session_id)
+        return Session.model_validate(json.loads(p.read_text(encoding="utf-8"))) if p.is_file() else None
 
     def delete_session_by_id(self, session_id: str) -> None:
-        path = self._dnd_meta_path("sessions", session_id)
-        if os.path.isfile(path):
-            os.remove(path)
+        p = self._dnd_meta_path("sessions", session_id)
+        if p.is_file():
+            p.unlink()
 
-    # --- TIMELINE ---
+    # ------------------------------------------------------------------
+    # Timeline
+    # ------------------------------------------------------------------
+
     def read_timeline(self) -> list:
-        path = os.path.join(self.vault_path, ".dnd_meta", "timeline.json")
-        if not os.path.isfile(path):
+        path = self.vault_path / ".dnd_meta" / "timeline.json"
+        if not path.is_file():
             return []
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        data = json.loads(path.read_text(encoding="utf-8"))
         return data if isinstance(data, list) else []
 
     def save_timeline(self, events: list) -> None:
-        meta_dir = os.path.join(self.vault_path, ".dnd_meta")
-        os.makedirs(meta_dir, exist_ok=True)
-        path = os.path.join(meta_dir, "timeline.json")
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(events, f, indent=2)
+        meta_dir = self.vault_path / ".dnd_meta"
+        meta_dir.mkdir(parents=True, exist_ok=True)
+        (meta_dir / "timeline.json").write_text(json.dumps(events, indent=2), encoding="utf-8")
 
-    # --- STARS/FAVORITES ---
+    # ------------------------------------------------------------------
+    # Stars / Favorites
+    # ------------------------------------------------------------------
+
     def read_starred(self) -> Set[str]:
-        star_path = os.path.join(self.vault_path, ".starred.json")
-        if not os.path.exists(star_path):
+        star_path = self.vault_path / ".starred.json"
+        if not star_path.exists():
             return set()
-        with open(star_path, "r", encoding="utf-8") as f:
-            return set(json.load(f))
+        return set(json.loads(star_path.read_text(encoding="utf-8")))
 
     def write_starred(self, stars: Set[str]) -> None:
-        star_path = os.path.join(self.vault_path, ".starred.json")
-        with open(star_path, "w", encoding="utf-8") as f:
-            json.dump(list(stars), f)
+        star_path = self.vault_path / ".starred.json"
+        star_path.write_text(json.dumps(list(stars)), encoding="utf-8")
 
-    # --- VERSIONING/BACKUPS ---
+    # ------------------------------------------------------------------
+    # Versioning / Backups
+    # ------------------------------------------------------------------
+
     def backup_note(self, note_path: str) -> str:
-        orig = os.path.join(self.vault_path, note_path)
-        version_dir = os.path.join(self.vault_path, ".versions", os.path.dirname(note_path))
-        os.makedirs(version_dir, exist_ok=True)
+        orig = self._abs(note_path)
+        version_dir = self.vault_path / ".versions" / Path(note_path).parent
+        version_dir.mkdir(parents=True, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        version_name = f"{os.path.basename(note_path)}.{timestamp}.bak"
-        backup_path = os.path.join(version_dir, version_name)
-        shutil.copy2(orig, backup_path)
-        return backup_path
+        backup = version_dir / f"{orig.name}.{timestamp}.bak"
+        shutil.copy2(str(orig), str(backup))
+        return str(backup)
 
     def list_note_versions(self, note_path: str) -> List[str]:
-        version_dir = os.path.join(self.vault_path, ".versions", os.path.dirname(note_path))
-        if not os.path.isdir(version_dir):
+        version_dir = self.vault_path / ".versions" / Path(note_path).parent
+        if not version_dir.is_dir():
             return []
-        pattern = os.path.splitext(os.path.basename(note_path))[0]
-        return [f for f in os.listdir(version_dir) if f.startswith(pattern) and f.endswith(".bak")]
+        stem = Path(note_path).stem
+        return [p.name for p in version_dir.iterdir() if p.name.startswith(stem) and p.suffix == ".bak"]
 
     def restore_note_version(self, note_path: str, version: str) -> None:
-        version_dir = os.path.join(self.vault_path, ".versions", os.path.dirname(note_path))
-        version_file = os.path.join(version_dir, version)
-        orig = os.path.join(self.vault_path, note_path)
-        shutil.copy2(version_file, orig)
+        version_dir = self.vault_path / ".versions" / Path(note_path).parent
+        shutil.copy2(str(version_dir / version), str(self._abs(note_path)))
 
-    # --- ATTACHMENTS ---
+    # ------------------------------------------------------------------
+    # Attachments
+    # ------------------------------------------------------------------
+
     def list_attachments(self, folder: str = "") -> List[str]:
-        path = os.path.join(self.vault_path, "_attachments", folder)
-        if not os.path.isdir(path):
+        path = self.vault_path / "_attachments" / folder
+        if not path.is_dir():
             return []
-        return [
-            name for name in os.listdir(path) if not name.endswith(".md") and os.path.isfile(os.path.join(path, name))
-        ]
+        return [p.name for p in path.iterdir() if p.is_file() and p.suffix != ".md"]
 
     def add_attachment(self, folder: str, filename: str, data: bytes) -> None:
-        dest = os.path.join(self.vault_path, "_attachments", folder, filename)
-        os.makedirs(os.path.dirname(dest), exist_ok=True)
-        with open(dest, "wb") as f:
-            f.write(data)
+        dest = self.vault_path / "_attachments" / folder / filename
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(data)
 
     def delete_attachment(self, path: str) -> None:
-        abs_path = os.path.join(self.vault_path, "_attachments", path)
-        if os.path.isfile(abs_path):
-            os.remove(abs_path)
+        abs_path = self.vault_path / "_attachments" / path
+        if abs_path.is_file():
+            abs_path.unlink()
+
+    # ------------------------------------------------------------------
+    # Search & Existence
+    # ------------------------------------------------------------------
+
+    def exists(self, rel_path: str) -> bool:
+        """Return True if a note or folder at rel_path exists in the vault."""
+        p = self._abs(rel_path)
+        return p.exists()
+
+    def search_notes(self, query: str, vault_id: str = "", top_k: int = 100) -> List[Note]:
+        """
+        Simple full-text search across all markdown notes in the vault.
+        Case-insensitive substring match on title and content.
+        vault_id is accepted for interface compatibility (multiuser) but
+        HybridStorage is single-vault — all notes are in self.vault_path.
+        """
+        query_lower = query.lower()
+        results: List[Note] = []
+        for p in self.vault_path.rglob("*.md"):
+            if p.name.startswith("."):
+                continue
+            try:
+                content = p.read_text(encoding="utf-8", errors="replace")
+                if query_lower in p.stem.lower() or query_lower in content.lower():
+                    rel = str(p.relative_to(self.vault_path))
+                    results.append(
+                        Note(
+                            id=rel,
+                            owner_id="system",
+                            vault_id=vault_id or str(self.vault_path),
+                            title=p.stem,
+                            content=content,
+                        )
+                    )
+                    if len(results) >= top_k:
+                        break
+            except Exception:
+                continue
+        return results
+
+    def update_note_metadata(self, note_id: str, meta: dict) -> None:
+        """
+        Merge meta into the stored JSON metadata for note_id.
+        Only updates the provided keys — non-overlapping keys are preserved.
+        """
+        meta_path = self._dnd_meta_path("notes", note_id)
+        if meta_path.is_file():
+            existing = json.loads(meta_path.read_text(encoding="utf-8"))
+            existing.update(meta)
+            meta_path.write_text(json.dumps(existing, indent=2), encoding="utf-8")

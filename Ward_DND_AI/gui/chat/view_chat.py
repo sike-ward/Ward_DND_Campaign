@@ -57,19 +57,20 @@ class ChatView(QWidget):
     def save_chat_state_to_recovery_folder(self, recovery_dir):
         """
         Save current prompt, output, and history text to recovery folder.
+        Uses pathlib for cross-platform path handling.
         """
-        import os
         from datetime import datetime
+        from pathlib import Path as _Path
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        fname = f"recovery_chat_{timestamp}.txt"
-        path = os.path.join(recovery_dir, fname)
+        dest = _Path(recovery_dir) / f"recovery_chat_{timestamp}.txt"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+
         prompt = self.prompt_box.toPlainText()
         output = self.output_box.toPlainText()
         history = self.history_text.toPlainText()
 
-        with open(path, "w", encoding="utf-8") as f:
-            f.write("# Chat Tab Crash Recovery\n\n")
-            f.write(f"Prompt:\n{prompt}\n\n")
-            f.write(f"Output:\n{output}\n\n")
-            f.write(f"History:\n{history}\n")
+        dest.write_text(
+            f"# Chat Tab Crash Recovery\n\nPrompt:\n{prompt}\n\nOutput:\n{output}\n\nHistory:\n{history}\n",
+            encoding="utf-8",
+        )

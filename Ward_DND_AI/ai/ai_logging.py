@@ -1,6 +1,7 @@
 import csv
 import os
 from datetime import datetime
+from pathlib import Path
 
 # Update prices as needed. Default rates are for illustration only.
 OPENAI_PRICES = {
@@ -9,7 +10,7 @@ OPENAI_PRICES = {
 }
 DEFAULT_RATE = 0.002 / 1000  # fallback rate if model key missing
 
-LOG_PATH = os.path.join(os.path.dirname(__file__), "ai_usage_log.csv")
+LOG_PATH = Path(__file__).parent / "ai_usage_log.csv"
 
 
 def estimate_cost(model, prompt_tokens, completion_tokens):
@@ -105,7 +106,7 @@ def read_logs(n=20):
     """
     Read the last n log records as a list of dicts (most recent last).
     """
-    if not os.path.exists(LOG_PATH):
+    if not LOG_PATH.exists():
         return []
     with open(LOG_PATH, "r", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))

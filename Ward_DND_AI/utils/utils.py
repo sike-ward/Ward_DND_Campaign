@@ -1,5 +1,6 @@
 import os
 import re
+from pathlib import Path
 
 import yaml
 from PyQt6.QtGui import QColor, QFont, QSyntaxHighlighter, QTextCharFormat
@@ -34,7 +35,7 @@ def get_all_folders(vault_path):
     for folder_root, dirs, files in os.walk(vault_path):
         dirs[:] = [d for d in dirs if not d.startswith(".")]
         for d in dirs:
-            full_path = os.path.relpath(os.path.join(folder_root, d), vault_path)
+            full_path = str(Path(folder_root) / d)
             folders.append(full_path)
     folders.insert(0, "")
     return sorted(folders)
