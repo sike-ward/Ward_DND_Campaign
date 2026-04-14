@@ -1,38 +1,43 @@
-import uuid
+"""
+Session model — tracks an authenticated user session.
+
+Sessions are created on login and expire after a configurable duration.
+They can be refreshed via a refresh token without requiring re-login.
+
+Multiuser: each user can have multiple active sessions (different
+devices/browsers). The storage layer enforces session limits if needed.
+"""
+
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from Ward_DND_AI.models.base import CoreModel
 
 
-class Session(BaseModel):
+class Session(CoreModel):
     """
-    Represents a user login session.
-    Tracks authentication tokens, expiry, context, and metadata.
+    An authenticated user session.
+
+    Inherits id, schema_version, owner_id, created_at, last_modified
+    from CoreModel. owner_id is the authenticated user's ID.
     """
 
-    id: str = Field(
-        default_factory=lambda: str(uuid.uuid4()),
-        description="Unique session ID (UUID4).",
+    expires_at: datetime = Field(..., description="UTC timestamp when this session expires.")
+    refresh_token: Optional[str] = Field(default=None, description="Token used to extend the session.")
+    ip_address: Optional[str] = Field(default=None, description="Client IP address at login.")
+    user_agent: Optional[str] = Field(default=None, description="Client user-agent string.")
+    context: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="Arbitrary session state (active vault, UI prefs, etc.).",
     )
-    schema_version: int = Field(default=1, description="Model schema version for migration.")
-    user_id: str = Field(..., description="ID of the user owning this session.")
-    created_at: datetime = Field(default_factory=datetime.utcnow, description="Session creation timestamp.")
-    expires_at: datetime = Field(..., description="When this session expires.")
-    refresh_token: Optional[str] = Field(default=None, description="Token to refresh session.")
-    ip_address: Optional[str] = Field(default=None, description="Client IP address.")
-    user_agent: Optional[str] = Field(default=None, description="Client user agent string.")
-    context: Dict[str, Any] = Field(default_factory=dict, description="Additional context/state for the session.")
-    is_active: bool = Field(default=True, description="Is session currently active.")
-
-    class Config:
-        validate_assignment = True
-        extra = "forbid"
+    is_active: bool = Field(default=True, description="False once the session is logged out or expired.")
 
     def is_expired(self) -> bool:
-        """Check if the session is expired."""
+        """Return True if the session has passed its expiry time."""
         return datetime.utcnow() >= self.expires_at
 
-    def refresh_expiry(self, duration: timedelta):
-        """Extend the expiry by the given duration."""
+    def refresh_expiry(self, duration: timedelta) -> None:
+        """Extend session expiry by the given duration."""
         self.expires_at = datetime.utcnow() + duration

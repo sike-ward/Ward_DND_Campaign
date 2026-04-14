@@ -1,54 +1,59 @@
-import uuid
-from datetime import datetime
+"""
+Note model — the primary content unit in Ward DND AI.
+
+Notes hold lore, session logs, NPC descriptions, item cards, location
+entries, and anything else a DM or player wants to record. They live
+inside a Vault, optionally inside a Folder, and are always owned by a User.
+
+Multiuser: every note carries owner_id (from CoreModel), a group_id for
+shared access, and a permissions dict for per-user/group overrides.
+"""
+
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from Ward_DND_AI.models.base import CoreModel
 
 
-class Note(BaseModel):
+class Note(CoreModel):
     """
     A persistent note for lore, session logs, items, NPCs, locations, etc.
-    All notes are scoped to a vault/campaign, with full AI, tags, permissions, and rich metadata support.
+
+    Inherits id, schema_version, owner_id, created_at, last_modified
+    from CoreModel.
     """
 
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()), description="Unique note ID (UUID4).")
-    schema_version: int = Field(default=1, description="Model version for migration/upgrades.")
-    created_at: datetime = Field(default_factory=datetime.utcnow, description="When note was created.")
     vault_id: str = Field(..., description="Vault/campaign this note belongs to.")
     folder_id: Optional[str] = Field(default=None, description="Parent folder ID, if any.")
     title: str = Field(..., min_length=1, max_length=128, description="Note title or heading.")
-    content: str = Field(default="", description="Markdown/rich text. User, AI, or Obsidian content.")
+    content: str = Field(default="", description="Markdown/rich text content.")
     tags: List[str] = Field(
         default_factory=list,
-        description="Tags for organization/search (user or AI-generated).",
+        description="Tags for organization and search (user or AI-generated).",
     )
-    owner_id: str = Field(..., description="User ID who created this note.")
-    group_id: Optional[str] = Field(default=None, description="Group/team ID with edit/view access, if any.")
+    group_id: Optional[str] = Field(
+        default=None,
+        description="Group ID with shared edit/view access, if any.",
+    )
     permissions: Dict[str, str] = Field(
         default_factory=dict,
-        description="User/group permission overrides for this note.",
+        description="Per-user or per-group permission overrides. Keys are IDs, values are roles (read/write/admin).",
     )
     links: List[str] = Field(
         default_factory=list,
-        description="IDs of notes this note links to (wiki style).",
+        description="IDs of notes this note links to (wiki-style internal links).",
     )
     attachments: List[str] = Field(
         default_factory=list,
-        description="Attached asset IDs (images, sounds, maps, etc).",
+        description="Attached asset IDs (images, sounds, maps, etc.).",
     )
-    ai_summary: Optional[str] = Field(default=None, description="AI-generated summary or search snippet.")
-    meta: Dict[str, str] = Field(default_factory=dict, description="YAML frontmatter/Obsidian compatibility.")
-    path: Optional[str] = Field(
+    ai_summary: Optional[str] = Field(
         default=None,
-        description="Relative path within the vault (e.g., 'NPCs/Aldric.md').",
+        description="AI-generated summary or search snippet.",
     )
-    note_type: str = Field(
-        default="generic",
-        description="Type/category: e.g., 'npc', 'item', 'location', 'session', etc.",
+    meta: Dict[str, str] = Field(
+        default_factory=dict,
+        description="YAML frontmatter or Obsidian-compatible metadata.",
     )
-    last_modified: datetime = Field(default_factory=datetime.utcnow, description="Last modification timestamp.")
-    version: int = Field(default=1, description="Note revision/version for sync/history.")
-
-    class Config:
-        validate_assignment = True
-        extra = "forbid"
+    is_deleted: bool = Field(default=False, description="Soft delete flag — excluded from queries but not removed.")

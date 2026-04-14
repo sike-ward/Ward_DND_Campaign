@@ -1,41 +1,46 @@
-import uuid
-from datetime import datetime
+"""
+Vault model — the top-level container for a campaign or world.
+
+A Vault holds all notes, characters, maps, folders, and assets for one
+campaign. Users can own multiple vaults (e.g., one per campaign). The
+owner is always a single user; additional members are granted access
+via the members list and permissions dict.
+
+Multiuser: members list + permissions dict support DM-owned vaults with
+player access, shared worldbuilding vaults, and solo play.
+"""
+
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from Ward_DND_AI.models.base import CoreModel
 
 
-class Vault(BaseModel):
+class Vault(CoreModel):
     """
-    Represents a campaign/world/project—contains all notes, characters, maps, assets, and settings.
-    Swappable: the user can have multiple vaults, switching between games/worlds as needed.
+    A campaign or world container — the root of all content.
+
+    Inherits id, schema_version, owner_id, created_at, last_modified
+    from CoreModel.
     """
 
-    id: str = Field(
-        default_factory=lambda: str(uuid.uuid4()),
-        description="Unique vault/campaign ID.",
-    )
-    schema_version: int = Field(default=1, description="Model version for migration/upgrades.")
-    created_at: datetime = Field(default_factory=datetime.utcnow, description="When this vault was created.")
     name: str = Field(..., min_length=2, max_length=64, description="Vault/campaign name.")
-    description: Optional[str] = Field(default=None, description="Optional campaign/world summary/about.")
-    owner_id: str = Field(..., description="User ID or group ID who owns this vault.")
-    members: List[str] = Field(default_factory=list, description="User/group IDs with access to this vault.")
-    roles: List[str] = Field(
+    description: Optional[str] = Field(default=None, description="Campaign or world summary.")
+    members: List[str] = Field(
         default_factory=list,
-        description="Optional campaign roles: ['GM', 'player', ...].",
-    )
-    is_active: bool = Field(default=True, description="Enable/archive this vault/campaign.")
-    settings: Dict[str, str] = Field(
-        default_factory=dict,
-        description="Per-vault config/settings for AI, export, UI, etc.",
+        description="User IDs with access to this vault (beyond the owner).",
     )
     permissions: Dict[str, str] = Field(
         default_factory=dict,
-        description="Fine-grained user/group permissions for this vault.",
+        description="Per-user/group permission overrides (read/write/admin).",
     )
-    version: int = Field(default=1, description="Vault revision/version for sync or upgrade.")
-
-    class Config:
-        validate_assignment = True
-        extra = "forbid"
+    is_active: bool = Field(default=True, description="False to archive/disable this vault.")
+    settings: Dict[str, str] = Field(
+        default_factory=dict,
+        description="Per-vault config: AI model overrides, export settings, UI prefs, etc.",
+    )
+    record_version: int = Field(
+        default=1,
+        description="Incremented on every save — used for optimistic locking and sync.",
+    )
