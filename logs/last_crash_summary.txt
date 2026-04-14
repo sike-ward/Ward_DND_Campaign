@@ -1,2 +1,2 @@
-ImportError: No AI plugin registered under name 'loreai'
-See full log: C:\Users\Evan\Desktop\Ward_DND_Campaign\logs\crash_2026-04-14_14-33-13.log
+TypeError: BrowseController.__init__() missing 2 required positional arguments: 'storage' and 'config'
+See full log: C:\Users\Evan\Desktop\Ward_DND_Campaign\logs\crash_2026-04-14_15-17-20.log
