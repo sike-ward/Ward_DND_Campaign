@@ -16,6 +16,7 @@ Multiuser design:
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
 from Ward_DND_AI.auth.permission_checker import PermissionChecker
@@ -30,7 +31,7 @@ from Ward_DND_AI.managers.session_manager import SessionManager
 from Ward_DND_AI.managers.sound_manager import SoundManager
 from Ward_DND_AI.managers.user_manager import UserManager
 from Ward_DND_AI.managers.vault_manager import VaultManager
-from Ward_DND_AI.storage.hybrid_storage import HybridStorage
+from Ward_DND_AI.storage.sqlite_backend import SQLiteBackend
 from Ward_DND_AI.storage.storage_base import StorageBackend
 
 if TYPE_CHECKING:
@@ -73,21 +74,24 @@ class AppContext:
     images : ImageManager
     sounds : SoundManager
     sessions : SessionManager
+    permissions : PermissionChecker
     """
 
     def __init__(self, config: Config, storage: Optional[StorageBackend] = None):
         self.config = config
 
-        # Storage — accept an injected backend or build the default HybridStorage.
-        # Passing a custom backend makes unit-testing trivial.
-        self.storage: StorageBackend = storage or HybridStorage(config.VAULT_PATH)
+        # SQLite database lives alongside the vault.
+        # Passing a custom backend (e.g. in tests) overrides the default.
+        _db_path = Path(config.VAULT_PATH).resolve().parent / "ward_dnd.db"
+        self.storage: StorageBackend = storage or SQLiteBackend(
+            db_path=str(_db_path),
+            vault_path=config.VAULT_PATH,
+        )
 
         # AI engine — wired up by main.py after construction.
         self.ai: Optional[AIInterface] = None
 
-        # Active user slot — placeholder until session-based auth is live.
-        # In single-user mode this is set to the local user ID on startup.
-        # When real auth is implemented, set this from the session token instead.
+        # Active user — set from login dialog in main.py.
         self.current_user_id: Optional[str] = None
 
         # --- Managers — all share the same storage instance ---
