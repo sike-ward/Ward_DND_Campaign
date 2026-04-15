@@ -43,7 +43,7 @@ class LoreMainApp(QMainWindow):
         self.storage = ctx.storage
         self._config = ctx.config
 
-        self.setWindowTitle("Obsidian Lore Assistant")
+        self.setWindowTitle(getattr(ctx.config, "APP_NAME", "Ward DND AI"))
         self.resize(1024, 768)
 
         # --- Central Tab Widget ---

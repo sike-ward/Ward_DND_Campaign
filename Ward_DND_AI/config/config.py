@@ -31,6 +31,7 @@ DEFAULT_CONFIG = {
     "SHOW_TOOLTIPS": True,
     "STARTUP_TAB": "Dashboard",
     "COMPACT_MODE": False,
+    "APP_NAME": "Ward DND AI",
 }
 
 

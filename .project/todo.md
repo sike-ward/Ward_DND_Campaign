@@ -49,11 +49,11 @@
 
 ---
 
-## 6. UI/UX and Security
+## 6. UI/UX and Security ✅
 
-- [ ] No hardcoded UI text or unlocalizable strings (UI uses variables/config for all user-facing text)
-- [ ] Add simple user/session login or “current user” context (even hardcoded for now)
-- [ ] Enforce permissions (read/write/owner) for all per-vault actions (basic ACL/permissions structure in place, ready to expand)
+- [x] No hardcoded UI text or unlocalizable strings (APP_NAME in config, window title reads from config)
+- [x] Add simple user/session login or “current user” context (default local user created on first launch, ctx.current_user_id set)
+- [x] Enforce permissions (read/write/owner) for all per-vault actions (PermissionChecker in auth/, wired into NoteManager + VaultManager, ctx.permissions available everywhere)
 
 ---
 

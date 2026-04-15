@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Optional
 
+from Ward_DND_AI.auth.permission_checker import permissions
 from Ward_DND_AI.models.note import Note
 from Ward_DND_AI.storage.storage_base import StorageBackend
 from Ward_DND_AI.utils.audit_logger import audit
@@ -53,7 +54,8 @@ class NoteManager:
     def get_note(self, note_id: str) -> Optional[Note]:
         return self.storage.get_note_by_id(note_id)
 
-    def update_note(self, note: Note) -> None:
+    def update_note(self, note: Note, actor_id: str = "system") -> None:
+        permissions.require_write(note, actor_id)
         # Backup before overwriting so we can restore previous versions
         try:
             self.storage.backup_note(note.id)
@@ -63,14 +65,16 @@ class NoteManager:
         self.storage.save_note(note)
         audit("update", "note", note.id, user_id=note.owner_id)
 
-    def delete_note(self, note_id: str) -> None:
-        # Backup before deletion so content can be recovered
+    def delete_note(self, note_id: str, actor_id: str = "system") -> None:
+        _note = self.get_note(note_id)
+        if _note:
+            permissions.require_delete(_note, actor_id)
         try:
             self.storage.backup_note(note_id)
         except Exception:
             pass
         self.storage.delete_note_by_id(note_id)
-        audit("delete", "note", note_id)
+        audit("delete", "note", note_id, user_id=actor_id)
 
     def add_tag(self, note_id: str, tag: str) -> None:
         note = self.get_note(note_id)

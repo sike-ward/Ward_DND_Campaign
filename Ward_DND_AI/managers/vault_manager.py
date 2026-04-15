@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Optional
 
+from Ward_DND_AI.auth.permission_checker import permissions
 from Ward_DND_AI.models.vault import Vault
 from Ward_DND_AI.storage.storage_base import StorageBackend
 from Ward_DND_AI.utils.audit_logger import audit
@@ -54,9 +55,10 @@ class VaultManager:
         self.storage.save_vault(vault)
         audit("update", "vault", vault.id, user_id=getattr(vault, "owner_id", "system"))
 
-    def delete_vault(self, vault_id: str) -> None:
+    def delete_vault(self, vault_id: str, actor_id: str = "system") -> None:
         vault = self.get_vault(vault_id)
         if vault:
+            permissions.require_delete(vault, actor_id)
             vault.is_active = False
             self.update_vault(vault)
 

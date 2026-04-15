@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
+from Ward_DND_AI.auth.permission_checker import PermissionChecker
 from Ward_DND_AI.config.config import Config
 from Ward_DND_AI.managers.character_manager import CharacterManager
 from Ward_DND_AI.managers.folder_manager import FolderManager
@@ -85,6 +86,8 @@ class AppContext:
         self.ai: Optional[AIInterface] = None
 
         # Active user slot — placeholder until session-based auth is live.
+        # In single-user mode this is set to the local user ID on startup.
+        # When real auth is implemented, set this from the session token instead.
         self.current_user_id: Optional[str] = None
 
         # --- Managers — all share the same storage instance ---
@@ -98,6 +101,9 @@ class AppContext:
         self.images = ImageManager(self.storage)
         self.sounds = SoundManager(self.storage)
         self.sessions = SessionManager(self.storage)
+
+        # Permission checker — stateless, shared across all managers
+        self.permissions = PermissionChecker()
 
     # ------------------------------------------------------------------
     # Convenience helpers

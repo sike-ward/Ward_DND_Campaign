@@ -37,6 +37,22 @@ def main():
     ai_engine = get_model_backend(config, storage=ctx.storage)
     ctx.ai = ai_engine  # wire AI into context
 
+    # --- Resolve current user (single-user mode) ---
+    # Creates a default local user on first launch if none exists.
+    # Replace this block with real session-based auth when multiuser is implemented.
+    _LOCAL_USER_EMAIL = "local@ward-dnd.local"
+    _local_user = ctx.users.get_user_by_email(_LOCAL_USER_EMAIL)
+    if _local_user is None:
+        _local_user = ctx.users.create_user(
+            email=_LOCAL_USER_EMAIL,
+            username="local",
+            password="changeme",
+            roles=["admin"],
+        )
+        logger.info("Created default local user: %s", _local_user.id)
+    ctx.current_user_id = _local_user.id
+    logger.info("Current user: %s", ctx.current_user_id)
+
     qapp = QApplication(sys.argv)
     window = LoreMainApp(ctx=ctx)
     window.show()
