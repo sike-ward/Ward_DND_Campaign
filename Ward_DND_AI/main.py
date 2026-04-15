@@ -50,20 +50,28 @@ def main():
     ctx = AppContext(config)
 
     # --- Bootstrap admin account on first ever launch ---
-    # Credentials are printed to the console once.
-    # Change the password from Settings > Account after first login.
-    if not ctx.users.get_user_by_email("admin@ward-dnd.local"):
+    # Credentials come from .env (ADMIN_EMAIL, ADMIN_PASSWORD).
+    # If ADMIN_PASSWORD is not set, a secure random password is generated
+    # and printed to the console ONCE. It is never stored in the codebase.
+    import os
+    import secrets
+
+    _admin_email = os.getenv("ADMIN_EMAIL", "admin@warddnd.app")
+    _admin_password = os.getenv("ADMIN_PASSWORD") or secrets.token_urlsafe(16)
+
+    if not ctx.users.get_user_by_email(_admin_email):
         ctx.users.create_user(
-            email="admin@ward-dnd.local",
+            email=_admin_email,
             username="admin",
-            password="WardDND2024!",
+            password=_admin_password,
             roles=["admin"],
         )
         logger.info("=" * 60)
         logger.info("FIRST LAUNCH — admin account created")
-        logger.info("  Email:    admin@ward-dnd.local")
-        logger.info("  Password: WardDND2024!")
-        logger.info("  Change this password in Settings > Account")
+        logger.info("  Email:    %s", _admin_email)
+        logger.info("  Password: %s", _admin_password)
+        logger.info("  Save this password — it will not be shown again.")
+        logger.info("  Set ADMIN_EMAIL and ADMIN_PASSWORD in .env to control this.")
         logger.info("=" * 60)
 
     # --- PyQt application + login dialog ---
@@ -75,7 +83,9 @@ def main():
         sys.exit(0)
 
     ctx.current_user_id = login.user.id
-    logger.info("Logged in as: %s (%s)", login.user.username, login.user.id)
+    _is_admin = "admin" in login.user.roles
+    ctx.storage.set_user_context(login.user.id, is_admin=_is_admin)
+    logger.info("Logged in as: %s (%s) admin=%s", login.user.username, login.user.id, _is_admin)
 
     # --- Wire AI engine after login ---
     ai_engine = get_model_backend(config, storage=ctx.storage)

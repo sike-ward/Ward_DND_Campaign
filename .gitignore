@@ -15,6 +15,12 @@ env/
 .env.*
 !.env.example
 
+# Database — contains user data, never commit
+*.db
+*.db-shm
+*.db-wal
+!.env.example
+
 # Logs
 *.log
 logs/

@@ -1,3 +1,5 @@
+import json
+
 """
 SQLite Storage Backend for Ward DND AI.
 
@@ -17,16 +19,15 @@ Thread-safe for multi-threaded PyQt6 applications via create_engine with
 check_same_thread=False.
 """
 
-import json
 import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Set
 
-from sqlalchemy import String, Text, create_engine
-from sqlalchemy.orm import DeclarativeBase, Session, mapped_column
-from sqlalchemy.types import Mapped
+from sqlalchemy import String, Text, create_engine, select
+from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
+# Mapped is in sqlalchemy.orm, not sqlalchemy.types
 from Ward_DND_AI.models.character import Character
 from Ward_DND_AI.models.folder import Folder
 from Ward_DND_AI.models.group import Group
@@ -65,6 +66,7 @@ class GroupRecord(Base):
     __tablename__ = "groups"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    owner_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
     data: Mapped[str] = mapped_column(Text, nullable=False)  # JSON blob
 
 
@@ -74,6 +76,8 @@ class VaultRecord(Base):
     __tablename__ = "vaults"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    owner_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
+    members_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
     data: Mapped[str] = mapped_column(Text, nullable=False)  # JSON blob
 
 
@@ -83,6 +87,8 @@ class FolderRecord(Base):
     __tablename__ = "folders"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    owner_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
+    vault_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
     data: Mapped[str] = mapped_column(Text, nullable=False)  # JSON blob
 
 
@@ -92,6 +98,8 @@ class NoteRecord(Base):
     __tablename__ = "notes"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    owner_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
+    vault_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
     data: Mapped[str] = mapped_column(Text, nullable=False)  # JSON blob (metadata only)
 
 
@@ -249,9 +257,10 @@ class SQLiteBackend(StorageBackend):
         with self._session() as session:
             record = session.query(GroupRecord).filter(GroupRecord.id == group.id).first()
             if record:
+                record.owner_id = group.owner_id
                 record.data = group.model_dump_json()
             else:
-                record = GroupRecord(id=group.id, data=group.model_dump_json())
+                record = GroupRecord(id=group.id, owner_id=group.owner_id, data=group.model_dump_json())
                 session.add(record)
             session.commit()
 
@@ -278,18 +287,29 @@ class SQLiteBackend(StorageBackend):
         with self._session() as session:
             record = session.query(VaultRecord).filter(VaultRecord.id == vault.id).first()
             if record:
+                record.owner_id = vault.owner_id
+                record.members_json = json.dumps(vault.members)
                 record.data = vault.model_dump_json()
             else:
-                record = VaultRecord(id=vault.id, data=vault.model_dump_json())
+                record = VaultRecord(
+                    id=vault.id,
+                    owner_id=vault.owner_id,
+                    members_json=json.dumps(vault.members),
+                    data=vault.model_dump_json(),
+                )
                 session.add(record)
             session.commit()
 
     def get_vault_by_id(self, vault_id: str) -> Optional[Vault]:
-        """Retrieve a Vault by ID."""
+        """Retrieve a Vault by ID — returns None if user lacks access."""
         with self._session() as session:
             record = session.query(VaultRecord).filter(VaultRecord.id == vault_id).first()
             if record:
-                return Vault.model_validate_json(record.data)
+                vault = Vault.model_validate_json(record.data)
+                members = json.loads(record.members_json or "[]")
+                if not self._can_access(vault.owner_id, vault.permissions, members):
+                    return None
+                return vault
         return None
 
     def delete_vault_by_id(self, vault_id: str) -> None:
@@ -390,18 +410,24 @@ class SQLiteBackend(StorageBackend):
         with self._session() as session:
             record = session.query(NoteRecord).filter(NoteRecord.id == note.id).first()
             if record:
+                record.owner_id = note.owner_id
+                record.vault_id = note.vault_id
                 record.data = note.model_dump_json()
             else:
-                record = NoteRecord(id=note.id, data=note.model_dump_json())
+                record = NoteRecord(
+                    id=note.id, owner_id=note.owner_id, vault_id=note.vault_id, data=note.model_dump_json()
+                )
                 session.add(record)
             session.commit()
 
     def get_note_by_id(self, note_id: str) -> Optional[Note]:
-        """Retrieve a Note by ID."""
+        """Retrieve a Note by ID — returns None if user lacks access."""
         with self._session() as session:
             record = session.query(NoteRecord).filter(NoteRecord.id == note_id).first()
             if record:
                 note = Note.model_validate_json(record.data)
+                if not self._can_access(note.owner_id, note.permissions):
+                    return None
                 # Load content from file if available
                 if hasattr(note, "path") and note.path:
                     abs_path = self._abs(note.path)
@@ -427,11 +453,33 @@ class SQLiteBackend(StorageBackend):
             session.commit()
 
     def list_notes(self, folder: str = "") -> List[str]:
-        """List all markdown note file paths under folder."""
+        """List note file paths the current user can access.
+
+        Admins see all notes. Regular users see notes they own
+        or notes explicitly shared with them.
+        """
+        # Collect accessible note IDs from the DB
+        accessible_ids: set[str] = set()
+        with self._session() as session:
+            if self._is_admin:
+                records = session.query(NoteRecord).all()
+            else:
+                uid = self._current_user_id or ""
+                records = session.query(NoteRecord).filter((NoteRecord.owner_id == uid)).all()
+            for rec in records:
+                note_data = json.loads(rec.data or "{}")
+                perms = note_data.get("permissions", {})
+                if self._can_access(rec.owner_id, perms):
+                    accessible_ids.add(rec.id)
+        # Fall back to filesystem listing if no DB records (legacy/unregistered notes)
         root = self._abs(folder) if folder else self.vault_path
         if not root.is_dir():
             return []
-        return [str(p.relative_to(self.vault_path)) for p in root.rglob("*.md") if p.is_file()]
+        all_paths = [str(p.relative_to(self.vault_path)) for p in root.rglob("*.md") if p.is_file()]
+        if self._is_admin or not self._current_user_id:
+            return all_paths
+        # Return only paths that have a DB record the user can access
+        return [p for p in all_paths if p in accessible_ids or p.replace("\\", "/") in accessible_ids]
 
     def read_note(self, path: str) -> str:
         """Read note content from markdown file."""
@@ -721,19 +769,20 @@ class SQLiteBackend(StorageBackend):
                         break
             except Exception:
                 continue
-
         return results
 
     def update_note_metadata(self, note_id: str, meta: dict) -> None:
         """
-        Merge meta dict into the stored metadata for note_id.
-
-        Only updates provided keys — does not overwrite the full record.
+        Merge meta into the stored JSON metadata for note_id.
+        Only updates the provided keys; non-overlapping keys are preserved.
         """
-        with self._session() as session:
-            record = session.query(NoteRecord).filter(NoteRecord.id == note_id).first()
+        with Session(self.engine) as session:
+            record = session.scalar(select(NoteRecord).where(NoteRecord.record_id == note_id))
             if record:
-                existing = json.loads(record.data)
+                existing = {}
+                try:
+                    existing = __import__("json").loads(record.data) if record.data else {}
+                except Exception:
+                    pass
                 existing.update(meta)
-                record.data = json.dumps(existing)
-                session.commit()
+                record.data = __import__("json").dumps(existing)

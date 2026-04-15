@@ -14,6 +14,54 @@ from Ward_DND_AI.models.vault import Vault
 
 
 class StorageBackend(ABC):
+    """
+    Abstract storage interface.
+
+    User context
+    ------------
+    Call set_user_context(user_id, is_admin) immediately after login.
+    All list/get methods use this to enforce data isolation:
+      - Admins see everything.
+      - Regular users see only records they own, records in vaults they
+        belong to, or records explicitly shared with them via permissions.
+    """
+
+    # Populated by set_user_context() after login
+    _current_user_id: Optional[str] = None
+    _is_admin: bool = False
+
+    def set_user_context(self, user_id: str, is_admin: bool = False) -> None:
+        """
+        Set the active user for all subsequent queries.
+        Must be called once after login before any data access.
+        """
+        self._current_user_id = user_id
+        self._is_admin = is_admin
+
+    def _can_access(self, owner_id: str, permissions: dict, member_ids: list | None = None) -> bool:
+        """
+        Return True if the current user may access a resource.
+
+        Rules (in order):
+          1. Admins always have access.
+          2. The owner always has access.
+          3. Explicit permissions entry grants access.
+          4. Vault membership grants access (pass vault.members as member_ids).
+          5. Default: deny.
+        """
+        if self._is_admin:
+            return True
+        uid = self._current_user_id
+        if not uid:
+            return False
+        if uid == owner_id:
+            return True
+        if uid in permissions:
+            return True
+        if member_ids and uid in member_ids:
+            return True
+        return False
+
     # --- CRUD for ALL MODELS ---
     @abstractmethod
     def save_user(self, user: User) -> None:
