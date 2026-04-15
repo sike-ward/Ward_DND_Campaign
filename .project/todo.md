@@ -57,19 +57,19 @@
 
 ---
 
-## 7. Documentation & Compliance
+## 7. Documentation & Compliance ✅
 
-- [ ] Create or update `README.md` and stub out `/docs/`
-- [ ] Docs folder contains migration/upgrade path, backup/restore, permissions model, and config reference
-- [ ] Config and usage docs up to date (only new backend/workflow)
-- [ ] Docstrings/comments required by linting for all functions/classes
+- [x] Create or update `README.md` and stub out `/docs/`
+- [x] Docs folder contains migration/upgrade path, backup/restore, permissions model, and config reference
+- [x] Config and usage docs up to date (only new backend/workflow)
+- [x] Docstrings/comments required by linting for all functions/classes
 
 ---
 
-## 8. Data Portability & Disaster Recovery
+## 8. Data Portability & Disaster Recovery ✅
 
-- [ ] Export ALL user data from the app (notes, models, logs, settings)
-- [ ] Test simulated disaster recovery (restore from backup, migrate old to new format)
+- [x] Export ALL user data from the app (scripts/export_data.py — notes, models, logs, settings, users)
+- [x] Test simulated disaster recovery (test_disaster_recovery.py — backup, restore, settings fallback, search)
 
 ---
 
