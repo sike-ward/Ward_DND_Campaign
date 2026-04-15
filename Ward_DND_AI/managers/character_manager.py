@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 
 from Ward_DND_AI.models.character import Character
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class CharacterManager:
@@ -67,6 +68,7 @@ class CharacterManager:
         if character:
             # Soft delete if you want, or remove permanently
             self.storage.delete_character_by_id(character_id)
+            audit("delete", "character", character_id)
 
     def check_permission(self, character_id: str, user_id: str, permission: str) -> bool:
         character = self.get_character(character_id)

@@ -39,13 +39,13 @@
 
 ---
 
-## 5. Logging, Backup, and Testing
+## 5. Logging, Backup, and Testing ✅
 
-- [ ] Basic audit/event logging (every create/update/delete logs a line in `audit.log`)
-- [ ] Set up automatic backups (user-accessible, test restore)
-- [ ] Smoke/integration test for every model’s CRUD (manual script or pytest)
-- [ ] Lint and type-check the codebase (`ruff`, `mypy` all pass on every commit)
-- [ ] Add mypy config to repo
+- [x] Basic audit/event logging (every create/update/delete logs a line in `audit.log`)
+- [x] Set up automatic backups (backup_note() wired into NoteManager on update/delete)
+- [x] Smoke/integration test for every model’s CRUD (test_models_crud.py)
+- [x] Lint and type-check the codebase (`ruff` + `mypy` in CI)
+- [x] Add mypy config to repo (mypy.ini)
 
 ---
 

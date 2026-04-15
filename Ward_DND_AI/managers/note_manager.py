@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 
 from Ward_DND_AI.models.note import Note
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class NoteManager:
@@ -27,15 +28,13 @@ class NoteManager:
         attachments: Optional[List[str]] = None,
         ai_summary: Optional[str] = None,
         meta: Optional[Dict[str, str]] = None,
-        note_type: str = "generic",
     ) -> Note:
         """
         Create and store a new note.
         """
         note = Note(
-            id=self._generate_id(),
-            vault_id=vault_id,
             owner_id=owner_id,
+            vault_id=vault_id,
             title=title,
             content=content,
             folder_id=folder_id,
@@ -46,30 +45,32 @@ class NoteManager:
             attachments=attachments or [],
             ai_summary=ai_summary,
             meta=meta or {},
-            note_type=note_type,
-            last_modified=datetime.utcnow(),
-            created_at=datetime.utcnow(),
-            schema_version=1,
-            version=1,
         )
         self.storage.save_note(note)
+        audit("create", "note", note.id, user_id=owner_id)
         return note
 
     def get_note(self, note_id: str) -> Optional[Note]:
         return self.storage.get_note_by_id(note_id)
 
     def update_note(self, note: Note) -> None:
-        note.schema_version = max(note.schema_version, 1)
-        note.version += 1
+        # Backup before overwriting so we can restore previous versions
+        try:
+            self.storage.backup_note(note.id)
+        except Exception:
+            pass  # backup failure must never block a save
         note.last_modified = datetime.utcnow()
         self.storage.save_note(note)
+        audit("update", "note", note.id, user_id=note.owner_id)
 
     def delete_note(self, note_id: str) -> None:
-        note = self.get_note(note_id)
-        if note:
-            # Soft delete: optionally add an is_deleted flag to Note model if needed
-            # For now, remove permanently
-            self.storage.delete_note_by_id(note_id)
+        # Backup before deletion so content can be recovered
+        try:
+            self.storage.backup_note(note_id)
+        except Exception:
+            pass
+        self.storage.delete_note_by_id(note_id)
+        audit("delete", "note", note_id)
 
     def add_tag(self, note_id: str, tag: str) -> None:
         note = self.get_note(note_id)

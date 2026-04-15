@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 
 from Ward_DND_AI.models.vault import Vault
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class VaultManager:
@@ -41,6 +42,7 @@ class VaultManager:
             version=1,
         )
         self.storage.save_vault(vault)
+        audit("update", "vault", vault.id, user_id=getattr(vault, "owner_id", "system"))
         return vault
 
     def get_vault(self, vault_id: str) -> Optional[Vault]:
@@ -50,6 +52,7 @@ class VaultManager:
         vault.schema_version = max(vault.schema_version, 1)
         vault.version += 1
         self.storage.save_vault(vault)
+        audit("update", "vault", vault.id, user_id=getattr(vault, "owner_id", "system"))
 
     def delete_vault(self, vault_id: str) -> None:
         vault = self.get_vault(vault_id)

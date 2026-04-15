@@ -6,6 +6,7 @@ import bcrypt
 
 from Ward_DND_AI.models.user import User
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class UserManager:
@@ -46,6 +47,7 @@ class UserManager:
             last_login=None,
         )
         self.storage.save_user(user)
+        audit("update", "user", user.id, user_id=getattr(user, "owner_id", "system"))
         return user
 
     def get_user(self, user_id: str) -> Optional[User]:
@@ -62,6 +64,7 @@ class UserManager:
         if not user.last_login:
             user.last_login = datetime.utcnow()
         self.storage.save_user(user)
+        audit("update", "user", user.id, user_id=getattr(user, "owner_id", "system"))
 
     def delete_user(self, user_id: str) -> None:
         """

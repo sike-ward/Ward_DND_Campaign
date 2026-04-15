@@ -3,6 +3,7 @@ from typing import Optional
 
 from Ward_DND_AI.models.session import Session
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class SessionManager:
@@ -37,6 +38,7 @@ class SessionManager:
             schema_version=1,
         )
         self.storage.save_session(session)
+        audit("create", "session", session.id, user_id=getattr(session, "owner_id", "system"))
         return session
 
     def get_session(self, session_id: str) -> Optional[Session]:
@@ -50,6 +52,7 @@ class SessionManager:
         if session and session.is_active:
             session.expires_at = datetime.utcnow() + self.session_duration
             self.storage.save_session(session)
+            audit("update", "session", session.id, user_id=getattr(session, "owner_id", "system"))
 
     def revoke_session(self, session_id: str) -> None:
         """
@@ -59,6 +62,7 @@ class SessionManager:
         if session:
             session.is_active = False
             self.storage.save_session(session)
+            audit("update", "session", session.id, user_id=getattr(session, "owner_id", "system"))
 
     def is_session_valid(self, session_id: str) -> bool:
         session = self.get_session(session_id)

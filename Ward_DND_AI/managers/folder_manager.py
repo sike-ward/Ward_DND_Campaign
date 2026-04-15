@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 
 from Ward_DND_AI.models.folder import Folder
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class FolderManager:
@@ -62,6 +63,7 @@ class FolderManager:
             # Soft delete: implement is_deleted in model if needed
             # For now, remove permanently
             self.storage.delete_folder_by_id(folder_id)
+            audit("delete", "folder", folder_id)
 
     def add_note_to_folder(self, folder_id: str, note_id: str) -> None:
         folder = self.get_folder(folder_id)

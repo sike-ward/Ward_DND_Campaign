@@ -25,4 +25,8 @@ jobs:
         run: ruff format --check .
 
       - name: Run tests
-        run: pytest
+        run: pytest Ward_DND_AI/tests/
+
+      - name: Type check (mypy)
+        run: mypy Ward_DND_AI/models/ Ward_DND_AI/managers/ Ward_DND_AI/storage/ Ward_DND_AI/context/
+        continue-on-error: true

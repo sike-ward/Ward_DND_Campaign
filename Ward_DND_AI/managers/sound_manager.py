@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 
 from Ward_DND_AI.models.sound import Sound
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class SoundManager:
@@ -48,6 +49,7 @@ class SoundManager:
             version=1,
         )
         self.storage.save_sound(sound)
+        audit("update", "sound", sound.id, user_id=getattr(sound, "owner_id", "system"))
         return sound
 
     def get_sound(self, sound_id: str) -> Optional[Sound]:
@@ -58,6 +60,7 @@ class SoundManager:
         sound.version += 1
         sound.last_modified = datetime.utcnow()
         self.storage.save_sound(sound)
+        audit("update", "sound", sound.id, user_id=getattr(sound, "owner_id", "system"))
 
     def delete_sound(self, sound_id: str) -> None:
         sound = self.get_sound(sound_id)

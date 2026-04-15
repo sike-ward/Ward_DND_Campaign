@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 
 from Ward_DND_AI.models.map import Map
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class MapManager:
@@ -47,6 +48,7 @@ class MapManager:
             version=1,
         )
         self.storage.save_map(map_obj)
+        audit("update", "map", map.id, user_id=getattr(map, "owner_id", "system"))
         return map_obj
 
     def get_map(self, map_id: str) -> Optional[Map]:
@@ -57,12 +59,14 @@ class MapManager:
         map_obj.version += 1
         map_obj.last_modified = datetime.utcnow()
         self.storage.save_map(map_obj)
+        audit("update", "map", map.id, user_id=getattr(map, "owner_id", "system"))
 
     def delete_map(self, map_id: str) -> None:
         map_obj = self.get_map(map_id)
         if map_obj:
             # Soft delete or permanent removal
             self.storage.delete_map_by_id(map_id)
+            audit("delete", "map", map_id)
 
     def check_permission(self, map_id: str, user_id: str, permission: str) -> bool:
         map_obj = self.get_map(map_id)

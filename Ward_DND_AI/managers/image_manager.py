@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 
 from Ward_DND_AI.models.image import Image
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class ImageManager:
@@ -52,6 +53,7 @@ class ImageManager:
             version=1,
         )
         self.storage.save_image(image)
+        audit("update", "image", image.id, user_id=getattr(image, "owner_id", "system"))
         return image
 
     def get_image(self, image_id: str) -> Optional[Image]:
@@ -62,6 +64,7 @@ class ImageManager:
         image.version += 1
         image.last_modified = datetime.utcnow()
         self.storage.save_image(image)
+        audit("update", "image", image.id, user_id=getattr(image, "owner_id", "system"))
 
     def delete_image(self, image_id: str) -> None:
         image = self.get_image(image_id)

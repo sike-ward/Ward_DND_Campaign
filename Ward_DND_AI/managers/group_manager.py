@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from Ward_DND_AI.models.group import Group
 from Ward_DND_AI.storage.storage_base import StorageBackend
+from Ward_DND_AI.utils.audit_logger import audit
 
 
 class GroupManager:
@@ -36,6 +37,7 @@ class GroupManager:
             schema_version=1,
         )
         self.storage.save_group(group)
+        audit("create", "group", group.id, user_id=getattr(group, "owner_id", "system"))
         return group
 
     def get_group(self, group_id: str) -> Optional[Group]:
@@ -44,6 +46,7 @@ class GroupManager:
     def update_group(self, group: Group) -> None:
         group.schema_version = max(group.schema_version, 1)
         self.storage.save_group(group)
+        audit("update", "group", group.id, user_id=getattr(group, "owner_id", "system"))
 
     def delete_group(self, group_id: str) -> None:
         group = self.get_group(group_id)
