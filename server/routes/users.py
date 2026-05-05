@@ -57,8 +57,6 @@ def _list_all_users(ctx: AppContext):
         from MythosEngine.storage.sqlite_backend import SQLiteBackend, UserRecord
 
         if isinstance(ctx.storage, SQLiteBackend):
-            import json
-
             with ctx.storage._session() as s:
                 return [User.model_validate_json(r.data) for r in s.query(UserRecord).all()]
     except Exception:

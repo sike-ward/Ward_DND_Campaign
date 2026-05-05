@@ -261,7 +261,8 @@ def move_note(
     dest_prefix = f"{body.dest_folder_id}/" if body.dest_folder_id else ""
     safe_title = note.title.replace("/", "_").replace("\\", "_")
     dest_path = f"{dest_prefix}{safe_title}.md"
-    src_path = note.meta.get("_path", f"{note.title}.md")
+    # Prefer the stored _path meta; fall back to note.id (the filesystem path for HybridStorage)
+    src_path = note.meta.get("_path") or note.id
     ctx.storage.move_note(src_path, dest_path)
     note.folder_id = body.dest_folder_id
     note.meta["_path"] = dest_path
@@ -284,7 +285,10 @@ def add_tag(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Note not found.")
     if body.tag not in note.tags:
         note.tags.append(body.tag)
-        ctx.notes.update_note(note, actor_id=current_user.id)
+        try:
+            ctx.notes.update_note(note, actor_id=current_user.id)
+        except PermissionError as exc:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc))
     return {"tags": note.tags}
 
 
@@ -299,7 +303,10 @@ def remove_tag(
     if note is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Note not found.")
     note.tags = [t for t in note.tags if t != tag]
-    ctx.notes.update_note(note, actor_id=current_user.id)
+    try:
+        ctx.notes.update_note(note, actor_id=current_user.id)
+    except PermissionError as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc))
 
 
 @router.put("/notes/{note_id:path}/meta")
@@ -313,5 +320,8 @@ def update_meta(
     if note is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Note not found.")
     note.meta.update(body.meta)
-    ctx.notes.update_note(note, actor_id=current_user.id)
+    try:
+        ctx.notes.update_note(note, actor_id=current_user.id)
+    except PermissionError as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc))
     return {"meta": note.meta}

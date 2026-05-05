@@ -500,6 +500,7 @@ class HybridStorage(StorageBackend):
 
     def get_invite_by_code(self, code: str) -> Optional["InviteCode"]:
         invite_dir = self._dnd_meta_dir("invites")
+        # Invite codes are always stored and compared in uppercase (see save_invite / InviteManager).
         code_upper = code.strip().upper()
         for p in invite_dir.glob("*.json"):
             try:
