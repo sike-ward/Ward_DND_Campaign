@@ -48,6 +48,9 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+# Local config — contains secrets and machine-specific paths
+MythosEngine/config/settings.json
+
 # Project temp files
 *.canvas
 ai_usage_log.csv

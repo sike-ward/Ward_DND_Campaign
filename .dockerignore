@@ -1,0 +1,55 @@
+# .dockerignore — files excluded from the Docker build context
+
+# ── Secrets (NEVER baked into images) ────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Runtime data (mounted as volumes at runtime, not baked in) ───────────────
+docker-data/
+*.db
+*.db-shm
+*.db-wal
+logs/
+loreai_index/
+Obsidian/
+
+# ── Frontend build artifacts ──────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/build/
+
+# ── Python bytecode & caches ──────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Version control ───────────────────────────────────────────────────────────
+.git/
+.gitignore
+.gitattributes
+
+# ── Desktop-app files (not needed server-side) ────────────────────────────────
+*.bat
+*.canvas
+Launch_MythosEngine.bat
+Dev_Console.bat
+test_launch.bat
+
+# ── Editor / OS ───────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Docs & tooling (keep requirements.txt — it IS needed) ────────────────────
+docs/
+README.md
+tech_debt.md
+mypy.ini
