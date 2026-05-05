@@ -13,10 +13,12 @@ The Electron ``main.cjs`` starts this automatically in production.
 """
 
 import logging
+import traceback
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from MythosEngine.config.config import Config
 from MythosEngine.context.app_context import AppContext
@@ -31,7 +33,22 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
-    """Bootstrap AppContext once at server startup."""
+    """Bootstrap AppContext and logging once at server startup."""
+    # Initialise file + in-memory logging before anything else so all
+    # startup messages land in the log file.
+    try:
+        from MythosEngine.utils.logging_setup import (  # noqa: F401
+            APP_SESSION_LOG_HANDLER,
+            file_handler,
+        )
+        root = logging.getLogger()
+        if not any(isinstance(h, type(file_handler)) for h in root.handlers):
+            root.addHandler(file_handler)
+            root.addHandler(APP_SESSION_LOG_HANDLER)
+    except Exception as exc:
+        logging.basicConfig(level=logging.INFO)
+        logger.warning("Could not configure file logging: %s", exc)
+
     cfg = Config()
     ctx = AppContext(cfg)
 
@@ -74,6 +91,32 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ── Global unhandled exception handler ───────────────────────────────────────
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    """
+    Catch-all handler for any exception that escapes a route.
+
+    Logs the full traceback to the app log file so crashes are never
+    silently swallowed, then returns a safe JSON 500 to the client.
+    """
+    logger.error(
+        "Unhandled exception on %s %s\n%s",
+        request.method,
+        request.url.path,
+        traceback.format_exc(),
+    )
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": "An internal server error occurred. See the server log for details."
+        },
+    )
+
 
 # ── Routers ───────────────────────────────────────────────────────────────────
 

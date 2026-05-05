@@ -64,12 +64,7 @@ def _user_response(user: User) -> dict:
 @router.get("/status")
 def auth_status(ctx: AppContext = Depends(get_ctx)):
     """Return whether first-time setup is required (no users exist yet)."""
-    users = ctx.storage.get_user_by_email  # just a probe
-    # Check if any user exists by attempting a broad list
     try:
-        # HybridStorage stores users in a global JSON; SQLite queries the DB.
-        # Both backends expose get_user_by_email; check for a sentinel admin.
-        # The cheapest approach: try to load the global users file/DB.
         any_user = _any_user_exists(ctx)
     except Exception:
         any_user = False
