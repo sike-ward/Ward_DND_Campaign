@@ -704,7 +704,7 @@ class SQLiteBackend(StorageBackend):
         orig = self._abs(note_path)
         version_dir = self.vault_path / ".versions" / Path(note_path).parent
         version_dir.mkdir(parents=True, exist_ok=True)
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
         backup = version_dir / f"{orig.name}.{timestamp}.bak"
         shutil.copy2(str(orig), str(backup))
         return str(backup)

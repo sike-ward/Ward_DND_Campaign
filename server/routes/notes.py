@@ -102,7 +102,7 @@ def list_folders(
 def create_folder(
     body: CreateFolderRequest,
     ctx: AppContext = Depends(get_ctx),
-    current_user: User = Depends(get_current_user),
+    _current_user: User = Depends(get_current_user),
 ):
     path = body.name if not body.parent_id else f"{body.parent_id}/{body.name}"
     ctx.storage.create_folder(path)
