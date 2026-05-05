@@ -1,11 +1,3 @@
-import json
-import re
-import shutil
-import uuid
-from datetime import datetime
-from pathlib import Path
-from typing import List, Optional, Set
-
 """
 SQLite Storage Backend for Ward DND AI.
 
@@ -25,7 +17,15 @@ Thread-safe for multi-threaded PyQt6 applications via create_engine with
 check_same_thread=False.
 """
 
-from sqlalchemy import String, Text, create_engine, text
+import json
+import re
+import shutil
+import uuid
+from datetime import datetime
+from pathlib import Path
+from typing import List, Optional, Set
+
+from sqlalchemy import Integer, String, Text, create_engine, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
 # Mapped is in sqlalchemy.orm, not sqlalchemy.types
@@ -94,27 +94,38 @@ class FolderRecord(Base):
 
 
 class NoteRecord(Base):
-    """ORM model for Note metadata — content stored as file."""
+    """ORM model for Note metadata — content stored as file.
+
+    path is the bridge key linking DB records to filesystem files. Every call
+    to write_note() upserts a row keyed on path, so ownership and permissions
+    are always in sync with the actual files on disk.
+
+    Permissions model
+    -----------------
+    permissions_json : JSON array of {"user_id": str, "role": "viewer"|"owner"}
+    is_dm_only       : overrides all grants — only admins see it
+    is_public        : DM shortcut to share with all players at once
+    """
 
     __tablename__ = "notes"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    owner_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
+    owner_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True, default="")
     vault_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
-    data: Mapped[str] = mapped_column(Text, nullable=False)  # JSON blob (metadata only)
-    # Extended columns added via _apply_schema_migrations for existing DBs
-    path: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    title: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    tags_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    permissions_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True, default="{}")
-    created_at: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
-    updated_at: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
-    note_type: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
-    is_dm_only: Mapped[int] = mapped_column(default=0, server_default="0")
-    is_public: Mapped[int] = mapped_column(default=0, server_default="0")
-    word_count: Mapped[Optional[int]] = mapped_column(nullable=True)
-    linked_note_ids: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    campaign_id: Mapped[Optional[str]] = mapped_column(String(36), nullable=True)
+    # Bridge key — vault-relative path (forward-slash normalised), indexed
+    path: Mapped[str] = mapped_column(Text, nullable=False, index=True, default="")
+    title: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    tags_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    permissions_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    created_at: Mapped[str] = mapped_column(String(32), nullable=False, default="")
+    updated_at: Mapped[str] = mapped_column(String(32), nullable=False, default="")
+    note_type: Mapped[str] = mapped_column(Text, nullable=False, default="note")
+    is_dm_only: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    is_public: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    word_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    linked_note_ids: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
+    campaign_id: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    data: Mapped[str] = mapped_column(Text, nullable=False, default="{}")  # spare JSON blob
 
 
 class CharacterRecord(Base):
@@ -163,12 +174,90 @@ class SessionRecord(Base):
 
 
 class StarredRecord(Base):
-    """Store starred/favorite note IDs per user (one JSON blob per user)."""
+    """Per-user starred note paths — one row per user_id (or 'system' fallback)."""
 
     __tablename__ = "starred"
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    data: Mapped[str] = mapped_column(Text, nullable=False, default="[]")  # JSON array
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)  # user_id
+    data: Mapped[str] = mapped_column(Text, nullable=False, default="[]")  # JSON array of paths
+
+
+# ============================================================================
+# Content-extraction helpers (module-level, no storage dependency)
+# ============================================================================
+
+_YAML_FRONT_RE = re.compile(r"^---[ \t]*\n(.*?)\n---[ \t]*\n", re.DOTALL)
+_H1_RE = re.compile(r"^#\s+(.+)$", re.MULTILINE)
+_HASHTAG_RE = re.compile(r"(?<!\[)#([A-Za-z0-9_\-]+)")
+_WIKILINK_RE = re.compile(r"\[\[([^\[\]|#]+?)(?:[|#][^\[\]]*)?\]\]")
+
+
+def _extract_title(path: str, content: str) -> str:
+    """Return the first H1 heading from content, or the filename stem as fallback."""
+    m = _H1_RE.search(content)
+    return m.group(1).strip() if m else Path(path).stem
+
+
+def _extract_tags(content: str) -> list:
+    """Return a sorted, deduplicated tag list pulled from three sources:
+    1. YAML frontmatter ``tags:`` field (inline list, block list, or scalar).
+    2. [[wikilinks]] in the note body.
+    3. #hashtags in the note body.
+    """
+    tags: set = set()
+
+    fm = _YAML_FRONT_RE.match(content)
+    body_start = fm.end() if fm else 0
+
+    if fm:
+        lines = fm.group(1).splitlines()
+        in_tags_block = False
+        for line in lines:
+            stripped = line.strip()
+            if stripped.lower().startswith("tags:"):
+                raw = stripped[5:].strip()
+                in_tags_block = False
+                if raw.startswith("["):
+                    # Inline list: tags: [dragon, npc]
+                    for t in raw.strip("[]").split(","):
+                        t = t.strip().strip("\"'")
+                        if t:
+                            tags.add(t)
+                elif raw:
+                    # Scalar: tags: dragon
+                    tags.add(raw.strip("\"'"))
+                else:
+                    # Block list follows on subsequent lines
+                    in_tags_block = True
+            elif in_tags_block:
+                if stripped.startswith("- "):
+                    t = stripped[2:].strip().strip("\"'")
+                    if t:
+                        tags.add(t)
+                elif stripped and not stripped.startswith("#"):
+                    in_tags_block = False  # end of block
+
+    body = content[body_start:]
+    for m in _WIKILINK_RE.finditer(body):
+        tags.add(m.group(1).strip())
+    for m in _HASHTAG_RE.finditer(body):
+        tags.add(m.group(1))
+
+    return sorted(tags)
+
+
+def _extract_links(content: str) -> list:
+    """Return sorted list of [[wikilink]] targets found outside frontmatter."""
+    fm = _YAML_FRONT_RE.match(content)
+    body = content[fm.end() :] if fm else content
+    return sorted({m.group(1).strip() for m in _WIKILINK_RE.finditer(body)})
+
+
+def _count_words(content: str) -> int:
+    """Approximate word count on the note body (frontmatter excluded)."""
+    fm = _YAML_FRONT_RE.match(content)
+    body = content[fm.end() :] if fm else content
+    return len(body.split())
 
 
 # ============================================================================
@@ -251,48 +340,59 @@ class SQLiteBackend(StorageBackend):
         return self.vault_path / rel
 
     def _apply_schema_migrations(self) -> None:
-        """Add new NoteRecord columns to existing DBs without dropping data."""
-        note_cols = {
-            "path": "TEXT",
-            "title": "TEXT",
-            "tags_json": "TEXT",
-            "permissions_json": "TEXT DEFAULT '{}'",
-            "created_at": "TEXT",
-            "updated_at": "TEXT",
-            "note_type": "TEXT",
+        """Add columns introduced in later schema versions to existing databases.
+
+        Only additive ALTER TABLE ADD COLUMN operations are used — safe for
+        SQLite and idempotent (skips columns that already exist).
+        """
+        note_additions: dict = {
+            "path": "TEXT NOT NULL DEFAULT ''",
+            "title": "TEXT NOT NULL DEFAULT ''",
+            "tags_json": "TEXT NOT NULL DEFAULT '[]'",
+            "permissions_json": "TEXT NOT NULL DEFAULT '[]'",
+            "created_at": "TEXT NOT NULL DEFAULT ''",
+            "updated_at": "TEXT NOT NULL DEFAULT ''",
+            "note_type": "TEXT NOT NULL DEFAULT 'note'",
             "is_dm_only": "INTEGER NOT NULL DEFAULT 0",
             "is_public": "INTEGER NOT NULL DEFAULT 0",
-            "word_count": "INTEGER",
-            "linked_note_ids": "TEXT",
-            "campaign_id": "TEXT",
+            "word_count": "INTEGER NOT NULL DEFAULT 0",
+            "linked_note_ids": "TEXT NOT NULL DEFAULT '[]'",
+            "campaign_id": "TEXT NOT NULL DEFAULT ''",
         }
         with self.engine.connect() as conn:
-            rows = conn.execute(text("PRAGMA table_info(notes)")).fetchall()
-            existing = {row[1] for row in rows}
-            for col, col_type in note_cols.items():
+            existing = {row[1] for row in conn.execute(text("PRAGMA table_info(notes)"))}
+            for col, typedef in note_additions.items():
                 if col not in existing:
-                    conn.execute(text(f"ALTER TABLE notes ADD COLUMN {col} {col_type}"))
+                    conn.execute(text(f"ALTER TABLE notes ADD COLUMN {col} {typedef}"))
             conn.commit()
 
-    def _can_access_note(self, rec: NoteRecord) -> bool:
-        """Return True if the current user may access this note record."""
+    def _can_access_note(self, rec: "NoteRecord") -> bool:
+        """Return True if the current user may read this note record.
+
+        Rules (evaluated in order):
+          1. Admins always have access.
+          2. is_dm_only=1  →  only admins; all players denied regardless of other flags.
+          3. owner_id == current user  →  access granted.
+          4. is_public=1  →  any authenticated player has access.
+          5. Explicit viewer/owner grant in permissions_json  →  access granted.
+          6. Default: deny.
+        """
         if self._is_admin:
             return True
-        # DM-only notes are visible to admins only (checked above)
-        if (rec.is_dm_only or 0) == 1:
-            return False
+        if rec.is_dm_only:
+            return False  # DM-only overrides everything for players
         uid = self._current_user_id
         if not uid:
             return False
         if rec.owner_id == uid:
             return True
-        if (rec.is_public or 0) == 1:
+        if rec.is_public:
             return True
         try:
-            perms = json.loads(rec.permissions_json or "{}")
+            perms = json.loads(rec.permissions_json or "[]")
+            return any(p.get("user_id") == uid for p in perms)
         except (json.JSONDecodeError, TypeError):
-            perms = {}
-        return uid in perms
+            return False
 
     # ========================================================================
     # Users
@@ -586,7 +686,7 @@ class SQLiteBackend(StorageBackend):
 
         now = datetime.utcnow().isoformat()
         norm_path = path.replace("\\", "/")
-        title = _extract_title(content)
+        title = _extract_title(norm_path, content)
         tags_json = json.dumps(_extract_tags(content))
         linked_note_ids = json.dumps(_extract_links(content))
         word_count = len(content.split())
@@ -611,7 +711,7 @@ class SQLiteBackend(StorageBackend):
                     tags_json=tags_json,
                     linked_note_ids=linked_note_ids,
                     word_count=word_count,
-                    permissions_json="{}",
+                    permissions_json="[]",
                     created_at=now,
                     updated_at=now,
                     is_dm_only=0,
