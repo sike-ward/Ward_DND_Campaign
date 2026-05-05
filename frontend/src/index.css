@@ -1,0 +1,358 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEME PALETTES — CSS Custom Properties
+   Each [data-theme] defines a full palette. Tailwind references these vars.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Dark (default) ──────────────────────────────────────────────────────── */
+[data-theme="dark"], :root {
+  --color-base: 13 13 20;
+  --color-surface: 22 22 31;
+  --color-card: 30 30 42;
+  --color-elevated: 39 39 56;
+  --color-hover: 48 48 70;
+  --color-active: 58 58 84;
+
+  --color-accent: 124 92 252;
+  --color-accent-hover: 104 68 240;
+  --color-green: 52 211 153;
+  --color-green-hover: 16 185 129;
+  --color-danger: 248 113 113;
+  --color-danger-hover: 239 68 68;
+  --color-warning: 251 191 36;
+
+  --color-border: 46 46 66;
+  --color-border-subtle: 36 36 58;
+
+  --color-txt: 236 238 244;
+  --color-txt-secondary: 160 164 184;
+  --color-txt-muted: 96 100 128;
+  --color-txt-dim: 139 143 168;
+
+  --color-scrollbar: 51 51 74;
+  --color-scrollbar-hover: 70 70 96;
+  --color-selection: 124 92 252;
+  --color-placeholder: 96 100 128;
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 20px rgba(124, 92, 252, 0.15);
+  --shadow-glow-lg: 0 0 40px rgba(124, 92, 252, 0.25);
+}
+
+/* ── Light ────────────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --color-base: 245 245 250;
+  --color-surface: 255 255 255;
+  --color-card: 255 255 255;
+  --color-elevated: 240 240 246;
+  --color-hover: 232 232 240;
+  --color-active: 220 220 232;
+
+  --color-accent: 99 72 220;
+  --color-accent-hover: 80 55 200;
+  --color-green: 16 185 129;
+  --color-green-hover: 5 150 105;
+  --color-danger: 239 68 68;
+  --color-danger-hover: 220 38 38;
+  --color-warning: 217 119 6;
+
+  --color-border: 218 218 230;
+  --color-border-subtle: 230 230 240;
+
+  --color-txt: 28 28 40;
+  --color-txt-secondary: 82 82 105;
+  --color-txt-muted: 140 140 165;
+  --color-txt-dim: 110 110 140;
+
+  --color-scrollbar: 200 200 215;
+  --color-scrollbar-hover: 175 175 195;
+  --color-selection: 99 72 220;
+  --color-placeholder: 160 160 180;
+
+  --shadow-card: 0 1px 8px rgba(0, 0, 0, 0.06), 0 4px 24px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 16px rgba(99, 72, 220, 0.08);
+  --shadow-glow-lg: 0 0 32px rgba(99, 72, 220, 0.12);
+}
+
+/* ── Midnight Blue ────────────────────────────────────────────────────────── */
+[data-theme="midnight"] {
+  --color-base: 12 17 29;
+  --color-surface: 17 24 39;
+  --color-card: 22 31 52;
+  --color-elevated: 30 41 66;
+  --color-hover: 38 50 78;
+  --color-active: 48 60 90;
+
+  --color-accent: 96 165 250;
+  --color-accent-hover: 59 130 246;
+  --color-green: 52 211 153;
+  --color-green-hover: 16 185 129;
+  --color-danger: 251 113 133;
+  --color-danger-hover: 244 63 94;
+  --color-warning: 251 191 36;
+
+  --color-border: 40 52 80;
+  --color-border-subtle: 30 42 68;
+
+  --color-txt: 226 232 245;
+  --color-txt-secondary: 156 172 204;
+  --color-txt-muted: 94 114 150;
+  --color-txt-dim: 120 140 175;
+
+  --color-scrollbar: 38 50 78;
+  --color-scrollbar-hover: 50 65 95;
+  --color-selection: 96 165 250;
+  --color-placeholder: 94 114 150;
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.40);
+  --shadow-glow: 0 0 20px rgba(96, 165, 250, 0.12);
+  --shadow-glow-lg: 0 0 40px rgba(96, 165, 250, 0.20);
+}
+
+/* ── Forest / Emerald ─────────────────────────────────────────────────────── */
+[data-theme="forest"] {
+  --color-base: 12 20 16;
+  --color-surface: 18 28 22;
+  --color-card: 24 38 30;
+  --color-elevated: 32 50 40;
+  --color-hover: 40 62 50;
+  --color-active: 50 74 60;
+
+  --color-accent: 52 211 153;
+  --color-accent-hover: 16 185 129;
+  --color-green: 52 211 153;
+  --color-green-hover: 16 185 129;
+  --color-danger: 251 113 133;
+  --color-danger-hover: 244 63 94;
+  --color-warning: 251 191 36;
+
+  --color-border: 38 58 46;
+  --color-border-subtle: 28 46 36;
+
+  --color-txt: 222 238 228;
+  --color-txt-secondary: 160 190 172;
+  --color-txt-muted: 92 120 104;
+  --color-txt-dim: 125 155 138;
+
+  --color-scrollbar: 38 58 46;
+  --color-scrollbar-hover: 52 76 62;
+  --color-selection: 52 211 153;
+  --color-placeholder: 92 120 104;
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 20px rgba(52, 211, 153, 0.12);
+  --shadow-glow-lg: 0 0 40px rgba(52, 211, 153, 0.20);
+}
+
+/* ── Parchment / Sepia ────────────────────────────────────────────────────── */
+[data-theme="parchment"] {
+  --color-base: 242 235 220;
+  --color-surface: 250 244 230;
+  --color-card: 255 250 240;
+  --color-elevated: 235 228 212;
+  --color-hover: 225 218 200;
+  --color-active: 215 206 186;
+
+  --color-accent: 160 90 44;
+  --color-accent-hover: 140 72 30;
+  --color-green: 22 163 74;
+  --color-green-hover: 16 130 58;
+  --color-danger: 185 28 28;
+  --color-danger-hover: 153 27 27;
+  --color-warning: 180 100 10;
+
+  --color-border: 210 200 180;
+  --color-border-subtle: 222 214 196;
+
+  --color-txt: 58 42 28;
+  --color-txt-secondary: 100 78 56;
+  --color-txt-muted: 150 132 110;
+  --color-txt-dim: 125 108 88;
+
+  --color-scrollbar: 200 190 170;
+  --color-scrollbar-hover: 180 170 148;
+  --color-selection: 160 90 44;
+  --color-placeholder: 160 145 125;
+
+  --shadow-card: 0 1px 6px rgba(80, 60, 30, 0.08), 0 4px 20px rgba(80, 60, 30, 0.05);
+  --shadow-glow: 0 0 16px rgba(160, 90, 44, 0.10);
+  --shadow-glow-lg: 0 0 32px rgba(160, 90, 44, 0.15);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLOBAL RESETS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: rgb(var(--color-base));
+  color: rgb(var(--color-txt));
+  font-family: "Segoe UI", "Inter", "SF Pro Display", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Selection ──────────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(var(--color-selection), 0.35);
+  color: white;
+}
+
+/* ── Scrollbar — thin, minimal ──────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-scrollbar));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-scrollbar-hover));
+}
+
+/* ── Focus ring ─────────────────────────────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid rgb(var(--color-accent));
+  outline-offset: 2px;
+}
+
+/* ── Smooth transitions ─────────────────────────────────────────────────── */
+button,
+a,
+input,
+textarea,
+select {
+  transition: all 0.15s ease;
+}
+
+/* ── Placeholder text ────────────────────────────────────────────────────── */
+::placeholder {
+  color: rgb(var(--color-placeholder));
+  opacity: 1;
+}
+
+/* ── Drag region for frameless window (macOS) ────────────────────────────── */
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* ── Theme transition (smooth color changes) ─────────────────────────────── */
+html.theme-transition {
+  transition: background-color 0.25s ease, color 0.25s ease !important;
+}
+html.theme-transition *:not(svg):not(path) {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+  transition-delay: 0s !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEME OVERRIDES
+   Force every Tailwind utility class to use the CSS variables.
+   This ensures themes work even if Tailwind's compiled output has
+   stale hardcoded hex colors from a previous build.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Background colors ─────────────────────────────────────────────────── */
+.bg-base                { background-color: rgb(var(--color-base)) !important; }
+.bg-surface             { background-color: rgb(var(--color-surface)) !important; }
+.bg-card                { background-color: rgb(var(--color-card)) !important; }
+.bg-elevated            { background-color: rgb(var(--color-elevated)) !important; }
+.bg-hover               { background-color: rgb(var(--color-hover)) !important; }
+.bg-active              { background-color: rgb(var(--color-active)) !important; }
+.bg-accent              { background-color: rgb(var(--color-accent)) !important; }
+.bg-accent-hover        { background-color: rgb(var(--color-accent-hover)) !important; }
+.bg-accent-soft         { background-color: rgba(var(--color-accent), 0.12) !important; }
+.bg-green               { background-color: rgb(var(--color-green)) !important; }
+.bg-green-hover         { background-color: rgb(var(--color-green-hover)) !important; }
+.bg-danger              { background-color: rgb(var(--color-danger)) !important; }
+.bg-danger-hover        { background-color: rgb(var(--color-danger-hover)) !important; }
+.bg-warning             { background-color: rgb(var(--color-warning)) !important; }
+.bg-txt-muted           { background-color: rgb(var(--color-txt-muted)) !important; }
+.bg-txt-dim             { background-color: rgb(var(--color-txt-dim)) !important; }
+
+/* ── Background with alpha (Tailwind opacity modifiers) ─────────────── */
+.bg-accent\/5           { background-color: rgba(var(--color-accent), 0.05) !important; }
+.bg-accent\/10          { background-color: rgba(var(--color-accent), 0.10) !important; }
+.bg-accent\/15          { background-color: rgba(var(--color-accent), 0.15) !important; }
+.bg-accent\/20          { background-color: rgba(var(--color-accent), 0.20) !important; }
+.bg-green\/20           { background-color: rgba(var(--color-green), 0.20) !important; }
+.bg-green\/90           { background-color: rgba(var(--color-green), 0.90) !important; }
+.bg-danger\/10          { background-color: rgba(var(--color-danger), 0.10) !important; }
+.bg-danger\/20          { background-color: rgba(var(--color-danger), 0.20) !important; }
+.bg-warning\/20         { background-color: rgba(var(--color-warning), 0.20) !important; }
+.bg-txt-muted\/20       { background-color: rgba(var(--color-txt-muted), 0.20) !important; }
+.bg-txt-dim\/20         { background-color: rgba(var(--color-txt-dim), 0.20) !important; }
+.bg-elevated\/50        { background-color: rgba(var(--color-elevated), 0.50) !important; }
+
+/* ── Text colors ────────────────────────────────────────────────────── */
+.text-txt               { color: rgb(var(--color-txt)) !important; }
+.text-txt-secondary     { color: rgb(var(--color-txt-secondary)) !important; }
+.text-txt-muted         { color: rgb(var(--color-txt-muted)) !important; }
+.text-txt-dim           { color: rgb(var(--color-txt-dim)) !important; }
+.text-accent            { color: rgb(var(--color-accent)) !important; }
+.text-green             { color: rgb(var(--color-green)) !important; }
+.text-danger            { color: rgb(var(--color-danger)) !important; }
+.text-warning           { color: rgb(var(--color-warning)) !important; }
+
+/* ── Text with alpha ────────────────────────────────────────────────── */
+.text-accent\/80        { color: rgba(var(--color-accent), 0.80) !important; }
+
+/* ── Border colors ──────────────────────────────────────────────────── */
+.border-border          { border-color: rgb(var(--color-border)) !important; }
+.border-border-subtle   { border-color: rgb(var(--color-border-subtle)) !important; }
+.border-accent          { border-color: rgb(var(--color-accent)) !important; }
+.border-danger          { border-color: rgb(var(--color-danger)) !important; }
+.border-txt-muted       { border-color: rgb(var(--color-txt-muted)) !important; }
+
+/* ── Border with alpha ──────────────────────────────────────────────── */
+.border-txt-muted\/10   { border-color: rgba(var(--color-txt-muted), 0.10) !important; }
+.border-txt-muted\/20   { border-color: rgba(var(--color-txt-muted), 0.20) !important; }
+.border-danger\/20      { border-color: rgba(var(--color-danger), 0.20) !important; }
+
+/* ── Shadows ────────────────────────────────────────────────────────── */
+.shadow-card            { box-shadow: var(--shadow-card) !important; }
+.shadow-glow            { box-shadow: var(--shadow-glow) !important; }
+.shadow-glow-lg         { box-shadow: var(--shadow-glow-lg) !important; }
+
+/* ── Accent color for checkboxes ────────────────────────────────────── */
+.accent-accent          { accent-color: rgb(var(--color-accent)) !important; }
+
+/* ── Hover states (need to keep the :hover pseudo-selector) ─────────── */
+.hover\:bg-hover:hover              { background-color: rgb(var(--color-hover)) !important; }
+.hover\:bg-accent-hover:hover       { background-color: rgb(var(--color-accent-hover)) !important; }
+.hover\:bg-danger:hover             { background-color: rgb(var(--color-danger)) !important; }
+.hover\:bg-danger\/10:hover         { background-color: rgba(var(--color-danger), 0.10) !important; }
+.hover\:bg-accent\/10:hover         { background-color: rgba(var(--color-accent), 0.10) !important; }
+.hover\:text-txt:hover              { color: rgb(var(--color-txt)) !important; }
+.hover\:text-accent:hover           { color: rgb(var(--color-accent)) !important; }
+.hover\:text-danger:hover           { color: rgb(var(--color-danger)) !important; }
+
+/* ── Focus states ───────────────────────────────────────────────────── */
+.focus\:border-accent:focus         { border-color: rgb(var(--color-accent)) !important; }
+
+/* ── Hover shadow states ────────────────────────────────────────────── */
+.hover\:shadow-glow:hover           { box-shadow: var(--shadow-glow) !important; }

@@ -19,13 +19,18 @@ env/
 *.db
 *.db-shm
 *.db-wal
-!.env.example
 
 # Logs
 *.log
 logs/
 app.log
 crash_log.txt
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
 
 # Distribution / packaging
 dist/
@@ -48,6 +53,9 @@ htmlcov/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local config — contains secrets and machine-specific paths
+MythosEngine/config/settings.json
 
 # Project temp files
 *.canvas

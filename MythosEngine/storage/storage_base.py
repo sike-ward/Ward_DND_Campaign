@@ -1,16 +1,17 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional, Set
 
-from Ward_DND_AI.models.character import Character
-from Ward_DND_AI.models.folder import Folder
-from Ward_DND_AI.models.group import Group
-from Ward_DND_AI.models.image import Image
-from Ward_DND_AI.models.map import Map
-from Ward_DND_AI.models.note import Note
-from Ward_DND_AI.models.session import Session
-from Ward_DND_AI.models.sound import Sound
-from Ward_DND_AI.models.user import User
-from Ward_DND_AI.models.vault import Vault
+from MythosEngine.models.character import Character
+from MythosEngine.models.folder import Folder
+from MythosEngine.models.group import Group
+from MythosEngine.models.image import Image
+from MythosEngine.models.invite_code import InviteCode
+from MythosEngine.models.map import Map
+from MythosEngine.models.note import Note
+from MythosEngine.models.session import Session
+from MythosEngine.models.sound import Sound
+from MythosEngine.models.user import User
+from MythosEngine.models.vault import Vault
 
 
 class StorageBackend(ABC):
@@ -29,14 +30,16 @@ class StorageBackend(ABC):
     # Populated by set_user_context() after login
     _current_user_id: Optional[str] = None
     _is_admin: bool = False
+    _is_gm: bool = False
 
-    def set_user_context(self, user_id: str, is_admin: bool = False) -> None:
+    def set_user_context(self, user_id: str, is_admin: bool = False, is_gm: bool = False) -> None:
         """
         Set the active user for all subsequent queries.
         Must be called once after login before any data access.
         """
         self._current_user_id = user_id
         self._is_admin = is_admin
+        self._is_gm = is_gm
 
     def _can_access(self, owner_id: str, permissions: dict, member_ids: list | None = None) -> bool:
         """
@@ -49,7 +52,7 @@ class StorageBackend(ABC):
           4. Vault membership grants access (pass vault.members as member_ids).
           5. Default: deny.
         """
-        if self._is_admin:
+        if self._is_admin or self._is_gm:
             return True
         uid = self._current_user_id
         if not uid:
@@ -187,6 +190,40 @@ class StorageBackend(ABC):
     def delete_session_by_id(self, session_id: str) -> None:
         pass
 
+    @abstractmethod
+    def list_active_sessions(self) -> List[Session]:
+        """Return all sessions that are active and not yet expired."""
+        pass
+
+    # --- Invite Codes ---
+    @abstractmethod
+    def save_invite(self, invite: InviteCode) -> None:
+        pass
+
+    @abstractmethod
+    def get_invite_by_code(self, code: str) -> Optional[InviteCode]:
+        pass
+
+    @abstractmethod
+    def get_invite_by_id(self, invite_id: str) -> Optional[InviteCode]:
+        pass
+
+    @abstractmethod
+    def list_invites(self) -> List[InviteCode]:
+        """Return all invite codes, newest first."""
+        pass
+
+    # --- PATH HELPERS ---
+    @abstractmethod
+    def absolute_path(self, rel: str) -> str:
+        """
+        Resolve a vault-relative path to an absolute filesystem path string.
+
+        Use this instead of accessing ``storage.vault_path`` directly so that
+        controllers remain backend-agnostic.
+        """
+        pass
+
     # --- GENERIC FILE & FOLDER HELPERS ---
     @abstractmethod
     def list_folders(self, parent: str = "") -> List[str]:
@@ -300,14 +337,4 @@ class StorageBackend(ABC):
         Merge meta dict into the stored metadata for note_id.
         Only updates provided keys — does not overwrite the full record.
         """
-        pass
-
-    @abstractmethod
-    def grant_note_access(self, path: str, user_id: str, role: str = "viewer") -> None:
-        """Grant user_id the given role on the note at path."""
-        pass
-
-    @abstractmethod
-    def revoke_note_access(self, path: str, user_id: str) -> None:
-        """Remove user_id's access grant from the note at path."""
         pass
