@@ -29,13 +29,20 @@ class InviteManager:
 
     def generate(self, created_by_user_id: str) -> InviteCode:
         """
-        Create a fresh invite code. The code is a readable 12-character string
-        in the format XXXX-XXXX-XXXX using uppercase letters and digits.
+        Create a fresh invite code with the default expiry (7 days).
+        """
+        return self.generate_with_expiry(created_by_user_id, expiry_days=_INVITE_EXPIRY_DAYS)
+
+    def generate_with_expiry(self, created_by_user_id: str, expiry_days: int = _INVITE_EXPIRY_DAYS) -> InviteCode:
+        """
+        Create a fresh invite code with a configurable expiry.
 
         Parameters
         ----------
         created_by_user_id : str
             user_id of the admin generating this invite.
+        expiry_days : int
+            Number of days until the code expires (default: 7).
 
         Returns
         -------
@@ -51,10 +58,10 @@ class InviteManager:
             owner_id=created_by_user_id,
             code=code_str,
             created_by=created_by_user_id,
-            expires_at=datetime.utcnow() + timedelta(days=_INVITE_EXPIRY_DAYS),
+            expires_at=datetime.utcnow() + timedelta(days=expiry_days),
         )
         self._storage.save_invite(invite)
-        logger.info("Invite code generated: %s by user %s", code_str, created_by_user_id)
+        logger.info("Invite code generated: %s by user %s (expires in %d days)", code_str, created_by_user_id, expiry_days)
         return invite
 
     # ── Validate ──────────────────────────────────────────────────────────
