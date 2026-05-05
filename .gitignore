@@ -19,7 +19,6 @@ env/
 *.db
 *.db-shm
 *.db-wal
-!.env.example
 
 # Logs
 *.log
