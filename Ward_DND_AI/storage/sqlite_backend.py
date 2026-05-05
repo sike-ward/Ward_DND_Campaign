@@ -1,4 +1,10 @@
 import json
+import re
+import shutil
+import uuid
+from datetime import datetime
+from pathlib import Path
+from typing import List, Optional, Set
 
 """
 SQLite Storage Backend for Ward DND AI.
@@ -19,12 +25,7 @@ Thread-safe for multi-threaded PyQt6 applications via create_engine with
 check_same_thread=False.
 """
 
-import shutil
-from datetime import datetime
-from pathlib import Path
-from typing import List, Optional, Set
-
-from sqlalchemy import String, Text, create_engine, select
+from sqlalchemy import String, Text, create_engine, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
 # Mapped is in sqlalchemy.orm, not sqlalchemy.types
@@ -101,6 +102,19 @@ class NoteRecord(Base):
     owner_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
     vault_id: Mapped[str] = mapped_column(String(36), nullable=False, default="")
     data: Mapped[str] = mapped_column(Text, nullable=False)  # JSON blob (metadata only)
+    # Extended columns added via _apply_schema_migrations for existing DBs
+    path: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    title: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    tags_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    permissions_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True, default="{}")
+    created_at: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    updated_at: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    note_type: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    is_dm_only: Mapped[int] = mapped_column(default=0, server_default="0")
+    is_public: Mapped[int] = mapped_column(default=0, server_default="0")
+    word_count: Mapped[Optional[int]] = mapped_column(nullable=True)
+    linked_note_ids: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    campaign_id: Mapped[Optional[str]] = mapped_column(String(36), nullable=True)
 
 
 class CharacterRecord(Base):
@@ -149,12 +163,38 @@ class SessionRecord(Base):
 
 
 class StarredRecord(Base):
-    """Store starred/favorite note IDs (one JSON blob with the entire set)."""
+    """Store starred/favorite note IDs per user (one JSON blob per user)."""
 
     __tablename__ = "starred"
 
-    id: Mapped[str] = mapped_column(String(1), primary_key=True, default="1")
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
     data: Mapped[str] = mapped_column(Text, nullable=False, default="[]")  # JSON array
+
+
+# ============================================================================
+# Module-level content helpers
+# ============================================================================
+
+
+def _extract_title(content: str) -> str:
+    """Return first H1 heading or first non-empty line (capped at 120 chars)."""
+    for line in content.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("# "):
+            return stripped[2:].strip()
+        if stripped:
+            return stripped[:120]
+    return ""
+
+
+def _extract_tags(content: str) -> List[str]:
+    """Return deduplicated list of #hashtag names found in content."""
+    return list(dict.fromkeys(re.findall(r"(?<!\[)#([A-Za-z][A-Za-z0-9_/-]*)", content)))
+
+
+def _extract_links(content: str) -> List[str]:
+    """Return deduplicated list of [[wikilink]] targets found in content."""
+    return list(dict.fromkeys(re.findall(r"\[\[([^\]|#]+?)(?:[|#][^\]]*)?\]\]", content)))
 
 
 # ============================================================================
@@ -192,8 +232,9 @@ class SQLiteBackend(StorageBackend):
         db_url = f"sqlite:///{self.db_path}"
         self.engine = create_engine(db_url, connect_args={"check_same_thread": False})
 
-        # Create all tables on first run
+        # Create all tables on first run, then apply additive column migrations
         Base.metadata.create_all(self.engine)
+        self._apply_schema_migrations()
 
     def _session(self) -> Session:
         """Get a new database session."""
@@ -208,6 +249,50 @@ class SQLiteBackend(StorageBackend):
     def _abs(self, rel: str) -> Path:
         """Resolve a relative vault path to an absolute Path."""
         return self.vault_path / rel
+
+    def _apply_schema_migrations(self) -> None:
+        """Add new NoteRecord columns to existing DBs without dropping data."""
+        note_cols = {
+            "path": "TEXT",
+            "title": "TEXT",
+            "tags_json": "TEXT",
+            "permissions_json": "TEXT DEFAULT '{}'",
+            "created_at": "TEXT",
+            "updated_at": "TEXT",
+            "note_type": "TEXT",
+            "is_dm_only": "INTEGER NOT NULL DEFAULT 0",
+            "is_public": "INTEGER NOT NULL DEFAULT 0",
+            "word_count": "INTEGER",
+            "linked_note_ids": "TEXT",
+            "campaign_id": "TEXT",
+        }
+        with self.engine.connect() as conn:
+            rows = conn.execute(text("PRAGMA table_info(notes)")).fetchall()
+            existing = {row[1] for row in rows}
+            for col, col_type in note_cols.items():
+                if col not in existing:
+                    conn.execute(text(f"ALTER TABLE notes ADD COLUMN {col} {col_type}"))
+            conn.commit()
+
+    def _can_access_note(self, rec: NoteRecord) -> bool:
+        """Return True if the current user may access this note record."""
+        if self._is_admin:
+            return True
+        # DM-only notes are visible to admins only (checked above)
+        if (rec.is_dm_only or 0) == 1:
+            return False
+        uid = self._current_user_id
+        if not uid:
+            return False
+        if rec.owner_id == uid:
+            return True
+        if (rec.is_public or 0) == 1:
+            return True
+        try:
+            perms = json.loads(rec.permissions_json or "{}")
+        except (json.JSONDecodeError, TypeError):
+            perms = {}
+        return uid in perms
 
     # ========================================================================
     # Users
@@ -355,13 +440,25 @@ class SQLiteBackend(StorageBackend):
             session.commit()
 
     def list_folders(self, parent: str = "") -> List[str]:
-        """List all folder paths under parent (directory-based enumeration)."""
+        """List folder paths under parent. Players only see folders with accessible notes."""
         root = self._abs(parent) if parent else self.vault_path
         if not root.is_dir():
             return []
-        return [
-            str(p.relative_to(self.vault_path)) for p in root.rglob("*") if p.is_dir() and not p.name.startswith(".")
+        all_folders = [
+            str(p.relative_to(self.vault_path)).replace("\\", "/")
+            for p in root.rglob("*")
+            if p.is_dir() and not p.name.startswith(".")
         ]
+        if self._is_admin or not self._current_user_id:
+            return all_folders
+        # Players only see folders that contain at least one accessible note
+        accessible_notes = set(self.list_notes())
+        accessible_prefixes: Set[str] = set()
+        for note_path in accessible_notes:
+            parts = Path(note_path).parts
+            for i in range(1, len(parts)):
+                accessible_prefixes.add("/".join(parts[:i]))
+        return [f for f in all_folders if f in accessible_prefixes]
 
     def create_folder(self, path: str) -> None:
         """Create a folder directory."""
@@ -453,60 +550,104 @@ class SQLiteBackend(StorageBackend):
             session.commit()
 
     def list_notes(self, folder: str = "") -> List[str]:
-        """List note file paths the current user can access.
+        """List note paths the current user can access.
 
-        Admins see all notes. Regular users see notes they own
-        or notes explicitly shared with them.
+        Admins see all filesystem notes. Players see only notes with a DB
+        record they own, have been granted access to, or that are public.
         """
-        # Collect accessible note IDs from the DB
-        accessible_ids: set[str] = set()
-        with self._session() as session:
-            if self._is_admin:
-                records = session.query(NoteRecord).all()
-            else:
-                uid = self._current_user_id or ""
-                records = session.query(NoteRecord).filter((NoteRecord.owner_id == uid)).all()
-            for rec in records:
-                note_data = json.loads(rec.data or "{}")
-                perms = note_data.get("permissions", {})
-                if self._can_access(rec.owner_id, perms):
-                    accessible_ids.add(rec.id)
-        # Fall back to filesystem listing if no DB records (legacy/unregistered notes)
         root = self._abs(folder) if folder else self.vault_path
         if not root.is_dir():
             return []
-        all_paths = [str(p.relative_to(self.vault_path)) for p in root.rglob("*.md") if p.is_file()]
+        all_paths = [
+            str(p.relative_to(self.vault_path)).replace("\\", "/")
+            for p in root.rglob("*.md")
+            if p.is_file() and not p.name.startswith(".")
+        ]
         if self._is_admin or not self._current_user_id:
             return all_paths
-        # Return only paths that have a DB record the user can access
-        return [p for p in all_paths if p in accessible_ids or p.replace("\\", "/") in accessible_ids]
+        # Build set of vault-relative paths the player is permitted to see
+        accessible: Set[str] = set()
+        with self._session() as session:
+            records = session.query(NoteRecord).filter(NoteRecord.path.isnot(None)).all()
+            for rec in records:
+                if self._can_access_note(rec) and rec.path:
+                    accessible.add(rec.path.replace("\\", "/"))
+        return [p for p in all_paths if p in accessible]
 
     def read_note(self, path: str) -> str:
         """Read note content from markdown file."""
         return self._abs(path).read_text(encoding="utf-8")
 
     def write_note(self, path: str, content: str) -> None:
-        """Write note content to markdown file."""
+        """Write note content to file and upsert NoteRecord metadata."""
         abs_path = self._abs(path)
         abs_path.parent.mkdir(parents=True, exist_ok=True)
         abs_path.write_text(content, encoding="utf-8")
 
+        now = datetime.utcnow().isoformat()
+        norm_path = path.replace("\\", "/")
+        title = _extract_title(content)
+        tags_json = json.dumps(_extract_tags(content))
+        linked_note_ids = json.dumps(_extract_links(content))
+        word_count = len(content.split())
+
+        with self._session() as session:
+            rec = session.query(NoteRecord).filter(NoteRecord.path == norm_path).first()
+            if rec:
+                # Preserve owner and permissions; update derived metadata only
+                rec.title = title
+                rec.tags_json = tags_json
+                rec.linked_note_ids = linked_note_ids
+                rec.word_count = word_count
+                rec.updated_at = now
+            else:
+                rec = NoteRecord(
+                    id=str(uuid.uuid4()),
+                    path=norm_path,
+                    owner_id=self._current_user_id or "",
+                    vault_id="",
+                    data="{}",
+                    title=title,
+                    tags_json=tags_json,
+                    linked_note_ids=linked_note_ids,
+                    word_count=word_count,
+                    permissions_json="{}",
+                    created_at=now,
+                    updated_at=now,
+                    is_dm_only=0,
+                    is_public=0,
+                )
+                session.add(rec)
+            session.commit()
+
     def delete_note(self, path: str) -> None:
-        """Delete a note markdown file."""
+        """Delete a note file and remove its DB record."""
         abs_path = self._abs(path)
         if abs_path.is_file():
             abs_path.unlink()
+        norm_path = path.replace("\\", "/")
+        with self._session() as session:
+            session.query(NoteRecord).filter(NoteRecord.path == norm_path).delete()
+            session.commit()
 
     def note_exists(self, path: str) -> bool:
         """Check if a note file exists."""
         return self._abs(path).is_file()
 
     def move_note(self, src_path: str, dest_path: str) -> None:
-        """Move a note from src to dest."""
+        """Move a note file and update its DB record path."""
         src = self._abs(src_path)
         dst = self._abs(dest_path)
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(str(src), str(dst))
+        norm_src = src_path.replace("\\", "/")
+        norm_dst = dest_path.replace("\\", "/")
+        with self._session() as session:
+            rec = session.query(NoteRecord).filter(NoteRecord.path == norm_src).first()
+            if rec:
+                rec.path = norm_dst
+                rec.updated_at = datetime.utcnow().isoformat()
+                session.commit()
 
     def copy_note(self, src_path: str, dest_path: str) -> None:
         """Copy a note from src to dest."""
@@ -659,9 +800,10 @@ class SQLiteBackend(StorageBackend):
     # ========================================================================
 
     def read_starred(self) -> Set[str]:
-        """Read the set of starred note IDs."""
+        """Read the set of starred note IDs for the current user."""
+        key = self._current_user_id or "default"
         with self._session() as session:
-            record = session.query(StarredRecord).filter(StarredRecord.id == "1").first()
+            record = session.query(StarredRecord).filter(StarredRecord.id == key).first()
             if record:
                 try:
                     return set(json.loads(record.data))
@@ -670,13 +812,14 @@ class SQLiteBackend(StorageBackend):
         return set()
 
     def write_starred(self, stars: Set[str]) -> None:
-        """Write the set of starred note IDs."""
+        """Write the set of starred note IDs for the current user."""
+        key = self._current_user_id or "default"
         with self._session() as session:
-            record = session.query(StarredRecord).filter(StarredRecord.id == "1").first()
+            record = session.query(StarredRecord).filter(StarredRecord.id == key).first()
             if record:
                 record.data = json.dumps(list(stars))
             else:
-                record = StarredRecord(id="1", data=json.dumps(list(stars)))
+                record = StarredRecord(id=key, data=json.dumps(list(stars)))
                 session.add(record)
             session.commit()
 
@@ -739,23 +882,21 @@ class SQLiteBackend(StorageBackend):
         return self._abs(rel_path).exists()
 
     def search_notes(self, query: str, vault_id: str = "", top_k: int = 100) -> List[Note]:
-        """
-        Full-text search across all markdown notes.
-
-        Case-insensitive substring match on title and content.
-        vault_id is accepted for interface compatibility but is ignored
-        (all notes in vault_path are searched).
-        """
+        """Full-text search across accessible notes (case-insensitive substring)."""
         query_lower = query.lower()
         results: List[Note] = []
+        # Pre-compute accessible paths for non-admin callers
+        accessible = None if self._is_admin else set(self.list_notes())
 
         for p in self.vault_path.rglob("*.md"):
             if p.name.startswith("."):
                 continue
+            rel = str(p.relative_to(self.vault_path)).replace("\\", "/")
+            if accessible is not None and rel not in accessible:
+                continue
             try:
                 content = p.read_text(encoding="utf-8", errors="replace")
                 if query_lower in p.stem.lower() or query_lower in content.lower():
-                    rel = str(p.relative_to(self.vault_path))
                     results.append(
                         Note(
                             id=rel,
@@ -772,17 +913,54 @@ class SQLiteBackend(StorageBackend):
         return results
 
     def update_note_metadata(self, note_id: str, meta: dict) -> None:
-        """
-        Merge meta into the stored JSON metadata for note_id.
-        Only updates the provided keys; non-overlapping keys are preserved.
-        """
-        with Session(self.engine) as session:
-            record = session.scalar(select(NoteRecord).where(NoteRecord.record_id == note_id))
-            if record:
+        """Merge meta into the stored JSON metadata for note_id (UUID or path)."""
+        with self._session() as session:
+            rec = session.query(NoteRecord).filter(NoteRecord.id == note_id).first()
+            if rec is None:
+                norm = note_id.replace("\\", "/")
+                rec = session.query(NoteRecord).filter(NoteRecord.path == norm).first()
+            if rec:
+                if not self._can_access_note(rec):
+                    return
                 existing = {}
                 try:
-                    existing = __import__("json").loads(record.data) if record.data else {}
+                    existing = json.loads(rec.data) if rec.data else {}
                 except Exception:
                     pass
                 existing.update(meta)
-                record.data = __import__("json").dumps(existing)
+                rec.data = json.dumps(existing)
+                session.commit()
+
+    def grant_note_access(self, path: str, user_id: str, role: str = "viewer") -> None:
+        """Grant user_id the given role on the note at path."""
+        norm_path = path.replace("\\", "/")
+        with self._session() as session:
+            rec = session.query(NoteRecord).filter(NoteRecord.path == norm_path).first()
+            if rec is None:
+                return
+            if not self._is_admin and rec.owner_id != self._current_user_id:
+                return
+            try:
+                perms = json.loads(rec.permissions_json or "{}")
+            except (json.JSONDecodeError, TypeError):
+                perms = {}
+            perms[user_id] = role
+            rec.permissions_json = json.dumps(perms)
+            session.commit()
+
+    def revoke_note_access(self, path: str, user_id: str) -> None:
+        """Remove user_id's access grant from the note at path."""
+        norm_path = path.replace("\\", "/")
+        with self._session() as session:
+            rec = session.query(NoteRecord).filter(NoteRecord.path == norm_path).first()
+            if rec is None:
+                return
+            if not self._is_admin and rec.owner_id != self._current_user_id:
+                return
+            try:
+                perms = json.loads(rec.permissions_json or "{}")
+            except (json.JSONDecodeError, TypeError):
+                perms = {}
+            perms.pop(user_id, None)
+            rec.permissions_json = json.dumps(perms)
+            session.commit()
