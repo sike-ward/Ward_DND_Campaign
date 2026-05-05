@@ -543,13 +543,14 @@ class UserManagementController:
             invite = self.ctx.invites.generate_with_expiry(
                 self.ctx.current_user_id,
                 expiry_days=dlg.expiry_days,
+                max_uses=dlg.max_uses,
             )
             QApplication.clipboard().setText(invite.code)
             QMessageBox.information(
                 self.view,
                 "New Invite Code Generated",
                 f"Code:  {invite.code}\n\n"
-                f"Valid for {dlg.expiry_days} day(s). Single use.\n\n"
+                f"Valid for {dlg.expiry_days} day(s), up to {dlg.max_uses} use(s).\n\n"
                 f"(Copied to clipboard.)",
             )
             self._refresh_invites()
