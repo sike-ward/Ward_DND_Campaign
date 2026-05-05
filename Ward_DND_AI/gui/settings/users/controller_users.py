@@ -116,7 +116,7 @@ class UserManagementController:
         if confirm == QMessageBox.StandardButton.Yes:
             try:
                 user.is_active = not user.is_active
-                self.ctx.storage.save_user(user)
+                self.ctx.users.update_user(user)
                 self.view.show_status(f"Account {'enabled' if user.is_active else 'disabled'}: {user.username}")
                 self.refresh()
             except Exception as exc:

@@ -38,6 +38,10 @@ from Ward_DND_AI.models.user import User
 from Ward_DND_AI.storage.storage_base import StorageBackend
 
 
+class AccountDisabledError(Exception):
+    """Raised when a valid user account is disabled at login time."""
+
+
 class LoginDialog(QDialog):
     """
     PyQt6 login dialog for Ward DND AI authentication.
@@ -147,7 +151,14 @@ class LoginDialog(QDialog):
             return
 
         # Attempt authentication
-        user = self.authenticate(username, password, self.storage)
+        try:
+            user = self.authenticate(username, password, self.storage)
+        except AccountDisabledError:
+            self._show_error("This account has been disabled. Contact an admin.")
+            self.password_input.clear()
+            self.password_input.setFocus()
+            return
+
         if user:
             self.user = user
             self.accept()
@@ -184,6 +195,10 @@ class LoginDialog(QDialog):
         user = storage.get_user_by_email(username)
         if not user:
             return None
+
+        # Block disabled accounts before password check
+        if not user.is_active:
+            raise AccountDisabledError(user.email)
 
         # Verify password using bcrypt
         try:

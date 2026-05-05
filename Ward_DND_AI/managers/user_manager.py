@@ -1,5 +1,4 @@
 import uuid
-from datetime import datetime
 from typing import List, Optional
 
 import bcrypt
@@ -61,8 +60,6 @@ class UserManager:
         Update an existing user.
         """
         user.schema_version = max(user.schema_version, 1)
-        if not user.last_login:
-            user.last_login = datetime.utcnow()
         self.storage.save_user(user)
         audit("update", "user", user.id, user_id=getattr(user, "owner_id", "system"))
 

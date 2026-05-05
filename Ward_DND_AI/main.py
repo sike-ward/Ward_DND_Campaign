@@ -87,6 +87,12 @@ def main():
     ctx.storage.set_user_context(login.user.id, is_admin=_is_admin)
     logger.info("Logged in as: %s (%s) admin=%s", login.user.username, login.user.id, _is_admin)
 
+    # Stamp last_login on every successful login
+    from datetime import datetime
+
+    login.user.last_login = datetime.utcnow()
+    ctx.storage.save_user(login.user)
+
     # --- Wire AI engine after login ---
     ai_engine = get_model_backend(config, storage=ctx.storage)
     ctx.ai = ai_engine
