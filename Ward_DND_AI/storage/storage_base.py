@@ -301,3 +301,13 @@ class StorageBackend(ABC):
         Only updates provided keys — does not overwrite the full record.
         """
         pass
+
+    @abstractmethod
+    def grant_note_access(self, path: str, user_id: str, role: str = "viewer") -> None:
+        """Grant user_id the given role on the note at path."""
+        pass
+
+    @abstractmethod
+    def revoke_note_access(self, path: str, user_id: str) -> None:
+        """Remove user_id's access grant from the note at path."""
+        pass
