@@ -792,15 +792,16 @@ class SQLiteBackend(StorageBackend):
         Only updates the provided keys; non-overlapping keys are preserved.
         """
         with Session(self.engine) as session:
-            record = session.scalar(select(NoteRecord).where(NoteRecord.record_id == note_id))
+            record = session.scalar(select(NoteRecord).where(NoteRecord.id == note_id))
             if record:
                 existing = {}
                 try:
-                    existing = __import__("json").loads(record.data) if record.data else {}
+                    existing = json.loads(record.data) if record.data else {}
                 except Exception:
                     pass
                 existing.update(meta)
-                record.data = __import__("json").dumps(existing)
+                record.data = json.dumps(existing)
+                session.commit()
 
     # ========================================================================
     # Active Sessions (for admin panel)
