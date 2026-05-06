@@ -24,7 +24,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Set
 
-from sqlalchemy import String, Text, create_engine, select
+from sqlalchemy import String, Text, create_engine, or_, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
 # Mapped is in sqlalchemy.orm, not sqlalchemy.types
@@ -480,7 +480,13 @@ class SQLiteBackend(StorageBackend):
                 records = session.query(NoteRecord).all()
             else:
                 uid = self._current_user_id or ""
-                records = session.query(NoteRecord).filter((NoteRecord.owner_id == uid)).all()
+                records = session.query(NoteRecord).filter(
+                    or_(
+                        NoteRecord.owner_id == uid,
+                        NoteRecord.owner_id == "",
+                        NoteRecord.owner_id == "system",
+                    )
+                ).all()
             for rec in records:
                 note_data = json.loads(rec.data or "{}")
                 perms = note_data.get("permissions", {})

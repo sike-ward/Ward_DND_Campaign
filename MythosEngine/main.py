@@ -14,6 +14,7 @@ Launch order:
 """
 
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -30,6 +31,21 @@ from MythosEngine.config.config import Config
 from MythosEngine.context.app_context import AppContext
 from MythosEngine.gui.gui import LoreMainApp
 from MythosEngine.utils.crash_handler import catch_and_report_crashes
+
+
+def _bootstrap_dev_accounts(ctx) -> None:
+    """Create dev test accounts if they don't already exist."""
+    logger = logging.getLogger(__name__)
+    _dev_accounts = [
+        ("dm_test@dev.local", "DM Test", "devtest", ["admin", "gm"]),
+        ("player_test@dev.local", "Player Test", "devtest", ["player"]),
+    ]
+    for email, username, password, roles in _dev_accounts:
+        try:
+            ctx.users.create_user(email=email, username=username, password=password, roles=roles)
+            logger.info("Dev account created: %s", email)
+        except ValueError:
+            pass  # already exists
 
 
 @catch_and_report_crashes
@@ -54,6 +70,10 @@ def main():
 
     # --- Initialise AppContext (storage, managers, auth) ---
     ctx = AppContext(config)
+
+    # --- Dev mode: ensure test accounts exist ---
+    if os.environ.get("DEV_MODE", "").lower() == "true":
+        _bootstrap_dev_accounts(ctx)
 
     # --- PyQt must be initialised before any dialog is shown ---
     qapp = QApplication(sys.argv)

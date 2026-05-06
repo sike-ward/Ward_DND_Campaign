@@ -47,16 +47,20 @@ class StorageBackend(ABC):
 
         Rules (in order):
           1. Admins always have access.
-          2. The owner always has access.
-          3. Explicit permissions entry grants access.
-          4. Vault membership grants access (pass vault.members as member_ids).
-          5. Default: deny.
+          2. Resources with no real owner (empty string or "system") are public
+             to all logged-in users.
+          3. The owner always has access.
+          4. Explicit permissions entry grants access.
+          5. Vault membership grants access (pass vault.members as member_ids).
+          6. Default: deny.
         """
         if self._is_admin or self._is_gm:
             return True
         uid = self._current_user_id
         if not uid:
             return False
+        if not owner_id or owner_id == "system":
+            return True
         if uid == owner_id:
             return True
         if uid in permissions:

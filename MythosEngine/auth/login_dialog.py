@@ -23,11 +23,14 @@ Usage
         pass
 """
 
+import os
 from typing import Optional
 
 import bcrypt
 from PyQt6.QtWidgets import (
     QDialog,
+    QFrame,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
     QPushButton,
@@ -154,7 +157,84 @@ class LoginDialog(QDialog):
             signup_btn.clicked.connect(self._on_signup)
             layout.addWidget(signup_btn)
 
+        # Dev quick-login panel — only rendered when DEV_MODE=true
+        if os.environ.get("DEV_MODE", "").lower() == "true":
+            self._build_dev_panel(layout)
+
         self.setLayout(layout)
+
+    def _build_dev_panel(self, layout: QVBoxLayout) -> None:
+        """Append a collapsible dev-only quick-login section to layout."""
+        layout.addSpacing(8)
+
+        toggle_btn = QPushButton("▶  Dev Quick Login")
+        toggle_btn.setCheckable(True)
+        toggle_btn.setStyleSheet(
+            "QPushButton { background-color: #3d2000; color: #ffaa00; "
+            "border: 1px solid #ffaa00; border-radius: 4px; font-size: 11px; "
+            "padding: 6px 10px; text-align: left; font-weight: bold; }"
+            "QPushButton:checked { background-color: #4d2c00; }"
+            "QPushButton:hover { background-color: #4d2c00; }"
+        )
+        layout.addWidget(toggle_btn)
+
+        dev_frame = QFrame()
+        dev_frame.setStyleSheet(
+            "QFrame { background-color: #2a1500; border: 1px solid #ffaa00; "
+            "border-radius: 4px; }"
+        )
+        dev_frame.setVisible(False)
+
+        frame_layout = QVBoxLayout()
+        frame_layout.setContentsMargins(12, 10, 12, 12)
+        frame_layout.setSpacing(8)
+
+        warning = QLabel("⚠  Dev mode — do not use in production")
+        warning.setStyleSheet("color: #ffaa00; font-size: 11px; font-style: italic;")
+        frame_layout.addWidget(warning)
+
+        btn_row = QHBoxLayout()
+        btn_row.setSpacing(8)
+
+        dm_btn = QPushButton("Login as DM")
+        dm_btn.setStyleSheet(
+            "QPushButton { background-color: #5c3a00; color: #ffcc44; "
+            "border: 1px solid #ffaa00; border-radius: 4px; "
+            "font-size: 12px; font-weight: bold; padding: 6px; }"
+            "QPushButton:hover { background-color: #7a4d00; }"
+            "QPushButton:pressed { background-color: #3d2600; }"
+        )
+        dm_btn.setMinimumHeight(36)
+        dm_btn.clicked.connect(lambda: self._dev_login("dm_test@dev.local", "devtest"))
+        btn_row.addWidget(dm_btn)
+
+        player_btn = QPushButton("Login as Player")
+        player_btn.setStyleSheet(
+            "QPushButton { background-color: #003a3a; color: #44eeff; "
+            "border: 1px solid #00dddd; border-radius: 4px; "
+            "font-size: 12px; font-weight: bold; padding: 6px; }"
+            "QPushButton:hover { background-color: #004d4d; }"
+            "QPushButton:pressed { background-color: #002626; }"
+        )
+        player_btn.setMinimumHeight(36)
+        player_btn.clicked.connect(lambda: self._dev_login("player_test@dev.local", "devtest"))
+        btn_row.addWidget(player_btn)
+
+        frame_layout.addLayout(btn_row)
+        dev_frame.setLayout(frame_layout)
+        layout.addWidget(dev_frame)
+
+        def _on_toggle(checked: bool) -> None:
+            dev_frame.setVisible(checked)
+            toggle_btn.setText("▼  Dev Quick Login" if checked else "▶  Dev Quick Login")
+
+        toggle_btn.toggled.connect(_on_toggle)
+
+    def _dev_login(self, email: str, password: str) -> None:
+        """Fill in credentials and trigger login for dev quick-login buttons."""
+        self.username_input.setText(email)
+        self.password_input.setText(password)
+        self._on_login_clicked()
 
     def _on_login_clicked(self) -> None:
         """Handle login button click."""
