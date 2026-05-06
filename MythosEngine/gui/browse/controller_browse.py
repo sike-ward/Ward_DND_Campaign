@@ -1093,20 +1093,46 @@ class BrowseController:
 
         if not note:
             self.v.show_status("Select a note to edit metadata.")
-
             return
 
         meta = self.storage.get_note_metadata(note)
 
-        dlg = MetadataEditorDialog(self.v, meta)
+        # Determine whether the current user can manage sharing.
+        current_uid = getattr(self.ctx, "current_user_id", None) or ""
+        is_admin_or_gm = getattr(self.ctx, "is_gm_or_admin", False)
+        perms_data = {}
+        all_users = []
+        is_privileged = False
+        try:
+            perms_data = self.storage.get_note_permissions(note)
+            owner_id = perms_data.get("owner_id", "")
+            is_owner = bool(current_uid and current_uid == owner_id)
+            is_privileged = is_admin_or_gm or is_owner
+            if is_privileged:
+                all_users = self.storage.list_all_users()
+        except Exception:
+            pass
+
+        dlg = MetadataEditorDialog(
+            self.v,
+            meta,
+            note_path=note,
+            permissions_data=perms_data,
+            all_users=all_users,
+            current_user_id=current_uid,
+            is_privileged=is_privileged,
+        )
 
         if dlg.exec():
             new_meta = dlg.get_metadata()
-
             self.storage.update_note_metadata(note, new_meta)
 
-            self.v.show_status("Metadata updated.")
+            if is_privileged:
+                changes = dlg.get_sharing_changes()
+                for user_id, role in changes.get("add", []):
+                    self.storage.grant_note_access(note, user_id, role)
+                for user_id in changes.get("remove", []):
+                    self.storage.revoke_note_access(note, user_id)
 
-            # Optionally update the metadata preview label
-
+            self.v.show_status("Note properties updated.")
             self.v.show_metadata(note)

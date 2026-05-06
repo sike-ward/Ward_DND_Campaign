@@ -803,6 +803,52 @@ class SQLiteBackend(StorageBackend):
                 record.data = __import__("json").dumps(existing)
 
     # ========================================================================
+    # Note Permissions
+    # ========================================================================
+
+    def _permissions_path(self) -> Path:
+        return self.vault_path / ".note_permissions.json"
+
+    def _load_all_note_permissions(self) -> dict:
+        p = self._permissions_path()
+        if p.exists():
+            try:
+                return json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                return {}
+        return {}
+
+    def _save_all_note_permissions(self, data: dict) -> None:
+        self._permissions_path().write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    def get_note_permissions(self, note_path: str) -> dict:
+        data = self._load_all_note_permissions()
+        return data.get(note_path, {"owner_id": "", "permissions": {}})
+
+    def grant_note_access(self, note_path: str, user_id: str, role: str) -> None:
+        data = self._load_all_note_permissions()
+        if note_path not in data:
+            data[note_path] = {"owner_id": self._current_user_id or "", "permissions": {}}
+        data[note_path]["permissions"][user_id] = role
+        self._save_all_note_permissions(data)
+
+    def revoke_note_access(self, note_path: str, user_id: str) -> None:
+        data = self._load_all_note_permissions()
+        if note_path in data:
+            data[note_path]["permissions"].pop(user_id, None)
+            self._save_all_note_permissions(data)
+
+    def list_all_users(self) -> list:
+        users = []
+        with self._session() as session:
+            for rec in session.query(UserRecord).all():
+                try:
+                    users.append(User.model_validate_json(rec.data))
+                except Exception:
+                    pass
+        return users
+
+    # ========================================================================
     # Active Sessions (for admin panel)
     # ========================================================================
 

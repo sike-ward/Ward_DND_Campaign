@@ -14,6 +14,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QPushButton,
     QScrollArea,
@@ -933,58 +934,105 @@ class QuickSwitcherDialog(QDialog):
             super().keyPressEvent(event)
 
 
-from PyQt6.QtWidgets import (
-    QDialog,
-    QWidget,
-)
-
-
 class MetadataEditorDialog(QDialog):
-    def __init__(self, parent, metadata_dict):
-        super().__init__(parent)
-        self.setWindowTitle("Edit Metadata")
-        self.resize(400, 300)
-        self.layout = QVBoxLayout(self)
-        self.fields = {}  # key: (QLineEdit, QLineEdit)
+    """
+    Two-tab dialog: "Metadata" (key-value editor) and "Sharing" (access control).
 
-        # Existing fields
+    Sharing tab is only shown when is_privileged=True (admin, GM, or note owner).
+    """
+
+    def __init__(
+        self,
+        parent,
+        metadata_dict,
+        note_path="",
+        permissions_data=None,
+        all_users=None,
+        current_user_id="",
+        is_privileged=False,
+    ):
+        super().__init__(parent)
+        self.setWindowTitle("Note Properties")
+        self.resize(480, 420)
+
+        self._note_path = note_path
+        self._is_privileged = is_privileged
+        self._current_user_id = current_user_id
+        self._permissions_data = permissions_data or {"owner_id": "", "permissions": {}}
+        self._all_users = all_users or []
+        self._pending_adds: list = []    # [(user_id, role), ...]
+        self._pending_removes: list = [] # [user_id, ...]
+
+        self.fields = {}  # k_edit -> (v_edit, container)
+        self._meta_footer_added = False  # True once Add-Field button + stretch are in layout
+
+        main_layout = QVBoxLayout(self)
+
+        tabs = QTabWidget()
+        main_layout.addWidget(tabs)
+
+        # ── Tab 1: Metadata ───────────────────────────────────────────────
+        meta_container = QWidget()
+        self._meta_layout = QVBoxLayout(meta_container)
+        self._meta_layout.setSpacing(4)
+
         for k, v in metadata_dict.items():
             self.add_field_row(str(k), str(v))
 
-        # Button row
-        btn_row = QHBoxLayout()
-        self.add_btn = QPushButton("Add Field")
-        self.save_btn = QPushButton("Save")
-        self.cancel_btn = QPushButton("Cancel")
-        btn_row.addWidget(self.add_btn)
-        btn_row.addWidget(self.save_btn)
-        btn_row.addWidget(self.cancel_btn)
-        self.layout.addLayout(btn_row)
+        add_field_btn = QPushButton("Add Field")
+        add_field_btn.clicked.connect(self.add_field_row)
+        self._meta_layout.addWidget(add_field_btn)
+        self._meta_layout.addStretch()
+        self._meta_footer_added = True
 
-        self.add_btn.clicked.connect(self.add_field_row)
-        self.save_btn.clicked.connect(self.accept)
-        self.cancel_btn.clicked.connect(self.reject)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(meta_container)
+        tabs.addTab(scroll, "Metadata")
+
+        # ── Tab 2: Sharing ────────────────────────────────────────────────
+        if is_privileged:
+            sharing_widget = self._build_sharing_tab()
+            tabs.addTab(sharing_widget, "Sharing")
+
+        # ── Bottom buttons ────────────────────────────────────────────────
+        btn_row = QHBoxLayout()
+        save_btn = QPushButton("Save")
+        cancel_btn = QPushButton("Cancel")
+        btn_row.addStretch()
+        btn_row.addWidget(save_btn)
+        btn_row.addWidget(cancel_btn)
+        save_btn.clicked.connect(self.accept)
+        cancel_btn.clicked.connect(self.reject)
+        main_layout.addLayout(btn_row)
+
+    # ── Metadata tab helpers ──────────────────────────────────────────────
 
     def add_field_row(self, key="", value="", *args, **kwargs):
-        # Accepts any arguments; ignores those passed by signal
         row = QHBoxLayout()
         k_edit = QLineEdit(str(key))
         v_edit = QLineEdit(str(value))
-        rm_btn = QPushButton("Remove")
+        rm_btn = QPushButton("✕")
+        rm_btn.setFixedWidth(28)
         row.addWidget(QLabel("Key:"))
         row.addWidget(k_edit)
-        row.addWidget(QLabel("Value:"))
+        row.addWidget(QLabel("Val:"))
         row.addWidget(v_edit)
         row.addWidget(rm_btn)
         container = QWidget()
         container.setLayout(row)
-        self.layout.insertWidget(self.layout.count() - 1, container)
+        if self._meta_footer_added:
+            # Insert before the "Add Field" button and stretch (last 2 items)
+            insert_pos = max(0, self._meta_layout.count() - 2)
+            self._meta_layout.insertWidget(insert_pos, container)
+        else:
+            self._meta_layout.addWidget(container)
         self.fields[k_edit] = (v_edit, container)
 
         def remove_row():
-            self.layout.removeWidget(container)
+            self._meta_layout.removeWidget(container)
             container.deleteLater()
-            del self.fields[k_edit]
+            self.fields.pop(k_edit, None)
 
         rm_btn.clicked.connect(remove_row)
 
@@ -996,3 +1044,98 @@ class MetadataEditorDialog(QDialog):
             if key:
                 meta[key] = val
         return meta
+
+    # ── Sharing tab helpers ───────────────────────────────────────────────
+
+    def _build_sharing_tab(self) -> QWidget:
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+        layout.setSpacing(8)
+
+        owner_id = self._permissions_data.get("owner_id", "")
+        owner_display = self._resolve_username(owner_id) if owner_id else "(unknown)"
+        owner_label = QLabel(f"<b>Owner:</b> {owner_display}")
+        layout.addWidget(owner_label)
+
+        layout.addWidget(QLabel("<b>Users with access:</b>"))
+
+        self._access_list = QListWidget()
+        self._access_list.setMinimumHeight(120)
+        layout.addWidget(self._access_list)
+        self._refresh_access_list()
+
+        remove_btn = QPushButton("Remove Selected")
+        remove_btn.clicked.connect(self._on_remove_access)
+        layout.addWidget(remove_btn)
+
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
+        layout.addWidget(sep)
+
+        layout.addWidget(QLabel("<b>Grant access to:</b>"))
+
+        add_row = QHBoxLayout()
+        self._user_combo = QComboBox()
+        for u in self._all_users:
+            display = u.username or u.email or u.id
+            self._user_combo.addItem(display, u.id)
+        add_row.addWidget(self._user_combo, stretch=2)
+
+        self._role_combo = QComboBox()
+        self._role_combo.addItems(["viewer", "owner"])
+        add_row.addWidget(self._role_combo, stretch=1)
+
+        add_btn = QPushButton("Add")
+        add_btn.clicked.connect(self._on_add_access)
+        add_row.addWidget(add_btn)
+        layout.addLayout(add_row)
+
+        layout.addStretch()
+        return widget
+
+    def _resolve_username(self, user_id: str) -> str:
+        for u in self._all_users:
+            if u.id == user_id:
+                return u.username or u.email or user_id
+        return user_id
+
+    def _effective_permissions(self) -> dict:
+        perms = dict(self._permissions_data.get("permissions", {}))
+        for uid in self._pending_removes:
+            perms.pop(uid, None)
+        for uid, role in self._pending_adds:
+            perms[uid] = role
+        return perms
+
+    def _refresh_access_list(self):
+        self._access_list.clear()
+        for user_id, role in self._effective_permissions().items():
+            display = self._resolve_username(user_id)
+            item = QListWidgetItem(f"{display}  —  {role}")
+            item.setData(Qt.ItemDataRole.UserRole, user_id)
+            self._access_list.addItem(item)
+
+    def _on_add_access(self):
+        user_id = self._user_combo.currentData()
+        role = self._role_combo.currentText()
+        if not user_id:
+            return
+        self._pending_removes = [uid for uid in self._pending_removes if uid != user_id]
+        self._pending_adds = [(uid, r) for uid, r in self._pending_adds if uid != user_id]
+        self._pending_adds.append((user_id, role))
+        self._refresh_access_list()
+
+    def _on_remove_access(self):
+        item = self._access_list.currentItem()
+        if not item:
+            return
+        user_id = item.data(Qt.ItemDataRole.UserRole)
+        if user_id:
+            self._pending_removes = [uid for uid in self._pending_removes if uid != user_id]
+            self._pending_removes.append(user_id)
+            self._pending_adds = [(uid, r) for uid, r in self._pending_adds if uid != user_id]
+            self._refresh_access_list()
+
+    def get_sharing_changes(self) -> dict:
+        """Return pending add/remove operations for the controller to apply."""
+        return {"add": list(self._pending_adds), "remove": list(self._pending_removes)}

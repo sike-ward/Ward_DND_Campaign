@@ -23,9 +23,11 @@ Usage
         pass
 """
 
+from datetime import datetime, timedelta
 from typing import Optional
 
 import bcrypt
+from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import (
     QDialog,
     QLabel,
@@ -42,6 +44,11 @@ from MythosEngine.storage.storage_base import StorageBackend
 # Set by main.py: LoginDialog.user_mgr   = ctx.users
 _invite_mgr = None
 _user_mgr = None
+
+# Per-username brute-force tracking: {email: {"count": int, "locked_until": datetime|None}}
+_failed_attempts: dict = {}
+_MAX_ATTEMPTS = 5
+_LOCKOUT_MINUTES = 15
 
 
 class LoginDialog(QDialog):
@@ -127,11 +134,11 @@ class LoginDialog(QDialog):
         button_layout = QVBoxLayout()
         button_layout.setSpacing(8)
 
-        login_button = QPushButton("Login")
-        login_button.setStyleSheet(self._button_stylesheet())
-        login_button.setMinimumHeight(40)
-        login_button.clicked.connect(self._on_login_clicked)
-        button_layout.addWidget(login_button)
+        self._login_button = QPushButton("Login")
+        self._login_button.setStyleSheet(self._button_stylesheet())
+        self._login_button.setMinimumHeight(40)
+        self._login_button.clicked.connect(self._on_login_clicked)
+        button_layout.addWidget(self._login_button)
 
         cancel_button = QPushButton("Cancel")
         cancel_button.setStyleSheet(self._cancel_button_stylesheet())
@@ -157,22 +164,46 @@ class LoginDialog(QDialog):
         self.setLayout(layout)
 
     def _on_login_clicked(self) -> None:
-        """Handle login button click."""
+        """Handle login button click with brute-force rate limiting."""
         username = self.username_input.text().strip()
         password = self.password_input.text()
 
-        # Validate input
         if not username or not password:
             self._show_error("Please enter both email and password.")
             return
 
+        # Check lockout
+        entry = _failed_attempts.get(username)
+        if entry and entry.get("locked_until"):
+            if datetime.now() < entry["locked_until"]:
+                self._show_error("Too many failed attempts. Try again in 15 minutes.")
+                return
+            # Lockout expired — reset
+            _failed_attempts.pop(username, None)
+
         # Attempt authentication
         user = self.authenticate(username, password, self.storage)
         if user:
+            _failed_attempts.pop(username, None)
             self.user = user
             self.accept()
         else:
-            self._show_error("Invalid email or password. Please try again.")
+            # Track failure and apply 1-second delay to slow automated attacks
+            record = _failed_attempts.setdefault(username, {"count": 0, "locked_until": None})
+            record["count"] += 1
+
+            if record["count"] >= _MAX_ATTEMPTS:
+                record["locked_until"] = datetime.now() + timedelta(minutes=_LOCKOUT_MINUTES)
+                self._show_error("Too many failed attempts. Try again in 15 minutes.")
+            else:
+                remaining = _MAX_ATTEMPTS - record["count"]
+                self._show_error(
+                    f"Invalid email or password. Please try again. ({remaining} attempt(s) remaining)"
+                )
+                # Disable the button for 1 second to slow automated attacks
+                self._login_button.setEnabled(False)
+                QTimer.singleShot(1000, lambda: self._login_button.setEnabled(True))
+
             self.password_input.clear()
             self.password_input.setFocus()
 

@@ -338,3 +338,19 @@ class StorageBackend(ABC):
         Only updates provided keys — does not overwrite the full record.
         """
         pass
+
+    # --- NOTE PERMISSIONS ---
+
+    def get_note_permissions(self, note_path: str) -> dict:
+        """Return {"owner_id": str, "permissions": {user_id: role}} for a note."""
+        return {"owner_id": "", "permissions": {}}
+
+    def grant_note_access(self, note_path: str, user_id: str, role: str) -> None:
+        """Grant a user access to a note with the specified role ('viewer' or 'owner')."""
+
+    def revoke_note_access(self, note_path: str, user_id: str) -> None:
+        """Revoke a user's access to a note."""
+
+    def list_all_users(self) -> list:
+        """Return all users, bypassing access control (admin-level operation)."""
+        return []
